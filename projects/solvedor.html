@@ -52,11 +52,11 @@ footer { color:var(--muted); font-size:.85rem; margin-top:56px; }
 <h2>The problem</h2>
 <p>Industrial Engineering students at UFAM learn Operations Research mostly on paper. Solvers exist, but they expect code or rigid formats, so students spend their energy on syntax instead of on the model.</p>
 <h2>What I built</h2>
-<p>A Streamlit app where students type a linear programming model in the same notation their textbook uses: an objective to maximize or minimize, then the constraints. A parser I wrote with Python regular expressions turns that text into a model for Google OR-Tools, which solves it. The app explains the solution step by step, flags mistakes as students type, and draws the problem with Plotly in up to three dimensions, with gradient arrows showing which way the objective improves. A gallery of ready-made examples gets students started.</p>
+<p>A Streamlit app where students type a linear programming model in the same notation their textbook uses: an objective to maximize or minimize, then the constraints. A parser I wrote with pyparsing turns that text into a model for Google OR-Tools, which solves it. The app explains the solution step by step, flags mistakes as students type, and draws the problem with Plotly in up to three dimensions, with gradient arrows showing which way the objective improves. A gallery of ready-made examples gets students started.</p>
 <p>The teaching approach comes from Active and Problem-Based Learning: students learn by modeling real problems themselves, not by watching someone else solve them.</p>
 <h2>Result</h2>
 <p>It became my bachelor thesis in Industrial Engineering, and the code is open source. You can run it locally with one command.</p>
-<p><strong>Stack:</strong> Python, Streamlit, Google OR-Tools, Plotly, regular expressions</p>
+<p><strong>Stack:</strong> Python, Streamlit, Google OR-Tools, pyparsing, Plotly</p>
 <p><a href="https://github.com/jvitorcosta/or-solver-streamlit">View the code on GitHub</a></p>
 </article>
 </main>
