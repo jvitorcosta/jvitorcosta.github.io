@@ -116,6 +116,21 @@ activities, appears to break the terms. The builder must, in this order:
 Only activities visible to "Everyone" count. **Car drives must never show**: his radar-laps routine
 logs drives on Strava, so exclude driving and other motor activity types.
 
+**Finding (2026-11-05).** Confirmed. The API Agreement (https://www.strava.com/legal/api, read
+2026-11-05, page shows effective date June 1, 2026) limits Strava Data shown in an app to the user it
+belongs to, and sharing it with others needs that user's explicit consent. So an API-fed public row is out.
+The rule covers data obtained through the API; a row Vitor types by hand is his own content and not
+"Strava Data", so `data/activity.toml` is fine (the pages don't say this outright; it's our reading).
+Brand Guidelines (https://developers.strava.com/guidelines/): a link back to original Strava data must read
+"View on Strava" (readable, bold/underlined or #FC5200); don't imply Strava sponsors the page; plain-text
+mentions of Strava are fine. The guidelines don't mention profile links specifically.
+Official embeds exist (https://support.strava.com/hc/articles/216918527): activity embeds (profile and
+activity both "Everyone"), and profile cards (recent activities list or last-week summary, by default
+sport type). The help pages don't say whether activity embeds show a map, and third-party plugin pages
+say they show the full map, so assume yes; they also don't address personal-site use.
+**Recommendation:** keep the manual row plus a "View on Strava" link to his profile. Use the profile
+card embed only if Vitor wants it live and accepts its look; skip activity embeds (map risk near home).
+
 ## My party and PC box
 
 - **My party** is chosen by Vitor in one short list file in the site repo (repo name, tag, picture,
