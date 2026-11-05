@@ -35,6 +35,7 @@ class Book:
     url: str
     page: int | None
     pages: int | None
+    finished: bool = False
 
 
 @dataclass(frozen=True)

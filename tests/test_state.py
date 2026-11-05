@@ -12,7 +12,7 @@ def test_refresh_stores_new_value():
     assert result == BOOK
     assert state["book"] == {
         "title": "Dune", "author": "Frank Herbert", "cover": "c.jpg",
-        "url": "https://x/dune", "page": 10, "pages": 400,
+        "url": "https://x/dune", "page": 10, "pages": 400, "finished": False,
     }
 
 

@@ -10,6 +10,12 @@ from homepage.model import Book
 GOODREADS = "https://www.goodreads.com"
 GOODREADS_PROFILE = f"{GOODREADS}/user/show/185113793-vitor-pinheiro"
 NO_BOOK = "no currently-reading book on the profile page"
+# Only on a real profile page: tells "he finished the book" apart from "the page changed".
+PROFILE_MARKER = 'id="profileNameTopHeading"'
+
+
+class NothingReading(ValueError):
+    """The profile loaded but lists no currently-reading book."""
 
 
 def _text(raw: str) -> str:
@@ -20,7 +26,7 @@ def fetch_book(profile_url: str = GOODREADS_PROFILE, get: Callable[..., bytes] =
     page = get(profile_url).decode("utf-8", errors="replace")
     start = page.find('id="currentlyReadingReviews"')
     if start < 0:
-        raise ValueError(NO_BOOK)
+        raise (NothingReading if PROFILE_MARKER in page else ValueError)(NO_BOOK)
     block = page[start:]
     # Only the first entry: stop at the next one so its progress is never read.
     first = block.find('class="Updates')
