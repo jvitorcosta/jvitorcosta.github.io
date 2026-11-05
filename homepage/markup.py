@@ -2,14 +2,18 @@
 
 from __future__ import annotations
 
+import hashlib
 import sys
 from datetime import date
+from functools import cache
 from html import escape
+from pathlib import Path
 from urllib.parse import urlparse
 
 from homepage.content import Content
 
 ARROW = '<span aria-hidden="true">▶</span> '  # decoration before every section title
+SITE_ROOT = Path(__file__).resolve().parents[1]
 ICONS = "assets/icons"  # pixel app tiles, drawn by tools/pixel_icons.py
 # platform: (display name, brand colour of the round profile icon)
 PLATFORMS = {
@@ -43,6 +47,13 @@ def safe_url(url: str) -> str:
     return ""
 
 
+@cache
+def versioned(path: str) -> str:
+    """Site-relative asset URL with a content hash, so browsers refetch it when the file changes."""
+    digest = hashlib.sha256((SITE_ROOT / path).read_bytes()).hexdigest()[:8]
+    return f"{path}?v={digest}"
+
+
 def warn(message: str) -> None:
     print(f"::warning::{message}", file=sys.stderr)
 
@@ -74,7 +85,7 @@ class Page:
     def go(self, platform: str) -> str:
         """Pixel brand tile at the end of a row, linking to Vitor's profile there."""
         name, colour = PLATFORMS[platform]
-        img = f'<img src="{ICONS}/{platform}.svg" alt="" width="40" height="40">'
+        img = f'<img src="{versioned(f"{ICONS}/{platform}.svg")}" alt="" width="40" height="40">'
         link = safe_url(self.c.links.get(platform, ""))
         if not link:
             return f'<span class="go" style="background:{colour}" aria-hidden="true">{img}</span>'

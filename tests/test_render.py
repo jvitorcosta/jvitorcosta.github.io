@@ -95,8 +95,8 @@ def test_head(tmp_path):
     assert f'property="og:description" content="{esc(STRINGS["en"]["page_description"])}"' in html
     assert 'property="og:image" content="https://jvitorcosta.github.io/og-image.png"' in html
     assert '<link rel="canonical" href="https://jvitorcosta.github.io/">' in html
-    assert '<link rel="stylesheet" href="assets/site.css">' in html
-    assert '<script src="assets/site.js" defer></script>' in html
+    assert re.search(r'<link rel="stylesheet" href="assets/site\.css\?v=[0-9a-f]{8}">', html)
+    assert re.search(r'<script src="assets/site\.js\?v=[0-9a-f]{8}" defer></script>', html)
     assert "fonts.googleapis.com" not in html and "fonts.gstatic.com" not in html
     ld = re.search(r'<script type="application/ld\+json">(.*?)</script>', html).group(1)
     assert '"addressLocality": "Manaus"' in ld and '"addressCountry": "BR"' in ld
@@ -363,7 +363,7 @@ def test_no_external_image_sources(tmp_path):
     srcs = re.findall(r'src="([^"]*)"', html)
     assert srcs and not [s for s in srcs if re.match(r"(https?:)?//", s)]
     for icon in ("spotify", "letterboxd", "goodreads", "strava"):
-        assert f'src="assets/icons/{icon}.svg"' in html
+        assert re.search(rf'src="assets/icons/{icon}\.svg\?v=[0-9a-f]{{8}}"', html)
 
 
 def test_language_toggle_label_contains_visible_text(tmp_path):
@@ -464,7 +464,7 @@ def test_footer_is_a_landmark_outside_main(tmp_path):
 def test_early_palette_script_runs_before_the_stylesheet(tmp_path):
     head = render(tmp_path).split("</head>")[0]
     m = re.search(r"<script>(.*?)</script>", head, re.S)
-    assert m and m.start() < head.index('<link rel="stylesheet" href="assets/site.css">')
+    assert m and m.start() < head.index('<link rel="stylesheet" href="assets/site.css?v=')
     script = m.group(1)
     assert script.lstrip().startswith("try{") and "catch(e){}" in script
     assert 'localStorage.getItem("palette")' in script
@@ -506,3 +506,11 @@ def test_tab_and_home_screen_icons(tmp_path):
     head = render(tmp_path).split("</head>")[0]
     assert '<link rel="icon" href="favicon.svg" type="image/svg+xml">' in head
     assert '<link rel="apple-touch-icon" href="apple-touch-icon.png">' in head
+
+
+def test_asset_version_follows_the_file_content():
+    # Phones kept old icons next to a new stylesheet; a content hash in the URL makes them refetch.
+    import hashlib
+    from homepage.markup import SITE_ROOT, versioned
+    data = (SITE_ROOT / "assets" / "site.css").read_bytes()
+    assert versioned("assets/site.css") == "assets/site.css?v=" + hashlib.sha256(data).hexdigest()[:8]
