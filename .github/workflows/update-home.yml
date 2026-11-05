@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # only for pushing to the state branch
+    outputs:
+      stale: ${{ steps.build.outputs.stale }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -51,6 +53,7 @@ jobs:
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
 
       - name: Build the homepage
+        id: build
         run: uv run --locked --no-dev python -m homepage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -87,3 +90,18 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  # A source quiet for over a week turns the run red, so GitHub emails. It runs after the deploy,
+  # so the page still updates with everything else.
+  alert:
+    needs: [build, deploy]
+    if: needs.build.outputs.stale != ''
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Fail on sources that stopped updating
+        env:
+          STALE: ${{ needs.build.outputs.stale }}
+        run: |
+          echo "::error::not updated for over a week: $STALE (see the build job summary)"
+          exit 1

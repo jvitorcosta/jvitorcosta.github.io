@@ -79,3 +79,19 @@ def test_unreachable_state_branch_fails_the_job(tmp_path):
     work = checkout(tmp_path, with_state=True)
     git(work, "remote", "set-url", "origin", str(tmp_path / "gone.git"))
     assert run(work, "Fetch the state branch").returncode != 0
+
+
+def job(name: str) -> str:
+    m = re.search(rf"(?ms)^  {name}:\n(.*?)(?=^  \S|\Z)", WORKFLOW)
+    assert m, name
+    return m.group(1)
+
+
+def test_stale_sources_fail_a_job_after_the_deploy():
+    # A red run makes GitHub email; it comes after the deploy so the page still updates.
+    assert "stale: ${{ steps.build.outputs.stale }}" in job("build")
+    assert re.search(r"(?m)^      - name: Build the homepage\n        id: build$", WORKFLOW)
+    alert = job("alert")
+    assert "needs: [build, deploy]" in alert
+    assert "if: needs.build.outputs.stale != ''" in alert
+    assert "exit 1" in alert
