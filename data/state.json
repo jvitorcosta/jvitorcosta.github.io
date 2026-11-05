@@ -2,6 +2,7 @@
   "book": {
     "author": "David Goggins",
     "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1536184191l/41721428._SX318_.jpg",
+    "finished": false,
     "page": 210,
     "pages": 366,
     "title": "Can't Hurt Me: Master Your Mind and Defy the Odds",
@@ -132,10 +133,10 @@
     }
   ],
   "song": {
-    "artist": "Kavinsky",
-    "cover": "https://i.scdn.co/image/ab67616d00001e021c08bca073e89ae32c68ffaa",
+    "artist": "BIBI",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02aed0f31dcd91c3c0a4a6ca73",
     "playing": true,
-    "title": "Roadgame",
-    "url": "https://open.spotify.com/track/7D1Dq1oEmlKNJltvzTL0wN"
+    "title": "Scott and Zelda",
+    "url": "https://open.spotify.com/track/1MJyiTlVdSLAjI9aclZ3hL"
   }
 }
