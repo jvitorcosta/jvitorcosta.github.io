@@ -20,18 +20,18 @@
   },
   "repos": [
     {
+      "description": "Radares, lombadas eletrônicas e câmeras de avanço de sinal em Manaus: dados abertos",
+      "homepage": "",
+      "name": "open-radars-manaus",
+      "pushed": "2026-11-05T21:31:13Z",
+      "url": "https://github.com/jvitorcosta/open-radars-manaus"
+    },
+    {
       "description": "Cyberdeck for my car: two ESP32 touchscreens and a Garmin app. Spotify as a Pokémon battle with synced lyrics, and the car's LED lights by touch, voice, gamepad or watch",
       "homepage": "",
       "name": "car-cyberdeck",
       "pushed": "2026-11-05T16:32:54Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
-    },
-    {
-      "description": "Radares, lombadas eletrônicas e câmeras de avanço de sinal em Manaus: dados abertos",
-      "homepage": "",
-      "name": "open-radars-manaus",
-      "pushed": "2026-11-05T15:33:00Z",
-      "url": "https://github.com/jvitorcosta/open-radars-manaus"
     },
     {
       "description": "Connect IQ watch faces for the Garmin Forerunner 255",
@@ -133,11 +133,11 @@
     }
   ],
   "song": {
-    "artist": "BUDAH",
-    "cover": "https://i.scdn.co/image/ab67616d00001e021740d107679e490f38fe1f48",
-    "playing": false,
-    "title": "Pouca Roupa",
-    "url": "https://open.spotify.com/track/07KqxZsYYsciaB5lvN3Imq"
+    "artist": "Tina Charles",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02c6171a753bd6b09e10c34578",
+    "playing": true,
+    "title": "I Love to Love",
+    "url": "https://open.spotify.com/track/0tlsZOKkDspm8LDpb0HVQ8"
   },
   "updated": {
     "book": "2026-11-05",
