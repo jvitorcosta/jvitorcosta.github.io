@@ -72,7 +72,7 @@ def test_both_languages_have_the_same_keys():
     assert required <= set(strings["en"])
     assert all(v.strip() for lang in strings.values() for v in lang.values())
     assert strings["en"]["page_title"] == (
-        "Vitor Pinheiro · AI engineer in Manaus who builds gadgets for his car, watch and city"
+        "Vitor Pinheiro · engineer from Manaus"
     )
 
 
