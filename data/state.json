@@ -20,116 +20,109 @@
   },
   "repos": [
     {
-      "description": "Radares, lombadas eletrônicas e câmeras de avanço de sinal em Manaus: dados abertos",
+      "description": "Copier template for new Python projects: uv, Ruff, strict mypy, pytest, pre-commit, CI on three OSes and a full Claude Code setup",
       "homepage": "",
-      "name": "open-radars-manaus",
-      "pushed": "2026-11-05T21:49:19Z",
-      "url": "https://github.com/jvitorcosta/open-radars-manaus"
-    },
-    {
-      "description": "Cyberdeck for my car: two ESP32 touchscreens and a Garmin app. Spotify as a Pokémon battle with synced lyrics, and the car's LED lights by touch, voice, gamepad or watch",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-05T16:32:54Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
-    },
-    {
-      "description": "Connect IQ watch faces for the Garmin Forerunner 255",
-      "homepage": "",
-      "name": "garmin-watchfaces",
-      "pushed": "2026-11-05T13:42:46Z",
-      "url": "https://github.com/jvitorcosta/garmin-watchfaces"
-    },
-    {
-      "description": "Streamlit app to evaluate time-series forecasts: MAPE by group and period, residual analysis and comparison with a benchmark forecast",
-      "homepage": "https://forecast-error-analysis.streamlit.app",
-      "name": "timeseries-analysis-streamlit",
-      "pushed": "2026-11-05T13:42:36Z",
-      "url": "https://github.com/jvitorcosta/timeseries-analysis-streamlit"
+      "name": "python-uv-claude-template",
+      "pushed": "2026-11-05T22:17:43Z",
+      "url": "https://github.com/jvitorcosta/python-uv-claude-template"
     },
     {
       "description": "SolvedOR: solve linear and integer programs written like a textbook, in the browser. Live at solvedor.streamlit.app",
       "homepage": "https://solvedor.streamlit.app",
       "name": "or-solver-streamlit",
-      "pushed": "2026-11-05T13:42:31Z",
+      "pushed": "2026-11-05T22:17:38Z",
       "url": "https://github.com/jvitorcosta/or-solver-streamlit"
     },
     {
-      "description": "Copier template for new Python projects: uv, Ruff, strict mypy, pytest, pre-commit, CI on three OSes and a full Claude Code setup",
-      "homepage": "",
-      "name": "python-uv-claude-template",
-      "pushed": "2026-11-05T13:42:25Z",
-      "url": "https://github.com/jvitorcosta/python-uv-claude-template"
+      "description": "Streamlit app that shows where a daily forecast goes wrong: by series, weekday, holiday and benchmark",
+      "homepage": "https://forecast-error-analysis.streamlit.app",
+      "name": "timeseries-analysis-streamlit",
+      "pushed": "2026-11-05T22:17:32Z",
+      "url": "https://github.com/jvitorcosta/timeseries-analysis-streamlit"
     },
     {
-      "description": "Custom watch faces for the Haylou RT (LS05S), built with haylou-rt-tools.",
-      "homepage": "",
-      "name": "haylou-faces",
-      "pushed": "2026-11-05T13:42:20Z",
-      "url": "https://github.com/jvitorcosta/haylou-faces"
-    },
-    {
-      "description": "Unofficial tools for the Haylou RT (LS05S) watch: BLE protocol, .tbwf watch faces and a text preview.",
-      "homepage": "",
-      "name": "haylou-rt-tools",
-      "pushed": "2026-11-05T13:42:15Z",
-      "url": "https://github.com/jvitorcosta/haylou-rt-tools"
-    },
-    {
-      "description": "Listen-only CAN bus reverse-engineering toolkit: ESP32 firmware over a Bluetooth ELM327 adapter and PC tools that find undocumented signals, like the gear or fuel level, in your recordings",
-      "homepage": "",
-      "name": "car-can-lab",
-      "pushed": "2026-11-05T13:42:09Z",
-      "url": "https://github.com/jvitorcosta/car-can-lab"
-    },
-    {
-      "description": "LightGBM card-fraud model with SHAP-grounded, LLM-written alert explanations and a deterministic grounding check, on public simulated data.",
+      "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
       "homepage": "",
       "name": "fraud-alert-explainer",
-      "pushed": "2026-11-05T13:21:56Z",
+      "pushed": "2026-11-05T22:17:25Z",
       "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
     },
     {
       "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
       "homepage": "",
       "name": "ask-vitor",
-      "pushed": "2026-10-29T06:43:58Z",
+      "pushed": "2026-11-05T22:17:19Z",
       "url": "https://github.com/jvitorcosta/ask-vitor"
     },
     {
-      "description": "Exploratory analysis of loan default data before a credit-risk model: missing values, categorical and continuous variables, outliers and bias",
+      "description": "Loan default case study: clean 50k loans, explore, and tune a Random Forest with a chosen threshold",
       "homepage": "",
       "name": "loan-EDA-python",
-      "pushed": "2026-10-28T21:37:13Z",
+      "pushed": "2026-11-05T22:17:13Z",
       "url": "https://github.com/jvitorcosta/loan-EDA-python"
     },
     {
-      "description": "University Operations Research exercises solved in Jupyter with Google OR-Tools: linear and integer programming",
-      "homepage": "",
-      "name": "operations-research-ortools",
-      "pushed": "2026-10-28T20:24:29Z",
-      "url": "https://github.com/jvitorcosta/operations-research-ortools"
-    },
-    {
-      "description": "University physics lab analyses in Python: I-V curves of resistors, a lamp and a diode with fits and uncertainties, Ohm's law and resistivity, and Lissajous figures",
-      "homepage": "",
-      "name": "lab-fisica-python",
-      "pushed": "2026-10-28T20:09:19Z",
-      "url": "https://github.com/jvitorcosta/lab-fisica-python"
-    },
-    {
-      "description": "Statistical quality control in Python: a p-chart for the share of defective samples per shift, with control limits and simulated measurements",
+      "description": "Statistical quality control in Python: a p-chart for defective samples in a production process",
       "homepage": "",
       "name": "quality-engineering-python",
-      "pushed": "2026-10-28T19:35:15Z",
+      "pushed": "2026-11-05T22:17:07Z",
       "url": "https://github.com/jvitorcosta/quality-engineering-python"
     },
     {
-      "description": "TabNews clone from the curso.dev course (just getting started)",
+      "description": "Physics lab analyses in Python: I-V curves, Ohm's law and Lissajous figures, done with a classmate",
       "homepage": "",
-      "name": "clone-tabnews",
-      "pushed": "2025-07-14T02:55:22Z",
-      "url": "https://github.com/jvitorcosta/clone-tabnews"
+      "name": "lab-fisica-python",
+      "pushed": "2026-11-05T22:17:01Z",
+      "url": "https://github.com/jvitorcosta/lab-fisica-python"
+    },
+    {
+      "description": "Operations Research coursework: linear and integer programming exercises solved with Google OR-Tools",
+      "homepage": "",
+      "name": "operations-research-ortools",
+      "pushed": "2026-11-05T22:16:53Z",
+      "url": "https://github.com/jvitorcosta/operations-research-ortools"
+    },
+    {
+      "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
+      "homepage": "",
+      "name": "open-radars-manaus",
+      "pushed": "2026-11-05T22:16:41Z",
+      "url": "https://github.com/jvitorcosta/open-radars-manaus"
+    },
+    {
+      "description": "Listen-only CAN bus toolkit with an ELM327 adapter: find the signals your car doesn't expose over OBD-II",
+      "homepage": "",
+      "name": "car-can-lab",
+      "pushed": "2026-11-05T22:16:35Z",
+      "url": "https://github.com/jvitorcosta/car-can-lab"
+    },
+    {
+      "description": "ESP32 touchscreens and a Garmin watch app for the car: Spotify as a Pokémon battle, plus LED light control",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-05T22:16:29Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
+      "description": "Unofficial tools to talk to the Haylou RT smartwatch over Bluetooth and build and preview custom watch faces",
+      "homepage": "",
+      "name": "haylou-rt-tools",
+      "pushed": "2026-11-05T22:16:22Z",
+      "url": "https://github.com/jvitorcosta/haylou-rt-tools"
+    },
+    {
+      "description": "Custom watch faces for the Haylou RT (LS05S), built with haylou-rt-tools",
+      "homepage": "",
+      "name": "haylou-faces",
+      "pushed": "2026-11-05T22:16:17Z",
+      "url": "https://github.com/jvitorcosta/haylou-faces"
+    },
+    {
+      "description": "Connect IQ watch faces for my Garmin Forerunner 255: a Pokémon Emerald battle scene and a planet of the day",
+      "homepage": "",
+      "name": "garmin-watchfaces",
+      "pushed": "2026-11-05T22:16:10Z",
+      "url": "https://github.com/jvitorcosta/garmin-watchfaces"
     }
   ],
   "song": {
