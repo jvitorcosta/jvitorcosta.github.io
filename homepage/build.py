@@ -11,10 +11,10 @@ from pathlib import Path
 from homepage import http
 from homepage.content import load_content
 from homepage.images import cache_image, prune
-from homepage.model import Book, Film, LiveData, Repo, Song
+from homepage.model import Book, Film, LiveData, Repo, Song, from_dict
 from homepage.render import render_home
 from homepage.sources.github import fetch_repos
-from homepage.sources.goodreads import fetch_book
+from homepage.sources.goodreads import NothingReading, fetch_book
 from homepage.sources.letterboxd import fetch_film
 from homepage.sources.spotify import fetch_song
 from homepage.state import load_state, refresh, save_state
@@ -60,7 +60,19 @@ def build(
 
     song = refresh("song", sources["song"], state, Song)
     film = refresh("film", sources["film"], state, Film)
-    book = refresh("book", sources["book"], state, Book)
+    book_fetch = sources["book"]
+
+    def book_or_finished() -> Book:
+        """A book that left the currently-reading shelf was finished: keep it, without progress."""
+        try:
+            return book_fetch()
+        except NothingReading:
+            if not isinstance(state.get("book"), dict):
+                raise
+            last = from_dict(Book, state["book"])
+            return replace(last, page=None, pages=None, finished=True)
+
+    book = refresh("book", book_or_finished, state, Book)
     repo_fetch = sources["repos"]
     repos = refresh("repos", lambda: repo_fetch() or None, state, Repo) or []
 

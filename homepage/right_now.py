@@ -98,7 +98,7 @@ def _book(p: Page, book: Book) -> str:
     if book.page is not None and book.pages:
         detail += " · " + p.t("page_of", page=book.page, pages=book.pages)
         bar = f'<div class="hp"><i style="width:{round(100 * book.page / book.pages)}%"></i></div>'
-    body = (f'<span class="k px">{p.t("reading")}</span>'
+    body = (f'<span class="k px">{p.t("finished" if book.finished else "reading")}</span>'
             f'<span class="t">{esc(clip(book.title, 48))}</span>{detail}{bar}')
     inner = _thumb(book.cover, tall=True) + f'<div class="body">{body}</div>'
     return f"<li>{_row(book.url, inner)}{p.go('goodreads')}</li>"

@@ -3,12 +3,15 @@
 
 [en]
 greeting = "VITOR"
-intro = "AI engineer from Manaus. I build gadgets for my car, my watch and my city."
+intro = "AI engineer from Manaus. In my free time I build gadgets for my car, my watch and my city."
+# Spanish in both languages on purpose: the page shows it once, as Spanish.
+motto = "Dios me prepara a fuego lento."
 right_now = "LATELY"
 listening = "LISTENING"
 last_played = "LISTENED"
 watched = "WATCHED"
 reading = "READING"
+finished = "FINISHED"
 moving = "MOVED"
 party = "MY PARTY"
 pc_box = "PC BOX"
@@ -29,12 +32,15 @@ page_description = "AI engineer from Manaus. What I'm listening to, watching, re
 
 [pt]
 greeting = "VITOR"
-intro = "Engenheiro de IA de Manaus. Eu crio gadgets pro meu carro, meu relógio e minha cidade."
+intro = "Engenheiro de IA de Manaus. No tempo livre, crio gadgets pro meu carro, meu relógio e minha cidade."
+# Spanish in both languages on purpose: the page shows it once, as Spanish.
+motto = "Dios me prepara a fuego lento."
 right_now = "ULTIMAMENTE"
 listening = "OUVINDO"
 last_played = "OUVI"
 watched = "ASSISTI"
 reading = "LENDO"
+finished = "TERMINEI"
 moving = "TREINEI"
 party = "MEU TIME"
 pc_box = "CAIXA DO PC"

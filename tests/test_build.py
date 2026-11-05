@@ -133,3 +133,20 @@ def test_image_warning_names_the_item(site, capsys):
     err = capsys.readouterr().err
     assert "::warning::film poster image not cached: offline" in err
     assert "::warning::book cover image not cached: offline" in err
+
+
+def test_book_that_left_currently_reading_shows_as_finished(site, capsys):
+    from homepage.model import to_dict
+    from homepage.sources.goodreads import NothingReading
+
+    def not_reading():
+        raise NothingReading("nothing on the currently-reading shelf")
+
+    save_state(site / "data" / "state.json", {"book": to_dict(BOOK)})
+    build(site, sources(book=not_reading), get=fake_get)
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert "Hurt Me" in html and "FINISHED" in html and "TERMINEI" in html
+    assert 'class="hp"' not in html  # no progress bar for a finished book
+    stored = load_state(site / "data" / "state.json")["book"]
+    assert stored["finished"] is True and stored["page"] is None
+    assert "::warning::book" not in capsys.readouterr().err  # finishing a book is not a failure

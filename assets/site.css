@@ -40,7 +40,7 @@
 
 .pal-pocket { --bg:#d7d3c8; --box:#fbfaf4; --ink:#1f2a44; --line:#1f2a44; --shadow:#9aa3b5; --soft:#dfe2ea; --accent:#d63333; --hp:#3fa34d; --ink-on-bg:#1f2a44; --strava:#c43d00; --strava-decoration:underline; color-scheme:light; }
 .pal-night { --bg:#141220; --box:#221d33; --ink:#f2eefc; --line:#7a6ea6; --shadow:#000000; --soft:#3a3354; --accent:#ff8000; --hp:#00e054; --ink-on-bg:#f2eefc; --strava:#fc5200; --strava-decoration:none; color-scheme:dark; }
-.pal-nu { --bg:#820ad1; --box:#faf5ff; --ink:#2a0845; --line:#2a0845; --shadow:#4a0478; --soft:#ead9fb; --accent:#820ad1; --hp:#ffb703; --ink-on-bg:#ffffff; --strava:#c43d00; --strava-decoration:underline; color-scheme:light; }
+.pal-nu { --bg:#820ad1; --box:#f7f0e1; --ink:#2a0845; --line:#2a0845; --shadow:#4a0478; --soft:#e9dcc2; --accent:#820ad1; --hp:#ffb703; --ink-on-bg:#ffffff; --strava:#c43d00; --strava-decoration:underline; color-scheme:light; }
 
 /* No JS yet (or none at all): a light-mode phone gets Pocket. site.js sets data-pal, which ends this. */
 @media (prefers-color-scheme: light) {
@@ -68,7 +68,7 @@ img { max-width: 100%; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
 
-.px, .h, .k, .lv, .badge, .ava, [data-lang-toggle] {
+.px, .h, .k, .lv, .badge, [data-lang-toggle] {
   font-family: "Press Start 2P", ui-monospace, monospace;
   font-weight: 400;
   letter-spacing: .5px;
@@ -182,17 +182,18 @@ header.top > a:hover { text-decoration: underline; }
 @keyframes blink { 50% { opacity: 0; } }
 
 .small { margin: 0; font-size: 15px; line-height: 1.5; }
+.motto { margin: 6px 0 0; font-size: 14px; font-style: italic; color: var(--accent); }
 #work .small { margin: 8px 0 0; }
 
 /* Trainer card */
 .trainer { display: flex; gap: 12px; align-items: center; }
 .ava {
   flex: none;
-  display: grid; place-items: center;
+  display: block;
   width: 72px; height: 72px;
-  font-size: 26px;
-  color: var(--box);
-  background: var(--accent);
+  padding: 4px;
+  box-sizing: border-box;
+  background: var(--soft);
   border: 3px solid var(--line);
 }
 h1.name { margin: 0 0 8px; font-size: 14px; line-height: 1.5; }
