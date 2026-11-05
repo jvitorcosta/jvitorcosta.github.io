@@ -513,7 +513,7 @@ def test_asset_version_follows_the_file_content():
     import hashlib
     from homepage.markup import SITE_ROOT, versioned
     data = (SITE_ROOT / "assets" / "site.css").read_bytes()
-    assert versioned("assets/site.css") == "assets/site.css?v=" + hashlib.sha256(data).hexdigest()[:8]
+    assert versioned("assets/site.css") == "assets/site.css?v=" + hashlib.sha256(data.replace(b"\r\n", b"\n")).hexdigest()[:8]
 
 
 def test_trainer_card_shows_the_full_name_and_the_chinese_name(tmp_path):
