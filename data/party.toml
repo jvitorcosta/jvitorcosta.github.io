@@ -1,0 +1,41 @@
+# My party: the projects shown as tiles, in this order. At most 6.
+# repo     GitHub repo name under jvitorcosta
+# tag      small label on the tile (DAILY, WRIST, CITY...)
+# picture  optional; site-relative path or https URL. Without one the tile shows `emoji`.
+# url      optional; defaults to projects/<repo>.html when that page exists, else the GitHub repo.
+
+[[member]]
+repo = "car-cyberdeck"
+tag = "DAILY"
+emoji = "🚗"
+name_en = "Car Cyberdeck"
+name_pt = "Car Cyberdeck"
+blurb_en = "Spotify as a Pokémon battle on my dashboard"
+blurb_pt = "O Spotify virando batalha Pokémon no painel do carro"
+
+[[member]]
+repo = "garmin-watchfaces"
+tag = "WRIST"
+picture = "https://raw.githubusercontent.com/jvitorcosta/garmin-watchfaces/HEAD/docs/images/pokeface-fr255.jpg"
+name_en = "Watch faces"
+name_pt = "Mostradores"
+blurb_en = "Pokémon faces I draw for my Garmin"
+blurb_pt = "Mostradores de Pokémon que eu desenho pro meu Garmin"
+
+[[member]]
+repo = "open-radars-manaus"
+tag = "CITY"
+emoji = "📍"
+name_en = "Open Radars"
+name_pt = "Open Radars"
+blurb_en = "every speed camera in Manaus, marked by me"
+blurb_pt = "cada radar de Manaus, marcado por mim"
+
+[[member]]
+repo = "haylou-faces"
+tag = "WRIST"
+picture = "https://raw.githubusercontent.com/jvitorcosta/haylou-faces/HEAD/faces/juma/previews/preview-sky.png"
+name_en = "Haylou faces"
+name_pt = "Mostradores Haylou"
+blurb_en = "I cracked a cheap watch to draw on it"
+blurb_pt = "Eu hackeei um relógio baratinho pra desenhar nele"

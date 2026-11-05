@@ -1,0 +1,14 @@
+# Last activity, edited by hand (no Strava API: its terms only allow showing data to the athlete).
+# Never add maps, routes, start/end points, heart rate or other health data.
+# distance_km: leave out for activities without distance (weights, boxing); the row shows duration.
+# url: the Strava activity page; empty means the row is not a link.
+
+[activity]
+sport = "Ride"
+emoji = "🚴"
+title = "Night Ride"
+distance_km = 5.0
+moving_min = 25
+detail = "12.1 km/h · 3 PRs"
+date = "2026-11-04"
+url = ""
