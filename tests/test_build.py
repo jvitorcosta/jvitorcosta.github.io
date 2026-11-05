@@ -90,7 +90,7 @@ def test_images_are_local(site):
 def test_failed_download_never_hotlinks(site):
     party = site / "data" / "party.toml"
     party.write_text(party.read_text(encoding="utf-8").replace(
-        'emoji = "🚗"', 'emoji = "🚗"\npicture = "%s"' % PIC, 1), encoding="utf-8")
+        'emoji = "📍"', 'emoji = "📍"\npicture = "%s"' % PIC, 1), encoding="utf-8")
     build(site, sources(), get=failing_get)
     html = (site / "index.html").read_text(encoding="utf-8")
     for s in srcs(html):
