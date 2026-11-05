@@ -81,6 +81,28 @@
     return safeHttps(data.cover);
   }
 
+  // If the new cover fails (a browser that blocks data: images, say), go back to the cover the
+  // page was built with; with none, hide the image rather than show a broken one.
+  function setCover(cover, src) {
+    var saved = cover.getAttribute("data-saved-src");
+    if (saved === null) {
+      saved = cover.getAttribute("src") || "";
+      cover.setAttribute("data-saved-src", saved);
+    }
+    cover.onerror = function () {
+      cover.onerror = null;
+      if (saved && cover.getAttribute("src") !== saved) cover.setAttribute("src", saved);
+      else cover.hidden = true;
+    };
+    if (src) {
+      cover.setAttribute("src", src);
+      cover.hidden = false;
+    } else {
+      cover.removeAttribute("src");
+      cover.hidden = true;
+    }
+  }
+
   function spotifyLabel(row) {
     var label = row.querySelector('[data-field="label"]');
     if (!label) return;
@@ -107,16 +129,7 @@
       else link.removeAttribute("href");
     }
     var cover = row.querySelector('[data-field="cover"]');
-    var src = coverSrc(data);
-    if (cover) {
-      if (src) {
-        cover.setAttribute("src", src);
-        cover.hidden = false;
-      } else {
-        cover.removeAttribute("src");
-        cover.hidden = true;
-      }
-    }
+    if (cover) setCover(cover, coverSrc(data));
     var badge = row.querySelector('[data-field="badge"]');
     if (badge) badge.hidden = !playing;
 
