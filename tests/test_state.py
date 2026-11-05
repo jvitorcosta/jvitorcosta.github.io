@@ -29,18 +29,18 @@ def test_refresh_keeps_last_value_on_error(capsys):
         raise ValueError("layout")
 
     assert refresh("book", boom, state, Book) == BOOK
-    assert "::warning::book not updated: layout" in capsys.readouterr().out
+    assert "::warning::book not updated: layout" in capsys.readouterr().err
 
 
 def test_refresh_keeps_last_value_on_none(capsys):
     state = _old_state()
     assert refresh("book", lambda: None, state, Book) == BOOK
-    assert "::warning::book not updated: no data" in capsys.readouterr().out
+    assert "::warning::book not updated: no data" in capsys.readouterr().err
 
 
 def test_refresh_without_history_returns_none(capsys):
     assert refresh("book", lambda: None, {}, Book) is None
-    assert "::warning::book not updated: no data" in capsys.readouterr().out
+    assert "::warning::book not updated: no data" in capsys.readouterr().err
 
 
 def test_refresh_list_roundtrip():

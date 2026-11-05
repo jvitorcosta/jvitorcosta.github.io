@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import Callable, TypeVar
 
@@ -41,7 +42,7 @@ def refresh(
             [to_dict(r) for r in result] if isinstance(result, list) else to_dict(result)
         )
         return result
-    print(f"::warning::{name} not updated: {reason}")
+    print(f"::warning::{name} not updated: {reason}", file=sys.stderr)
     stored = state.get(name)
     if stored is None:
         return None
