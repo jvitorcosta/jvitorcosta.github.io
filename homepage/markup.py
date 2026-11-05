@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 
 from homepage.content import Content
 
+ARROW = '<span aria-hidden="true">▶</span> '  # decoration before every section title
 ICONS = "assets/icons"  # simple-icons 11.14.0, vendored
 # platform: (display name, brand colour of the round profile icon)
 PLATFORMS = {

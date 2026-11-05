@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from homepage.markup import Page, clip, esc, safe_url
+from homepage.markup import ARROW, Page, clip, esc, safe_url
 from homepage.model import Activity, Book, Film, LiveData, Song
 
 SPOTIFY_ENDPOINT = "https://spotify-now-playing-ashen-two.vercel.app/api/now-playing.json"
@@ -63,9 +63,26 @@ def _stars(rating: float | None) -> str:
     return "★" * whole + ("½" if rating - whole >= 0.5 else "")
 
 
+def _marks_text(rating: float | None, liked: bool) -> dict[str, str]:
+    """What the star and heart glyphs say, for screen readers ("3.5 stars, liked")."""
+    words = {"en": [], "pt": []}
+    if rating is not None:
+        n = f"{rating:g}"
+        one = rating == 1
+        words["en"].append(f"{n} star" + ("" if one else "s"))
+        words["pt"].append(f"{n.replace('.', ',')} estrela" + ("" if one else "s"))
+    if liked:
+        words["en"].append("liked")
+        words["pt"].append("curtiu")
+    return {lang: ", ".join(w) for lang, w in words.items()}
+
+
 def _film(p: Page, film: Film) -> str:
     year = f" ({esc(film.year)})" if film.year else ""
-    marks = " ".join(m for m in (_stars(film.rating), "♥" if film.liked else "") if m)
+    glyphs = " ".join(m for m in (_stars(film.rating), "♥" if film.liked else "") if m)
+    marks = (f'<span aria-hidden="true">{glyphs}</span>'
+             f'<span class="sr">{p.both(_marks_text(film.rating, film.liked))}</span>'
+             if glyphs else "")
     detail = " · ".join(m for m in (marks, p.date(film.watched)) if m)
     review = (f'<br><i class="review">“{esc(clip(film.review, 70))}”</i>'
               if film.review else "")
@@ -124,6 +141,6 @@ def right_now(p: Page, live: LiveData) -> str:
     hidden = " hidden" if live.song is None and not others else ""
     rows = [_song(p, live.song)] + others
     return (f'<section class="box" id="right-now"{hidden}>'
-            f'<h2 class="h px"><span>▶ {p.t("right_now")}'
+            f'<h2 class="h px"><span>{ARROW}{p.t("right_now")}'
             f'<span class="cursor" aria-hidden="true">_</span></span></h2>'
             f'<ul class="menu">{"".join(rows)}</ul></section>')

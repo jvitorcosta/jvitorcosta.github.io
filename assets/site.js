@@ -145,6 +145,11 @@
       b.textContent = label;
       b.setAttribute("aria-label", label + (code === "pt" ? ", mudar idioma" : ", switch language"));
     });
+    // Labels without visible text (palette dots and their group) follow the page language.
+    each("[data-aria-en]", function (el) {
+      var label = el.getAttribute("data-aria-" + code);
+      if (label) el.setAttribute("aria-label", label);
+    });
     var row = document.getElementById("spotify-row");
     if (row && row.hasAttribute("data-filled")) spotifyLabel(row);
   }

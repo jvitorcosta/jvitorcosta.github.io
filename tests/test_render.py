@@ -415,3 +415,47 @@ def test_work_links_the_resume_case_page_when_it_exists(tmp_path):
     work = section(render(tmp_path), "work")
     assert ('<a href="projects/resume-as-code.html"><span lang="en">How my resume is built</span>'
             '<span lang="pt">Como meu currículo é feito</span> ›</a>') in work
+
+
+def test_section_arrows_are_hidden_from_screen_readers(tmp_path):
+    html = render(tmp_path)
+    h2s = re.findall(r"<h2.*?</h2>", html, re.S)
+    assert len(h2s) == 4
+    for h2 in h2s:
+        assert '<span aria-hidden="true">▶</span>' in h2
+        assert "▶" not in h2.replace('<span aria-hidden="true">▶</span>', "")
+
+
+def test_star_rating_has_a_text_alternative(tmp_path):
+    row = section(render(tmp_path), "right-now", "party")
+    assert '<span aria-hidden="true">★★★½ ♥</span>' in row
+    assert ('<span class="sr"><span lang="en">3.5 stars, liked</span>'
+            '<span lang="pt">3,5 estrelas, curtiu</span></span>') in row
+
+
+def test_star_text_variants(tmp_path):
+    def sr(rating, liked):
+        film = Film("F", "2026", rating, liked, "2026-11-05", "", "", "https://x/f")
+        m = re.search(r'<span class="sr">(<span lang="en">[^<]*</span>'
+                      r'<span lang="pt">[^<]*</span>)</span>', section(
+                          render(tmp_path, lv=live(film=film)), "right-now", "party")
+                      .split("Letterboxd")[0].split("F</span>")[-1])
+        return m.group(1) if m else ""
+
+    assert sr(1.0, False) == '<span lang="en">1 star</span><span lang="pt">1 estrela</span>'
+    assert sr(4.0, False) == '<span lang="en">4 stars</span><span lang="pt">4 estrelas</span>'
+    assert sr(None, True) == '<span lang="en">liked</span><span lang="pt">curtiu</span>'
+    assert sr(None, False) == ""
+
+
+def test_palette_labels_follow_the_language(tmp_path):
+    top = render(tmp_path).split("</header>")[0]
+    assert 'role="group" aria-label="Colours" data-aria-en="Colours" data-aria-pt="Cores"' in top
+    for en, pt in (("Pocket", "Pocket"), ("Night Menu", "Menu Noturno"), ("Nu Purple", "Roxo Nu")):
+        assert f'aria-label="{en}" data-aria-en="{en}" data-aria-pt="{pt}"' in top
+
+
+def test_footer_is_a_landmark_outside_main(tmp_path):
+    html = render(tmp_path)
+    assert html.index("</main>") < html.index('<footer class="foot">')
+    assert html.index('<footer class="foot">') < html.index("</body>")

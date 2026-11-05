@@ -11,7 +11,7 @@ import re
 from pathlib import Path
 
 from homepage.content import Content, PartyMember
-from homepage.markup import Page, clip, esc, safe_url, warn
+from homepage.markup import ARROW, Page, clip, esc, safe_url, warn
 from homepage.model import LiveData, Repo
 from homepage.right_now import right_now
 
@@ -23,8 +23,10 @@ GITHUB_REPOS = "https://github.com/jvitorcosta?tab=repositories"
 FONTS = ("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700"
          "&family=Press+Start+2P&display=swap")
 PC_BOX_ROWS = 8
-PALETTES = (("pocket", "Pocket", "#fbfaf4"), ("night", "Night Menu", "#221d33"),
-            ("nu", "Nu Purple", "#820ad1"))
+# key, English name, Portuguese name, swatch colour
+PALETTES = (("pocket", "Pocket", "Pocket", "#fbfaf4"),
+            ("night", "Night Menu", "Menu Noturno", "#221d33"),
+            ("nu", "Nu Purple", "Roxo Nu", "#820ad1"))
 CASE_SLUG = re.compile(r"[a-z0-9][a-z0-9-]*")
 RESUME_CASE = "resume-as-code"
 TRAINER_LINKS = (("instagram", "Instagram"), ("github", "GitHub"),
@@ -56,7 +58,7 @@ def _party(p: Page, repos: list[Repo], site_root: Path) -> str:
                      else f'<div class="mon">{inner}</div>')
     if not tiles:
         return ""
-    return (f'<section class="box" id="party"><h2 class="h px"><span>▶ {p.t("party")}</span></h2>'
+    return (f'<section class="box" id="party"><h2 class="h px"><span>{ARROW}{p.t("party")}</span></h2>'
             f'<div class="party">{"".join(tiles)}</div></section>')
 
 
@@ -99,7 +101,7 @@ def _pc_box(p: Page, repos: list[Repo], site_root: Path) -> str:
     if extra > 0:
         rows.append(f'<a class="more" href="{GITHUB_REPOS}">{p.t("more", n=extra)}'
                     f' <span aria-hidden="true">›</span></a>')
-    return (f'<section class="box pc" id="pc-box"><h2 class="h px"><span>▶ {p.t("pc_box")}</span>'
+    return (f'<section class="box pc" id="pc-box"><h2 class="h px"><span>{ARROW}{p.t("pc_box")}</span>'
             f'<a href="{GITHUB_REPOS}">{p.t("all_on_github")}</a></h2>{"".join(rows)}</section>')
 
 
@@ -122,17 +124,23 @@ def _work(p: Page, site_root: Path) -> str:
     if resume:
         links.append(f'<a href="{resume}">{p.t("resume_case")} ›</a>')
     link = f'<div class="links">{"".join(links)}</div>' if links else ""
-    return (f'<section class="box" id="work"><h2 class="h px"><span>▶ {p.t("work")}</span></h2>'
+    return (f'<section class="box" id="work"><h2 class="h px"><span>{ARROW}{p.t("work")}</span></h2>'
             f'<p class="small">{p.t("work_line")}</p>{names}{link}</section>')
+
+
+def _aria(en: str, pt: str) -> str:
+    return f'aria-label="{en}" data-aria-en="{en}" data-aria-pt="{pt}"'
 
 
 def _top() -> str:
     dots = "".join(
-        f'<button type="button" data-palette="{key}" aria-label="{label}" '
+        f'<button type="button" data-palette="{key}" {_aria(en, pt)} '
         f'style="background:{colour}"></button>'
-        for key, label, colour in PALETTES
+        for key, en, pt, colour in PALETTES
     )
-    return (f'<header class="top"><div class="sw" role="group" aria-label="Colours">{dots}</div>'
+    # site.js swaps aria-label to data-aria-<lang> when the language changes.
+    return (f'<header class="top"><div class="sw" role="group" {_aria("Colours", "Cores")}>'
+            f'{dots}</div>'
             '<button type="button" data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>'
             "</header>")
 
@@ -191,8 +199,9 @@ def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: 
         _party(p, repos, site_root),
         _pc_box(p, repos, site_root),
         _work(p, site_root),
-        _footer(p, live),
     ]
     body = "\n".join(s for s in sections if s)
+    # The footer sits outside <main> so it is the page's contentinfo landmark.
     return (f'<!doctype html>\n<html lang="en" class="pal-night">\n{_head(p)}\n'
-            f'<body>\n<main class="in">\n{body}\n</main>\n</body>\n</html>\n')
+            f'<body>\n<main class="in">\n{body}\n</main>\n{_footer(p, live)}\n'
+            f'</body>\n</html>\n')

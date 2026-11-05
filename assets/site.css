@@ -48,7 +48,7 @@ a { color: inherit; }
 }
 
 /* One centred column: full width on a phone (from 360px), at most 480px on a desktop. */
-main, body > header.top {
+main, body > header.top, body > footer.foot {
   display: block;
   width: 100%;
   max-width: 480px;
@@ -57,6 +57,9 @@ main, body > header.top {
   padding-right: 12px;
 }
 main { padding-top: 12px; padding-bottom: 28px; }
+/* The homepage footer sits after <main> (a contentinfo landmark); the column padding moves to it. */
+main:has(+ footer.foot) { padding-bottom: 0; }
+body > footer.foot { margin-top: 8px; padding-bottom: 28px; }
 body > header.top { padding-top: 12px; }
 main > header.top { padding: 0; }
 

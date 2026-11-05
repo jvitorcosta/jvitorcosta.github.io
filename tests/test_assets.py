@@ -138,3 +138,13 @@ def test_language_toggle_name_contains_visible_text():
 def test_pixel_labels_are_at_least_10px(selector):
     size = re.search(r"font-size:\s*(\d+)px", _rule(selector))
     assert size and int(size.group(1)) >= 10
+
+
+def test_language_switch_updates_translated_aria_labels():
+    source = js()
+    assert "data-aria-" in source
+    assert re.search(r'each\("\[data-aria-en\]"', source)
+
+
+def test_footer_outside_main_keeps_the_column():
+    assert re.search(r"body > footer\.foot", css())
