@@ -1,3 +1,4 @@
+import json
 import re
 import shutil
 from pathlib import Path
@@ -56,7 +57,7 @@ def test_build_writes_index_and_state(site):
     html = index.read_text(encoding="utf-8")
     assert "Hope" in html and "Can&#x27;t Hurt Me" in html or "Hurt Me" in html
     state = load_state(site / "data" / "state.json")
-    assert set(state) == {"song", "film", "book", "repos"}
+    assert set(state) == {"song", "film", "book", "repos", "updated"}
     assert (site / "assets" / "live").is_dir()
 
 
@@ -150,3 +151,44 @@ def test_book_that_left_currently_reading_shows_as_finished(site, capsys):
     stored = load_state(site / "data" / "state.json")["book"]
     assert stored["finished"] is True and stored["page"] is None
     assert "::warning::book" not in capsys.readouterr().err  # finishing a book is not a failure
+
+
+def test_source_quiet_for_a_week_is_reported(site, capsys, monkeypatch, tmp_path):
+    # A scraper that breaks quietly keeps its last value; this is how anyone finds out.
+    state_path = site / "data" / "state.json"
+    state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
+    state["updated"] = {"book": "2026-10-26"}
+    state_path.write_text(json.dumps(state), encoding="utf-8")
+    summary = tmp_path / "summary.md"
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+
+    def boom():
+        raise RuntimeError("page changed")
+
+    build(site, sources(book=boom), get=fake_get, today="2026-11-05")
+    assert "::warning::book has not updated for 10 days" in capsys.readouterr().err
+    assert "| book | 2026-10-26 | 10 |" in summary.read_text(encoding="utf-8")
+
+
+def test_no_summary_when_every_source_is_fresh(site, monkeypatch, tmp_path):
+    summary = tmp_path / "summary.md"
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+    build(site, sources(), get=fake_get, today="2026-11-05")
+    assert not summary.exists()
+
+
+def test_stale_sources_are_handed_to_the_alert_job(site, monkeypatch, tmp_path):
+    # The workflow fails a job after the deploy when this output is set, so GitHub emails.
+    state_path = site / "data" / "state.json"
+    state_path.write_text(json.dumps({"updated": {"book": "2026-10-26", "film": "2026-10-20"}}), encoding="utf-8")
+    output = tmp_path / "output.txt"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    build(site, sources(book=boom, film=boom), get=fake_get, today="2026-11-05")
+    assert output.read_text(encoding="utf-8") == "stale=film book\n"
+
+
+def test_no_output_when_every_source_is_fresh(site, monkeypatch, tmp_path):
+    output = tmp_path / "output.txt"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    build(site, sources(), get=fake_get, today="2026-11-05")
+    assert not output.exists()
