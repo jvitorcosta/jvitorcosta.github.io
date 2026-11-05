@@ -10,12 +10,12 @@ from urllib.parse import urlparse
 from homepage.content import Content
 
 ARROW = '<span aria-hidden="true">▶</span> '  # decoration before every section title
-ICONS = "assets/icons"  # simple-icons 11.14.0, vendored
+ICONS = "assets/icons"  # round app badges drawn from simple-icons 11.14.0 glyphs
 # platform: (display name, brand colour of the round profile icon)
 PLATFORMS = {
-    "spotify": ("Spotify", "#1db954"),
+    "spotify": ("Spotify", "#121212"),
     "letterboxd": ("Letterboxd", "#202830"),
-    "goodreads": ("Goodreads", "#553b08"),
+    "goodreads": ("Goodreads", "#382110"),
     "strava": ("Strava", "#fc4c02"),
 }
 
@@ -74,7 +74,7 @@ class Page:
     def go(self, platform: str) -> str:
         """Round brand icon at the end of a row, linking to Vitor's profile there."""
         name, colour = PLATFORMS[platform]
-        img = f'<img src="{ICONS}/{platform}.svg" alt="" width="17" height="17">'
+        img = f'<img src="{ICONS}/{platform}.svg" alt="" width="40" height="40">'
         link = safe_url(self.c.links.get(platform, ""))
         if not link:
             return f'<span class="go" style="background:{colour}" aria-hidden="true">{img}</span>'

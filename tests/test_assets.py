@@ -119,14 +119,15 @@ def _rule(selector_pattern: str) -> str:
 
 
 def test_brand_icons_contrast_with_their_circle():
-    """simple-icons SVGs are black; site.css inverts them to white only on the dark circles."""
-    from homepage.markup import PLATFORMS
+    """Each badge's main glyph colour reads on its own circle, which matches the fallback colour."""
+    from homepage.markup import ICONS, PLATFORMS
 
-    assert "invert" not in _rule(r"\.go img")
-    inverted = set(re.findall(r'\.go img\[src\$="/([\w-]+)\.svg"\]', css()))
     for platform, (_, circle) in PLATFORMS.items():
-        icon = "#ffffff" if platform in inverted else "#000000"
-        assert contrast(icon, circle) >= 3.0, f"{platform} icon on {circle}"
+        svg = (ROOT / ICONS / f"{platform}.svg").read_text(encoding="utf-8")
+        fills = re.findall(r'fill="(#[0-9a-f]{6})"', svg)
+        assert fills[0] == circle, f"{platform} circle"
+        assert contrast(fills[1], circle) >= 3.0, f"{platform} glyph on {circle}"
+    assert "invert" not in css()
 
 
 def test_language_toggle_name_contains_visible_text():
