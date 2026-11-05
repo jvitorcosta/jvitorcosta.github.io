@@ -107,8 +107,8 @@ def test_palette_and_language_buttons(tmp_path):
     html = render(tmp_path)
     for p, label in (("pocket", "Pocket"), ("night", "Night Menu"), ("nu", "Nu Purple")):
         assert f'<button type="button" data-palette="{p}" aria-label="{label}"' in html
-    assert ('<button type="button" data-lang-toggle aria-label="EN ▸PT, switch language">'
-            "EN ▸PT</button>") in html
+    assert ('<button type="button" data-lang-toggle aria-label="EN > PT, switch language">'
+            "EN > PT</button>") in html
 
 
 def test_profile_icons_link_to_profiles(tmp_path):
@@ -338,9 +338,9 @@ def test_pc_box_hand_written_text(tmp_path):
     assert "<span>my thesis</span>" in box  # falls back to the GitHub description
 
 
-def test_powered_by_strava_only_with_activity(tmp_path):
-    assert "Powered by Strava" in render(tmp_path)
-    assert "Powered by Strava" not in render(tmp_path, lv=live(activity=None))
+def test_no_powered_by_strava(tmp_path):
+    # The activity row is typed by hand, not fetched from Strava's API, so no API credit.
+    assert "Powered by" not in render(tmp_path)
 
 
 def test_work_section(tmp_path):
@@ -359,7 +359,7 @@ def test_no_external_image_sources(tmp_path):
 
 def test_language_toggle_label_contains_visible_text(tmp_path):
     html = render(tmp_path)
-    assert 'data-lang-toggle aria-label="EN ▸PT, switch language">EN ▸PT</button>' in html
+    assert 'data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>' in html
 
 
 def test_vendored_icons_are_plain_svgs():

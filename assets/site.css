@@ -297,7 +297,7 @@ a.mon:hover b { text-decoration: underline; }
 .pc .repo { display: flex; align-items: center; gap: 10px; border-bottom: 2px dotted var(--soft); }
 .pc .repo > :first-child {
   flex: 1; min-width: 0;
-  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  display: flex; flex-direction: column; justify-content: center; gap: 2px;
   min-height: 44px;
   padding: 10px 0;
   font-size: 15px;
@@ -305,7 +305,7 @@ a.mon:hover b { text-decoration: underline; }
   color: var(--ink);
   text-decoration: none;
 }
-.pc .repo > :first-child > span { font-size: 13px; font-weight: 400; text-align: right; }
+.pc .repo > :first-child > span { font-size: 13px; font-weight: 400; color: var(--ink); }
 .pc .repo > a:first-child:hover { text-decoration: underline; }
 .pc .try, .pc .more {
   display: inline-flex; align-items: center;

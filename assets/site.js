@@ -141,7 +141,7 @@
     root.lang = code;
     each("button[data-lang-toggle]", function (b) {
       // WCAG 2.5.3: the accessible name starts with the visible text.
-      var label = code === "pt" ? "PT ▸EN" : "EN ▸PT";
+      var label = code === "pt" ? "PT > EN" : "EN > PT";
       b.textContent = label;
       b.setAttribute("aria-label", label + (code === "pt" ? ", mudar idioma" : ", switch language"));
     });

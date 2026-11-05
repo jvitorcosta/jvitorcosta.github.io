@@ -116,13 +116,12 @@ def _top() -> str:
         for key, label, colour in PALETTES
     )
     return (f'<header class="top"><div class="sw" role="group" aria-label="Colours">{dots}</div>'
-            '<button type="button" data-lang-toggle aria-label="EN ▸PT, switch language">EN ▸PT</button>'
+            '<button type="button" data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>'
             "</header>")
 
 
 def _footer(p: Page, live: LiveData) -> str:
-    strava = f'{p.t("strava_credit")} · ' if live.activity is not None else ""
-    return f'<footer class="foot">{strava}{p.t("footer")}<br>{p.t("made_by")}</footer>'
+    return f'<footer class="foot">{p.t("footer")}<br>{p.t("made_by")}</footer>'
 
 
 def _json_ld(links: dict[str, str]) -> str:
