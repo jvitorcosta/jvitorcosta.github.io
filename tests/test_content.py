@@ -25,7 +25,7 @@ def test_loads_starting_party_in_order():
 def test_loads_links_jobs_and_activity():
     content = load_content(ROOT)
     assert content.links["letterboxd"] == "https://letterboxd.com/zubu/"
-    assert content.links["instagram"] == ""
+    assert content.links["instagram"] == "https://www.instagram.com/joaovpi/"
     assert [j.company for j in content.jobs] == ["Qubika", "Nubank", "EloGroup"]
     assert content.activity == Activity(
         "Ride", "🚴", "Night Ride", 5.0, 25, "12.1 km/h · 3 PRs", "2026-11-04", ""
