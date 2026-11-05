@@ -29,6 +29,12 @@ PALETTES = (("pocket", "Pocket", "Pocket", "#fbfaf4"),
             ("nu", "Nu Purple", "Roxo Nu", "#820ad1"))
 CASE_SLUG = re.compile(r"[a-z0-9][a-z0-9-]*")
 RESUME_CASE = "resume-as-code"
+# Applies a remembered palette before the stylesheet paints, so it never flashes; site.js
+# does the rest (buttons, system default) once it loads.
+EARLY_PALETTE = ('try{var p=localStorage.getItem("palette");'
+                 f'if(/^({"|".join(k for k, *_ in PALETTES)})$/.test(p)){{'
+                 'var h=document.documentElement;h.className="pal-"+p;'
+                 'h.setAttribute("data-pal",p)}}catch(e){}')
 TRAINER_LINKS = (("instagram", "Instagram"), ("github", "GitHub"),
                  ("linkedin", "LinkedIn"), ("email", "Email"))
 
@@ -180,6 +186,7 @@ def _head(p: Page) -> str:
 <meta property="og:image" content="{OG_IMAGE}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script>{EARLY_PALETTE}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS.replace("&", "&amp;")}">

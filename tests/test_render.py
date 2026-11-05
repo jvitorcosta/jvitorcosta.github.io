@@ -459,3 +459,15 @@ def test_footer_is_a_landmark_outside_main(tmp_path):
     html = render(tmp_path)
     assert html.index("</main>") < html.index('<footer class="foot">')
     assert html.index('<footer class="foot">') < html.index("</body>")
+
+
+def test_early_palette_script_runs_before_the_stylesheet(tmp_path):
+    head = render(tmp_path).split("</head>")[0]
+    m = re.search(r"<script>(.*?)</script>", head, re.S)
+    assert m and m.start() < head.index('<link rel="stylesheet" href="assets/site.css">')
+    script = m.group(1)
+    assert script.lstrip().startswith("try{") and "catch(e){}" in script
+    assert 'localStorage.getItem("palette")' in script
+    assert "pocket|night|nu" in script
+    assert '"pal-"+p' in script and 'setAttribute("data-pal",p)' in script
+    assert script.count("{") == script.count("}") and script.count("(") == script.count(")")
