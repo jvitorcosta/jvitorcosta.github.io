@@ -190,3 +190,47 @@ def test_spotify_cover_prefers_the_inline_image():
                        "cover": "https://i.scdn.co/image/a"}) == "https://i.scdn.co/image/a"
     assert _cover_src({"cover_data": "javascript:alert(1)", "cover": "http://x"}) == ""
     assert _cover_src({"cover": "https://i.scdn.co/image/a"}) == "https://i.scdn.co/image/a"
+
+
+FAKE_IMG = """
+function fakeImg(src) {
+  var a = src ? {src: src} : {};
+  return {hidden: false, onerror: null,
+    getAttribute: function (k) { return k in a ? a[k] : null; },
+    setAttribute: function (k, v) { a[k] = String(v); },
+    removeAttribute: function (k) { delete a[k]; }};
+}
+"""
+
+
+def _cover_after(initial: str, src: str, fail: bool) -> str:
+    # Runs the real setCover() from site.js on a fake <img>, optionally firing its error event.
+    source = js()
+    func = re.search(r"(?ms)^  function setCover\(.*?^  \}\n", source).group(0)
+    script = (FAKE_IMG + func + f"var img = fakeImg({json.dumps(initial)}); setCover(img, {json.dumps(src)});"
+              + ("if (img.onerror) img.onerror();" if fail else "")
+              + "process.stdout.write(JSON.stringify([img.getAttribute('src'), img.hidden]));")
+    return subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="needs node")
+def test_blocked_inline_cover_falls_back_to_the_saved_one():
+    saved, inline = "assets/live/abc.jpg", "data:image/jpeg;base64,/9j/AAA="
+    assert json.loads(_cover_after(saved, inline, fail=False)) == [inline, False]
+    assert json.loads(_cover_after(saved, inline, fail=True)) == [saved, False]
+    assert json.loads(_cover_after("", inline, fail=True))[1] is True  # nothing to fall back to: hide
+
+
+COPIED_PAGES = sorted([*ROOT.glob("projects/*.html"), ROOT / "privacy.html"])
+
+
+@pytest.mark.parametrize("page", COPIED_PAGES, ids=lambda p: p.name)
+def test_copied_pages_point_at_the_current_stylesheet(page):
+    # These pages come from curriculum-vitae with the site.css hash of the day they were copied.
+    # After a style change, re-copy them (tools/build_site.py --copy-to) or phones keep the old CSS.
+    html = page.read_text(encoding="utf-8")
+    if "http-equiv=\"refresh\"" in html:
+        return  # a redirect stub, no styles
+    from homepage.markup import versioned
+    current = versioned("assets/site.css").split("?v=")[1]
+    assert f"site.css?v={current}" in html, f"{page.name}: re-copy the case pages"
