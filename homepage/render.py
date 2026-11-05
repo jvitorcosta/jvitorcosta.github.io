@@ -27,12 +27,15 @@ PALETTES = (("pocket", "Pocket", "Pocket", "#fbfaf4"),
             ("nu", "Nu Purple", "Roxo Nu", "#820ad1"))
 CASE_SLUG = re.compile(r"[a-z0-9][a-z0-9-]*")
 RESUME_CASE = "resume-as-code"
-# Applies a remembered palette before the stylesheet paints, so it never flashes; site.js
+# Applies a remembered palette and language before the page paints, so neither flashes; site.js
 # does the rest (buttons, system default) once it loads.
 EARLY_PALETTE = ('try{var p=localStorage.getItem("palette");'
                  f'if(/^({"|".join(k for k, *_ in PALETTES)})$/.test(p)){{'
                  'var h=document.documentElement;h.className="pal-"+p;'
-                 'h.setAttribute("data-pal",p)}}catch(e){}')
+                 'h.setAttribute("data-pal",p)}}catch(e){}'
+                 # Same rule as site.js initialLang: stored choice, else the browser language.
+                 'var h=document.documentElement,l=(navigator.language||"").toLowerCase().indexOf("pt")?"en":"pt";'
+                 'try{var s=localStorage.getItem("lang");if(s=="en"||s=="pt")l=s}catch(e){}h.lang=l;')
 TRAINER_LINKS = (("instagram", "Instagram"), ("github", "GitHub"),
                  ("linkedin", "LinkedIn"), ("email", "Email"))
 

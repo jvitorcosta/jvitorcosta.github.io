@@ -473,6 +473,14 @@ def test_early_palette_script_runs_before_the_stylesheet(tmp_path):
     assert script.count("{") == script.count("}") and script.count("(") == script.count(")")
 
 
+def test_early_script_also_applies_the_language(tmp_path):
+    # A Portuguese visitor must not see English for a moment while site.js loads.
+    script = re.search(r"<script>(.*?)</script>", render(tmp_path).split("</head>")[0], re.S).group(1)
+    assert 'localStorage.getItem("lang")' in script
+    assert "navigator.language" in script and "h.lang=" in script
+    assert script.count("try{") == script.count("catch(e){}") == 2  # storage can throw on its own
+
+
 def test_page_requests_no_third_party_fonts(tmp_path):
     html = render(tmp_path)
     assert "googleapis" not in html and "gstatic" not in html
