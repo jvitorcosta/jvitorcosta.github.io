@@ -96,7 +96,7 @@ main { padding-top: 12px; padding-bottom: 28px; }
 /* The homepage footer sits after <main> (a contentinfo landmark); the column padding moves to it. */
 main:has(+ footer.foot) { padding-bottom: 0; }
 body > footer.foot { margin-top: 8px; padding-bottom: 28px; }
-body > header.top { padding-top: 12px; }
+body > header.top { display: flex; flex-wrap: wrap; padding-top: 12px; }
 main > header.top { padding: 0; }
 
 /* ---------- top bar: palette dots, language, back link ---------- */

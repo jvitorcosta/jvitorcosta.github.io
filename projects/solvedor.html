@@ -13,21 +13,24 @@
 <meta property="og:image" content="https://jvitorcosta.github.io/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try{var p=localStorage.getItem("palette");if(/^(pocket|night|nu)$/.test(p)){var h=document.documentElement;h.className="pal-"+p;h.setAttribute("data-pal",p)}}catch(e){}try{var h=document.documentElement,l=(navigator.language||"").toLowerCase().indexOf("pt")?"en":"pt";try{var s=localStorage.getItem("lang");if(s=="en"||s=="pt")l=s}catch(e){}h.lang=l}catch(e){}</script>
 <link rel="stylesheet" href="../assets/site.css">
 
 </head>
 <body>
 <header class="top">
 <a href="../index.html">&larr; Vitor</a>
-<span class="palettes">
-<button type="button" data-palette="pocket" aria-label="Pocket"></button>
-<button type="button" data-palette="night" aria-label="Night Menu"></button>
-<button type="button" data-palette="nu" aria-label="Nu Purple"></button>
+<span class="palettes" role="group" aria-label="Colours" data-aria-en="Colours" data-aria-pt="Cores">
+<button type="button" data-palette="pocket" aria-label="Pocket" data-aria-en="Pocket" data-aria-pt="Pocket"></button>
+<button type="button" data-palette="night" aria-label="Night Menu" data-aria-en="Night Menu" data-aria-pt="Menu Noturno"></button>
+<button type="button" data-palette="nu" aria-label="Nu Purple" data-aria-en="Nu Purple" data-aria-pt="Roxo Nu"></button>
 </span>
+<button type="button" data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>
 </header>
 <main>
 <div class="box">
 <article>
+<div lang="en">
 <h1>SolvedOR, teaching Operations Research by doing it</h1>
 <p class="meta">Bachelor thesis, Universidade Federal do Amazonas, 2023</p>
 <figure class="cover"><img src="images/solvedor/chart.png" alt="Feasible region of the Production Planning example in SolvedOR, with each constraint line, the direction the objective improves and the optimal point at (20, 20)"></figure>
@@ -44,6 +47,25 @@
 <p><strong>Stack:</strong> Python, Streamlit, Google OR-Tools, pyparsing, Plotly</p>
 <p><a class="btn" href="https://solvedor.streamlit.app">Try it live</a></p>
 <p><a href="https://github.com/jvitorcosta/or-solver-streamlit">View the code on GitHub</a></p>
+</div>
+<div lang="pt">
+<h1>SolvedOR, ensinando Pesquisa Operacional na prática</h1>
+<p class="meta">Trabalho de Conclusão de Curso, Universidade Federal do Amazonas, 2023</p>
+<figure class="cover"><img src="images/solvedor/chart.png" alt="Região viável do exemplo Production Planning no SolvedOR, com cada reta de restrição, a direção em que o objetivo melhora e o ponto ótimo em (20, 20)"></figure>
+<div class="embed" data-src="https://solvedor.streamlit.app/?embed=true" data-title="SolvedOR, ensinando Pesquisa Operacional na prática"><button type="button" class="btn">Rodar aqui</button><small>Carrega o app ao vivo nesta página. Se ninguém usou ele faz um tempo, ele leva uns 30 segundos pra acordar.</small></div>
+<h2>O problema</h2>
+<p>Os alunos de Engenharia de Produção da UFAM aprendem Pesquisa Operacional quase sempre no papel. Solvers existem, mas pedem código ou formatos rígidos, então os alunos gastam energia com sintaxe em vez de gastar com o modelo.</p>
+<h2>O que eu construí</h2>
+<p>Um app em Streamlit onde os alunos digitam um modelo de programação linear ou inteira na notação que o livro deles usa: uma função objetivo, as restrições e, se precisar, limites nas variáveis. Um parser que eu escrevi com pyparsing transforma esse texto num modelo pro Google OR-Tools, que resolve com GLOP os problemas lineares e com SCIP os inteiros. Quando algo tá errado, o erro diz em qual linha. Pra problemas com duas variáveis, o app desenha a região viável a partir das restrições do próprio aluno, com cada reta de restrição, a direção em que o objetivo melhora e o ponto ótimo. Uma galeria de exemplos ajuda os alunos a começar, e a interface inteira funciona em inglês e português.</p>
+<p><img alt="A área de trabalho do SolvedOR com o modelo Production Planning digitado na notação do livro e a solução: objetivo 1800 com product_a = 20, product_b = 20" src="images/solvedor/workspace.png" /></p>
+<p>A abordagem de ensino vem da Aprendizagem Ativa e da Aprendizagem Baseada em Problemas: os alunos aprendem modelando problemas reais eles mesmos, e não vendo outra pessoa resolver.</p>
+<h2>Resultado</h2>
+<p>Virou meu TCC em Engenharia de Produção. Quando os alunos testaram, 80% avaliaram montar um modelo no app como fácil ou muito fácil.</p>
+<p>Em 2026 eu voltei nele. Corrigi um bug em que problemas ilimitados apareciam como inviáveis, troquei um gráfico que só mostrava um único exemplo pela região viável de verdade e adicionei uma suíte com mais de 170 testes, incluindo execuções headless do app inteiro. O código e o fonte em LaTeX do artigo são open source, e o app tá no ar.</p>
+<p><strong>Stack:</strong> Python, Streamlit, Google OR-Tools, pyparsing, Plotly</p>
+<p><a class="btn" href="https://solvedor.streamlit.app">Testar ao vivo</a></p>
+<p><a href="https://github.com/jvitorcosta/or-solver-streamlit">Ver o código no GitHub</a></p>
+</div>
 </article>
 </div>
 <script>

@@ -165,7 +165,7 @@
       });
     });
 
-    // Only bilingual pages (the homepage) have the toggle; case pages stay in their own language.
+    // Pages with the language button (the homepage and translated case pages) follow the stored choice.
     var toggles = document.querySelectorAll("button[data-lang-toggle]");
     if (toggles.length) {
       applyLang(initialLang());

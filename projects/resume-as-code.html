@@ -13,21 +13,24 @@
 <meta property="og:image" content="https://jvitorcosta.github.io/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try{var p=localStorage.getItem("palette");if(/^(pocket|night|nu)$/.test(p)){var h=document.documentElement;h.className="pal-"+p;h.setAttribute("data-pal",p)}}catch(e){}try{var h=document.documentElement,l=(navigator.language||"").toLowerCase().indexOf("pt")?"en":"pt";try{var s=localStorage.getItem("lang");if(s=="en"||s=="pt")l=s}catch(e){}h.lang=l}catch(e){}</script>
 <link rel="stylesheet" href="../assets/site.css">
 
 </head>
 <body>
 <header class="top">
 <a href="../index.html">&larr; Vitor</a>
-<span class="palettes">
-<button type="button" data-palette="pocket" aria-label="Pocket"></button>
-<button type="button" data-palette="night" aria-label="Night Menu"></button>
-<button type="button" data-palette="nu" aria-label="Nu Purple"></button>
+<span class="palettes" role="group" aria-label="Colours" data-aria-en="Colours" data-aria-pt="Cores">
+<button type="button" data-palette="pocket" aria-label="Pocket" data-aria-en="Pocket" data-aria-pt="Pocket"></button>
+<button type="button" data-palette="night" aria-label="Night Menu" data-aria-en="Night Menu" data-aria-pt="Menu Noturno"></button>
+<button type="button" data-palette="nu" aria-label="Nu Purple" data-aria-en="Nu Purple" data-aria-pt="Roxo Nu"></button>
 </span>
+<button type="button" data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>
 </header>
 <main>
 <div class="box">
 <article>
+<div lang="en">
 <h1>My resume, as code</h1>
 <p class="meta">Personal project, 2026</p>
 <h2>The problem</h2>
@@ -40,6 +43,21 @@
 <p>Tailoring a resume now starts from one trusted record instead of a pile of old copies. This website is built from the same record, so it never goes stale. Personal data, like my phone number and the companies I apply to, stays out of the repository.</p>
 <p><strong>Stack:</strong> Python, uv, pandoc, Typst, pytest, Claude</p>
 
+</div>
+<div lang="pt">
+<h1>Meu currículo, como código</h1>
+<p class="meta">Projeto pessoal, 2026</p>
+<h2>O problema</h2>
+<p>Eu tinha umas vinte versões do meu currículo no Google Docs, cada uma adaptada pra uma vaga diferente, cada uma desatualizada do seu próprio jeito. Adaptar o currículo pra uma vaga nova significava reescrever os tópicos na mão, e as versões foram se afastando aos poucos até se contradizerem.</p>
+<h2>O que eu construí</h2>
+<p>Um repositório onde toda a minha carreira vive em Markdown puro: cada cargo, cada conquista com algumas formas de escrever já aprovadas, habilidades, formação e projetos pessoais. Uma pequena CLI em Python faz o trabalho mecânico. Ela cria uma pasta por candidatura, gera arquivos PDF e Word limpos, de uma coluna só, com pandoc e Typst, e mantém um controle de em que pé está cada candidatura.</p>
+<p>Eu adapto cada currículo com o Claude, seguindo uma regra escrita no próprio repositório: toda afirmação precisa ter origem no registro mestre. Reescrever e reordenar pode; números, ferramentas ou cargos novos, não. Quando uma vaga pede algo que eu nunca fiz, isso entra como lacuna na lista em vez de ser preenchido.</p>
+<p>Antes de construir, passei por todos os pontos em que meus currículos antigos discordavam e resolvi cada fato, um por um, então o registro mestre é a versão que eu consigo defender numa entrevista.</p>
+<h2>Resultado</h2>
+<p>Adaptar um currículo agora começa de um registro confiável, e não de uma pilha de cópias antigas. Este site é gerado a partir do mesmo registro, então nunca fica desatualizado. Dados pessoais, como meu telefone e as empresas pra onde eu me candidato, ficam fora do repositório.</p>
+<p><strong>Stack:</strong> Python, uv, pandoc, Typst, pytest, Claude</p>
+
+</div>
 </article>
 </div>
 </main>

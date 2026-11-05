@@ -13,21 +13,24 @@
 <meta property="og:image" content="https://jvitorcosta.github.io/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try{var p=localStorage.getItem("palette");if(/^(pocket|night|nu)$/.test(p)){var h=document.documentElement;h.className="pal-"+p;h.setAttribute("data-pal",p)}}catch(e){}try{var h=document.documentElement,l=(navigator.language||"").toLowerCase().indexOf("pt")?"en":"pt";try{var s=localStorage.getItem("lang");if(s=="en"||s=="pt")l=s}catch(e){}h.lang=l}catch(e){}</script>
 <link rel="stylesheet" href="../assets/site.css">
 
 </head>
 <body>
 <header class="top">
 <a href="../index.html">&larr; Vitor</a>
-<span class="palettes">
-<button type="button" data-palette="pocket" aria-label="Pocket"></button>
-<button type="button" data-palette="night" aria-label="Night Menu"></button>
-<button type="button" data-palette="nu" aria-label="Nu Purple"></button>
+<span class="palettes" role="group" aria-label="Colours" data-aria-en="Colours" data-aria-pt="Cores">
+<button type="button" data-palette="pocket" aria-label="Pocket" data-aria-en="Pocket" data-aria-pt="Pocket"></button>
+<button type="button" data-palette="night" aria-label="Night Menu" data-aria-en="Night Menu" data-aria-pt="Menu Noturno"></button>
+<button type="button" data-palette="nu" aria-label="Nu Purple" data-aria-en="Nu Purple" data-aria-pt="Roxo Nu"></button>
 </span>
+<button type="button" data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>
 </header>
 <main>
 <div class="box">
 <article>
+<div lang="en">
 <h1>Car Cyberdeck, a taste of Pokémon nostalgia on my dashboard</h1>
 <p class="meta">Side project, 2026</p>
 <h2>What it is</h2>
@@ -38,6 +41,19 @@
 <p>It lives in a moving car on a phone hotspot that drops all the time, so it has to fail safely. Updates go over WiFi, and if a new version crashes early the deck rolls back to the last good one. Watchdogs and back-offs keep it from hanging when a link drops, and the requests that change the lights are signed, so other devices on the hotspot can't take over.</p>
 <p><strong>Stack:</strong> C++17, Arduino, PlatformIO, ESP32 and ESP32-S3, Bluetooth LE, Garmin Connect IQ, host-side unit tests, CI, tagged releases</p>
 <p><a href="https://github.com/jvitorcosta/car-cyberdeck">View the code on GitHub</a></p>
+</div>
+<div lang="pt">
+<h1>Car Cyberdeck, um gostinho de nostalgia Pokémon no meu painel</h1>
+<p class="meta">Projeto pessoal, 2026</p>
+<h2>O que é</h2>
+<p>Uma tela touch ESP32 baratinha dentro de uma carcaça de Game Boy Advance no painel do carro. Ela mostra a música que tá tocando no Spotify como uma batalha Pokémon das antigas, no estilo Game Boy. Um Pokémon aleatório anda pela barra de HP enquanto a música toca, e a letra sincronizada aparece na caixa de diálogo, inclusive em japonês e chinês.</p>
+<h2>Como cresceu</h2>
+<p>Uma segunda tela assumiu as luzes do carro. Ela comanda os controladores de LED de dentro e de fora por Bluetooth, com um painel estilo terminal mostrando o relógio, o clima e o tempo de viagem. No modo música, as luzes seguem a cor de cada música. Depois vieram mais jeitos de controlar: Siri, um controle de Xbox e um appzinho no meu relógio Garmin. Uma página no celular com QR code funciona como controle remoto, e tudo se comunica pelo hotspot do celular, sem servidor.</p>
+<h2>A parte em que eu tomo cuidado</h2>
+<p>Ele vive num carro em movimento, ligado num hotspot de celular que cai toda hora, então precisa falhar de forma segura. As atualizações chegam por WiFi, e se uma versão nova der crash logo no começo, o deck volta pra última versão boa. Watchdogs e back-offs evitam que ele trave quando uma conexão cai, e os comandos que mudam as luzes são assinados, então outros aparelhos no hotspot não conseguem assumir o controle.</p>
+<p><strong>Stack:</strong> C++17, Arduino, PlatformIO, ESP32 e ESP32-S3, Bluetooth LE, Garmin Connect IQ, testes unitários no host, CI, releases com tag</p>
+<p><a href="https://github.com/jvitorcosta/car-cyberdeck">Ver o código no GitHub</a></p>
+</div>
 </article>
 </div>
 </main>
