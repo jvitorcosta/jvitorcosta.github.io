@@ -71,6 +71,16 @@
     }
   }
 
+  // The endpoint inlines the cover so the browser never calls Spotify's CDN; only JPEG/PNG pass.
+  function coverSrc(data) {
+    var inline = data.cover_data;
+    if (typeof inline === "string" &&
+        (inline.indexOf("data:image/jpeg;base64,") === 0 || inline.indexOf("data:image/png;base64,") === 0)) {
+      return inline;
+    }
+    return safeHttps(data.cover);
+  }
+
   function spotifyLabel(row) {
     var label = row.querySelector('[data-field="label"]');
     if (!label) return;
@@ -97,7 +107,7 @@
       else link.removeAttribute("href");
     }
     var cover = row.querySelector('[data-field="cover"]');
-    var src = safeHttps(data.cover);
+    var src = coverSrc(data);
     if (cover) {
       if (src) {
         cover.setAttribute("src", src);
