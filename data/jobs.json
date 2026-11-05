@@ -1,5 +1,20 @@
 [
-  {"title": "Senior AI/ML Engineer", "company": "Qubika", "start": "Feb 2026", "end": "Jul 2026"},
-  {"title": "AI/ML Software Engineer", "company": "Nubank", "start": "Sep 2022", "end": "Jul 2026"},
-  {"title": "Data Science and Engineering Intern", "company": "EloGroup", "start": "Jun 2021", "end": "Sep 2022"}
+  {
+    "title": "Senior AI/ML Engineer",
+    "company": "Qubika",
+    "start": "Feb 2026",
+    "end": "Jul 2026"
+  },
+  {
+    "title": "AI/ML Software Engineer",
+    "company": "Nubank",
+    "start": "Sep 2022",
+    "end": "Jul 2026"
+  },
+  {
+    "title": "Data Science and Engineering Intern",
+    "company": "EloGroup",
+    "start": "Jun 2021",
+    "end": "Sep 2022"
+  }
 ]
