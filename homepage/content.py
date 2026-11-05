@@ -39,6 +39,7 @@ class Content:
     party: list[PartyMember] = field(default_factory=list)
     jobs: list[Job] = field(default_factory=list)
     activity: Activity | None = None
+    pc_box: dict[str, dict[str, str]] = field(default_factory=dict)
 
 
 def _toml(path: Path) -> dict:
@@ -76,4 +77,8 @@ def load_content(root: Path) -> Content:
         jobs=jobs,
         activity=from_dict(Activity, {"distance_km": None, "url": "", **activity})
         if activity else None,
+        pc_box={
+            name: {lang: str(text[lang]) for lang in LANGS if text.get(lang)}
+            for name, text in _toml(data / "pc_box.toml").items()
+        },
     )

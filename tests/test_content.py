@@ -73,3 +73,21 @@ def test_both_languages_have_the_same_keys():
     assert strings["en"]["page_title"] == (
         "Vitor Pinheiro · AI engineer in Manaus who builds gadgets for his car, watch and city"
     )
+
+
+def test_pc_box_texts_start_empty():
+    assert load_content(ROOT).pc_box == {}
+
+
+def test_pc_box_texts_are_loaded(tmp_path):
+    root = _copy_data(tmp_path)
+    (root / "data" / "pc_box.toml").write_text(
+        '[solvedor]\nen = "my thesis"\npt = "meu TCC"\n', encoding="utf-8"
+    )
+    assert load_content(root).pc_box == {"solvedor": {"en": "my thesis", "pt": "meu TCC"}}
+
+
+def test_missing_pc_box_file_is_empty(tmp_path):
+    root = _copy_data(tmp_path)
+    (root / "data" / "pc_box.toml").unlink(missing_ok=True)
+    assert load_content(root).pc_box == {}

@@ -5,7 +5,7 @@ from pathlib import Path
 
 from homepage.content import Content, Job, PartyMember
 from homepage.model import Activity, Book, Film, LiveData, Repo, Song
-from homepage.render import clip, render_home
+from homepage.render import clip, render_home, safe_url
 
 ROOT = Path(__file__).resolve().parents[1]
 STRINGS = tomllib.loads((ROOT / "data" / "strings.toml").read_text(encoding="utf-8"))
@@ -138,10 +138,26 @@ def test_missing_live_value_omits_row(tmp_path):
     assert "<li></li>" not in html
 
 
-def test_all_rows_missing_omits_the_box(tmp_path):
+def test_all_rows_missing_hides_the_box(tmp_path):
     html = render(tmp_path, lv=LiveData(None, None, None, None))
-    assert 'id="right-now"' not in html
-    assert 'class="menu"' not in html
+    # only the hidden Spotify shell is left, so the box stays hidden until JS fills it
+    assert '<section class="box" id="right-now" hidden>' in html
+    assert len(re.findall(r"<li[ >]", html)) == 1
+
+
+def test_spotify_shell_when_no_song(tmp_path):
+    html = render(tmp_path, lv=live(song=None))
+    row = re.search(r'<li id="spotify-row"[^>]*>.*?</li>', html, re.S).group(0)
+    head = row.split(">", 1)[0]
+    assert " hidden" in head
+    assert ('data-endpoint="https://spotify-now-playing-ashen-two.vercel.app/api/'
+            'now-playing.json"') in head
+    for field in ("cover", "title", "artist", "label", "badge"):
+        assert f'data-field="{field}"' in row
+    assert "src=" not in row.split('class="go"')[0]
+    assert 'data-field="title"></span>' in row
+    assert 'data-field="artist"></span>' in row
+    assert '<section class="box" id="right-now">' in html
 
 
 def test_spotify_row(tmp_path):
@@ -234,9 +250,10 @@ def test_party_links(tmp_path):
 def test_missing_party_repo_is_skipped_with_warning(tmp_path, capsys):
     party = PARTY + [member("ghost"), member("explicit", url="https://example.com/e")]
     html = render(tmp_path, c=content(party=party))
-    out = capsys.readouterr().out
-    assert "::warning::party repo ghost not found" in out
-    assert "explicit" not in out
+    captured = capsys.readouterr()
+    assert "::warning::party repo ghost not found" in captured.err
+    assert captured.out == ""
+    assert "explicit" not in captured.err
     assert "ghost" not in html
     assert 'href="https://example.com/e"' in html
 
@@ -269,8 +286,56 @@ def test_activity_without_distance_shows_duration(tmp_path):
     act = Activity("WeightTraining", "🏋️", "Leg day", None, 50, "", "2026-11-03",
                    "https://www.strava.com/activities/1")
     html = render(tmp_path, lv=live(activity=act))
-    assert '<a class="row" href="https://www.strava.com/activities/1"' in html
+    assert '<a class="row"' not in html.split('id="party"')[0].split("Leg day")[0][-300:]
     assert "Leg day · 50 min" in html
+    link = re.search(r'<a class="strava-link" href="([^"]+)">(.*?)</a>', html).groups()
+    assert link[0] == "https://www.strava.com/activities/1"
+    assert link[1] == '<span lang="en">View on Strava</span><span lang="pt">View on Strava</span>'
+    assert "Leg day" not in link[1]
+
+
+def test_activity_row_is_never_a_link_and_falls_back_to_profile(tmp_path):
+    act = Activity("Run", "🏃", "Morning Run", 5.0, 30, "", "2026-11-03",
+                   "https://www.strava.com/activities/2")
+    html = render(tmp_path, lv=live(activity=act))
+    row = html[html.index("Morning Run") - 400:html.index("Morning Run")]
+    assert '<div class="row">' in row and '<a class="row"' not in row
+    profile = "https://www.strava.com/athletes/1"
+    html = render(tmp_path, c=content(links={**LINKS, "strava": profile}))
+    assert f'<a class="strava-link" href="{profile}">' in html
+    assert 'class="strava-link"' not in render(tmp_path)  # no url, no profile
+
+
+def test_unsafe_urls_are_not_links(tmp_path):
+    bad = "javascript:alert(1)"
+    song = Song("S", "A", "c.jpg", bad, True)
+    film = Film("F", "2026", None, False, "2026-11-05", "", "p.jpg", " JavaScript:alert(1)")
+    party = PARTY + [member("evil", url=bad)]
+    repos = REPOS + [Repo("x", "d", bad, bad, "")]
+    links = {**LINKS, "letterboxd": "data:text/html,hi", "github": bad}
+    html = render(tmp_path, c=content(party=party, links=links),
+                  lv=live(song=song, film=film), repos=repos)
+    assert "javascript:" not in html.lower()
+    assert "data:text" not in html
+    assert 'href=""' not in html
+
+
+def test_safe_url():
+    assert safe_url("https://x.y/z") == "https://x.y/z"
+    assert safe_url("http://x.y") == "http://x.y"
+    assert safe_url("mailto:a@b.c") == "mailto:a@b.c"
+    assert safe_url("projects/a.html") == "projects/a.html"
+    assert safe_url("assets/live/c.jpg") == "assets/live/c.jpg"
+    for bad in ("javascript:alert(1)", "java	script:x", "data:x", "vbscript:x", "//evil.com", ""):
+        assert safe_url(bad) == "", bad
+
+
+def test_pc_box_hand_written_text(tmp_path):
+    texts = {"ask-vitor": {"en": "a chatbot that only knows my CV", "pt": "um chatbot que só conhece meu CV"}}
+    box = section(render(tmp_path, c=content(pc_box=texts)), "pc-box", "work")
+    assert ('<span><span lang="en">a chatbot that only knows my CV</span>'
+            '<span lang="pt">um chatbot que só conhece meu CV</span></span>') in box
+    assert "<span>my thesis</span>" in box  # falls back to the GitHub description
 
 
 def test_powered_by_strava_only_with_activity(tmp_path):
