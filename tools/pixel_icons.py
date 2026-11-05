@@ -1,6 +1,6 @@
-"""Hand-drawn 20x20 pixel badges. '.' is the tile background; other letters map to colours.
+"""Hand-drawn pixel art: 20x20 app badges and 32x20 party tiles. '.' is the background.
 
-Run: python tools/pixel_icons.py assets/icons
+Run: python tools/pixel_icons.py assets/icons assets/party
 """
 import sys
 from pathlib import Path
@@ -94,23 +94,55 @@ ICONS = {
 }
 
 
-def svg(colours: dict[str, str], grid: str, title: str) -> str:
+# Party tiles are wide (about 150x96 on a phone), so they get a 32x20 grid.
+PARTY = {
+    "open-radars-manaus": ({".": "#ead9fb", "g": "#5f5e5a", "k": "#2a0845", "r": "#d63333",
+                            "y": "#ffb703", "a": "#444441", "c": "#40bcf4", "w": "#ffffff"}, """
+................................
+................................
+...y............................
+....y....kkkkkkkkkk.............
+.......rrkkkkkkkkkk.............
+.yyy...rrkkkkkkkkkk.............
+.......rrkkkkkkkkkk.............
+....y....kkkkkkkkkk.............
+...y...........gg...............
+...............gg...............
+...............gg...............
+...............gg...............
+...............gg.......cccc....
+...............gg.....rrrrrrrr..
+...............gg....rrrrrrrrrr.
+...............gg.....kk....kk..
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aawwwwaaaawwwwaaaawwwwaaaawwwwaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"""),
+}
+
+
+def svg(colours: dict[str, str], grid: str, title: str, width: int = 20, height: int = 20) -> str:
     rows = grid.strip("\n").splitlines()
-    assert len(rows) == 20 and all(len(r) == 20 for r in rows), title
+    assert len(rows) == height and all(len(r) == width for r in rows), title
     rects = []
     for y, row in enumerate(rows):
         x = 0
-        while x < 20:  # merge runs of the same colour into one rect
+        while x < width:  # merge runs of the same colour into one rect
             end = x
-            while end < 20 and row[end] == row[x]:
+            while end < width and row[end] == row[x]:
                 end += 1
             if row[x] != ".":
                 rects.append(f'<rect x="{x}" y="{y}" width="{end - x}" height="1" fill="{colours[row[x]]}"/>')
             x = end
-    return (f'<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">'
-            f'<title>{title}</title><rect width="20" height="20" fill="{colours["."]}"/>{"".join(rects)}</svg>\n')
+    return (f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">'
+            f'<title>{title}</title><rect width="{width}" height="{height}" fill="{colours["."]}"/>'
+            f'{"".join(rects)}</svg>\n')
 
 
-out = Path(sys.argv[1])
+icons_dir = Path(sys.argv[1])
 for name, (colours, grid) in ICONS.items():
-    (out / f"{name}.svg").write_text(svg(colours, grid, name.capitalize()), encoding="utf-8", newline="\n")
+    (icons_dir / f"{name}.svg").write_text(svg(colours, grid, name.capitalize()), encoding="utf-8", newline="\n")
+if len(sys.argv) > 2:
+    party_dir = Path(sys.argv[2])
+    for name, (colours, grid) in PARTY.items():
+        (party_dir / f"{name}.svg").write_text(svg(colours, grid, name, 32, 20), encoding="utf-8", newline="\n")

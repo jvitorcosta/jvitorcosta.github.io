@@ -26,6 +26,7 @@ blurb_pt = "Mostradores de Pokémon que eu desenho pro meu Garmin"
 [[member]]
 repo = "open-radars-manaus"
 tag = "CITY"
+picture = "assets/party/open-radars-manaus.svg"
 emoji = "📍"
 name_en = "Open Radars"
 name_pt = "Open Radars"
