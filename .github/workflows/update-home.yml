@@ -1,14 +1,15 @@
 name: Update homepage
 
+# Builds the page and publishes it straight to GitHub Pages. Nothing is pushed to main (the
+# protect-main ruleset only takes PRs): what the build must remember between runs (data/state.json
+# and the downloaded covers in assets/live) lives on the unprotected `state` branch.
+
 on:
   schedule:
     - cron: "0 9 * * *" # 05:00 in Manaus
   workflow_dispatch:
   push:
     branches: [main]
-
-permissions:
-  contents: write
 
 concurrency:
   group: update-home
@@ -17,20 +18,90 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # only for pushing to the state branch
+    outputs:
+      stale: ${{ steps.build.outputs.stale }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Fetch the state branch
+        # A missing branch means a first build: start empty and create it on save. A branch that
+        # exists but cannot be fetched fails the job, so a page built from empty state never deploys.
+        run: |
+          set +e
+          git ls-remote --exit-code --heads origin state > /dev/null
+          found=$?
+          set -e
+          if [ "$found" -eq 0 ]; then
+            git fetch --depth 1 origin state
+            git worktree add -B state .state FETCH_HEAD
+          elif [ "$found" -eq 2 ]; then
+            echo "no state branch yet, starting empty"
+            git worktree add --orphan -b state .state
+          else
+            echo "::error::could not reach the state branch"
+            exit 1
+          fi
+
+      - name: Restore saved state
+        run: |
+          mkdir -p data assets/live
+          cp .state/data/state.json data/state.json 2>/dev/null || true
+          cp -r .state/assets/live/. assets/live/ 2>/dev/null || true
 
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
 
       - name: Build the homepage
+        id: build
         run: uv run --locked --no-dev python -m homepage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: stefanzweifel/git-auto-commit-action@d0b01107b5db882071f96de5dd4b54961ea93f4c # v7.2.1
+      - name: Save state
+        run: |
+          mkdir -p .state/data .state/assets
+          cp data/state.json .state/data/state.json
+          rm -rf .state/assets/live && cp -r assets/live .state/assets/live
+          cd .state
+          git add -A
+          if git diff --cached --quiet; then echo "state unchanged"; exit 0; fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "chore: refresh state"
+          git push origin state
+
+      - name: Drop the state checkout from the site
+        run: rm -rf .state
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          commit_message: "chore: refresh homepage"
-          file_pattern: index.html data/state.json assets/live/*
-          commit_user_name: github-actions[bot]
-          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
-          commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  # A source quiet for over a week turns the run red, so GitHub emails. It runs after the deploy,
+  # so the page still updates with everything else.
+  alert:
+    needs: [build, deploy]
+    if: needs.build.outputs.stale != ''
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Fail on sources that stopped updating
+        env:
+          STALE: ${{ needs.build.outputs.stale }}
+        run: |
+          echo "::error::not updated for over a week: $STALE (see the build job summary)"
+          exit 1
