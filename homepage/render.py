@@ -118,7 +118,8 @@ def _trainer(p: Page) -> str:
     nav = f'<nav class="links">{links}</nav>' if links else ""
     return (f'<section class="box" id="trainer"><div class="trainer">'
             '<img class="ava" src="assets/avatar.png" alt="" width="72" height="72"><div>'
-            f'<h1 class="px name">{p.t("greeting")}</h1>'
+            f'<h1 class="px name">{p.t("greeting")} '
+            f'<span class="zh" lang="zh-Hans">{esc(p.c.strings["en"]["chinese_name"])}</span></h1>'
             f'<p class="small">{p.t("intro")}</p>'
             f'<p class="motto" lang="es">“{esc(p.c.strings["en"]["motto"])}”</p></div></div>{nav}</section>')
 

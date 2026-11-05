@@ -197,6 +197,12 @@ header.top > a:hover { text-decoration: underline; }
   border: 3px solid var(--line);
 }
 h1.name { margin: 0 0 8px; font-size: 14px; line-height: 1.5; }
+/* The pixel font has no Chinese glyphs: use a system CJK font, kept on one line. */
+h1.name .zh {
+  display: inline-block; white-space: nowrap;
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
+  font-size: 16px; font-weight: 700; letter-spacing: 0.1em;
+}
 
 /* Chunky buttons */
 .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
