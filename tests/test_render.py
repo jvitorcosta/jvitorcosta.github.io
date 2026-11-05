@@ -514,3 +514,11 @@ def test_asset_version_follows_the_file_content():
     from homepage.markup import SITE_ROOT, versioned
     data = (SITE_ROOT / "assets" / "site.css").read_bytes()
     assert versioned("assets/site.css") == "assets/site.css?v=" + hashlib.sha256(data).hexdigest()[:8]
+
+
+def test_trainer_card_shows_the_full_name_and_the_chinese_name(tmp_path):
+    html = render(tmp_path)
+    name = re.search(r'<h1 class="px name">(.*?)</h1>', html).group(1)
+    assert name.count("VITOR PINHEIRO") == 2  # English and Portuguese spans
+    # Written once, marked as Chinese so it is read out and drawn with a font that has the glyphs.
+    assert name.count('<span class="zh" lang="zh-Hans">白玉龙</span>') == 1
