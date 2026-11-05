@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from homepage.content import Content
 
 ARROW = '<span aria-hidden="true">▶</span> '  # decoration before every section title
-ICONS = "assets/icons"  # round app badges drawn from simple-icons 11.14.0 glyphs
+ICONS = "assets/icons"  # pixel app tiles, drawn by tools/pixel_icons.py
 # platform: (display name, brand colour of the round profile icon)
 PLATFORMS = {
     "spotify": ("Spotify", "#121212"),
@@ -72,7 +72,7 @@ class Page:
         })
 
     def go(self, platform: str) -> str:
-        """Round brand icon at the end of a row, linking to Vitor's profile there."""
+        """Pixel brand tile at the end of a row, linking to Vitor's profile there."""
         name, colour = PLATFORMS[platform]
         img = f'<img src="{ICONS}/{platform}.svg" alt="" width="40" height="40">'
         link = safe_url(self.c.links.get(platform, ""))
