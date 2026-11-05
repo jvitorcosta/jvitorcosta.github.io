@@ -1,0 +1,344 @@
+/* jvitorcosta.github.io: Game Boy menu look, shared by the homepage and the case-study pages.
+   Palettes live on <html> (.pal-pocket, .pal-night, .pal-nu); site.js picks one and marks it
+   with data-pal. Every text pair below passes WCAG AA (tests/test_assets.py checks them). */
+
+.pal-pocket { --bg:#d7d3c8; --box:#fbfaf4; --ink:#1f2a44; --line:#1f2a44; --shadow:#9aa3b5; --soft:#dfe2ea; --accent:#d63333; --hp:#3fa34d; --ink-on-bg:#1f2a44; --strava:#c43d00; --strava-decoration:underline; color-scheme:light; }
+.pal-night { --bg:#141220; --box:#221d33; --ink:#f2eefc; --line:#7a6ea6; --shadow:#000000; --soft:#3a3354; --accent:#ff8000; --hp:#00e054; --ink-on-bg:#f2eefc; --strava:#fc5200; --strava-decoration:none; color-scheme:dark; }
+.pal-nu { --bg:#820ad1; --box:#faf5ff; --ink:#2a0845; --line:#2a0845; --shadow:#4a0478; --soft:#ead9fb; --accent:#820ad1; --hp:#ffb703; --ink-on-bg:#ffffff; --strava:#c43d00; --strava-decoration:underline; color-scheme:light; }
+
+/* No JS yet (or none at all): a light-mode phone gets Pocket. site.js sets data-pal, which ends this. */
+@media (prefers-color-scheme: light) {
+  html:not([data-pal]) { --bg:#d7d3c8; --box:#fbfaf4; --ink:#1f2a44; --line:#1f2a44; --shadow:#9aa3b5; --soft:#dfe2ea; --accent:#d63333; --hp:#3fa34d; --ink-on-bg:#1f2a44; --strava:#c43d00; --strava-decoration:underline; color-scheme:light; }
+}
+
+/* ---------- base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+/* Bilingual spans: show the page language only. Descendant selectors, so <html> itself never hides. */
+html[lang=pt] [lang=en], html[lang=en] [lang=pt] { display: none; }
+
+html { background: var(--bg); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink-on-bg);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+img { max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+
+.px, .h, .k, .lv, .badge, .ava, [data-lang-toggle] {
+  font-family: "Press Start 2P", ui-monospace, monospace;
+  font-weight: 400;
+  letter-spacing: .5px;
+}
+.sr {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* One centred column: full width on a phone (from 360px), at most 480px on a desktop. */
+main, body > header.top {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+main { padding-top: 12px; padding-bottom: 28px; }
+body > header.top { padding-top: 12px; }
+main > header.top { padding: 0; }
+
+/* ---------- top bar: palette dots, language, back link ---------- */
+.top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 0 0 10px; }
+.sw, .palettes { display: flex; gap: 2px; }
+
+/* A 26px dot inside a 44px tap target. */
+[data-palette] {
+  position: relative;
+  width: 44px; height: 44px;
+  padding: 9px;
+  border: 0;
+  border-radius: 50%;
+  background-clip: content-box !important;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+[data-palette=pocket] { background-color: #fbfaf4; }
+[data-palette=night] { background-color: #221d33; }
+[data-palette=nu] { background-color: #820ad1; }
+[data-palette]::before, [data-palette][aria-pressed=true]::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid var(--ink-on-bg);
+}
+[data-palette]::before { inset: 9px; }
+[data-palette][aria-pressed=true]::after { inset: 2px; }
+[data-palette]:focus-visible { outline: 3px solid var(--ink-on-bg); outline-offset: 0; }
+
+[data-lang-toggle] {
+  min-width: 44px; min-height: 44px;
+  padding: 0 10px;
+  font-size: 10px;
+  color: var(--ink-on-bg);
+  background: transparent;
+  border: 3px solid var(--ink-on-bg);
+  border-radius: 4px;
+  cursor: pointer;
+}
+[data-lang-toggle]:focus-visible { outline-color: var(--ink-on-bg); }
+
+header.top > a {
+  display: inline-flex; align-items: center;
+  min-height: 44px;
+  padding: 0 4px;
+  color: var(--ink-on-bg);
+  font-weight: 700;
+  text-decoration: none;
+}
+header.top > a:hover { text-decoration: underline; }
+
+/* ---------- boxes ---------- */
+.box {
+  margin: 0 0 16px;
+  padding: 14px;
+  background: var(--box);
+  color: var(--ink);
+  border: 4px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 4px 4px 0 var(--shadow);
+}
+.h {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0 0 4px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.h a {
+  display: inline-flex; align-items: center;
+  min-height: 44px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--accent);
+  text-decoration: none;
+}
+.h a:hover { text-decoration: underline; }
+.cursor { animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.small { margin: 0; font-size: 15px; line-height: 1.5; }
+#work .small { margin: 8px 0 0; }
+
+/* Trainer card */
+.trainer { display: flex; gap: 12px; align-items: center; }
+.ava {
+  flex: none;
+  display: grid; place-items: center;
+  width: 72px; height: 72px;
+  font-size: 26px;
+  color: var(--box);
+  background: var(--accent);
+  border: 3px solid var(--line);
+}
+h1.name { margin: 0 0 8px; font-size: 14px; line-height: 1.5; }
+
+/* Chunky buttons */
+.links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.links a, .btn {
+  display: inline-flex; align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  font: 600 15px/1.2 Inter, system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--box);
+  border: 3px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 var(--shadow);
+  text-decoration: none;
+  cursor: pointer;
+}
+.links a:hover, .btn:hover { text-decoration: underline; }
+.links a:active, .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--shadow); }
+
+/* ---------- Right now ---------- */
+.menu { list-style: none; margin: 4px 0 0; padding: 0; }
+.menu > li { display: flex; align-items: center; gap: 10px; border-bottom: 2px dotted var(--soft); }
+.menu > li:last-child { border-bottom: 0; }
+.menu .row {
+  flex: 1; min-width: 0;
+  display: flex; gap: 12px; align-items: center;
+  min-height: 64px;
+  padding: 10px 0;
+  color: inherit;
+  text-decoration: none;
+}
+a.row:hover .t { text-decoration: underline; }
+.th {
+  flex: none;
+  width: 46px; height: 46px;
+  object-fit: cover;
+  background: var(--soft);
+  border: 3px solid var(--line);
+}
+.th.tall { height: 66px; }
+.stv {
+  flex: none;
+  display: grid; place-items: center;
+  width: 46px; height: 46px;
+  font-size: 22px;
+  background: #fc4c02;
+  border: 3px solid var(--line);
+}
+.menu .body { flex: 1; min-width: 0; font-size: 14px; line-height: 1.45; }
+.menu .t { display: block; font-size: 15px; font-weight: 700; }
+.k { display: block; margin-bottom: 4px; font-size: 9px; line-height: 1.5; }
+[data-field=artist] { display: block; }
+.review { display: block; margin-top: 2px; }
+.go {
+  flex: none;
+  display: grid; place-items: center;
+  width: 44px; height: 44px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+}
+.go img { width: 18px; height: 18px; filter: invert(1); }
+
+.badge {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 3px 5px;
+  font-size: 8px;
+  line-height: 1.2;
+  vertical-align: middle;
+  color: #08130a;
+  background: var(--hp);
+}
+/* Music bars next to ON while a song plays. */
+#spotify-row[data-playing=true] .badge::after {
+  content: "";
+  display: inline-block;
+  width: 9px; height: 8px;
+  margin-left: 4px;
+  vertical-align: bottom;
+  background:
+    linear-gradient(currentColor, currentColor) 0 100% / 2px 40% no-repeat,
+    linear-gradient(currentColor, currentColor) 3.5px 100% / 2px 100% no-repeat,
+    linear-gradient(currentColor, currentColor) 7px 100% / 2px 60% no-repeat;
+  animation: bars .9s steps(1) infinite;
+}
+@keyframes bars {
+  0% { background-size: 2px 40%, 2px 100%, 2px 60%; }
+  33% { background-size: 2px 100%, 2px 50%, 2px 90%; }
+  66% { background-size: 2px 70%, 2px 80%, 2px 30%; }
+}
+
+/* Reading progress as an HP bar; the ink edge marks the page even where the fill is pale. */
+.hp { max-width: 160px; height: 10px; margin-top: 6px; background: var(--box); border: 2px solid var(--line); }
+.hp i { display: block; height: 100%; background: var(--hp); border-right: 2px solid var(--ink); }
+
+/* Strava's own wording, bold; Strava orange where it reads well, a darker underlined orange elsewhere. */
+.strava-link {
+  display: flex; align-items: center;
+  width: fit-content;
+  min-height: 44px;
+  font-weight: 700;
+  color: var(--strava);
+  text-decoration-line: var(--strava-decoration);
+  text-underline-offset: 3px;
+}
+.strava-link:hover { text-decoration-line: underline; }
+
+/* ---------- My party ---------- */
+.party { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+.mon {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--box);
+  border: 3px solid var(--line);
+  border-radius: 5px;
+  text-decoration: none;
+}
+.mon .pic { position: relative; display: grid; place-items: center; height: 96px; background: var(--soft); }
+.mon .pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.mon .emoji { font-size: 32px; }
+.mon .lv {
+  position: absolute; top: 6px; left: 6px;
+  padding: 3px 4px;
+  font-size: 8px;
+  color: var(--ink);
+  background: var(--box);
+  border: 2px solid var(--line);
+}
+.mon .n { padding: 8px 9px 10px; font-size: 13px; line-height: 1.4; }
+.mon .n b { display: block; margin-bottom: 2px; font-size: 14px; }
+a.mon:hover b { text-decoration: underline; }
+
+/* ---------- PC box ---------- */
+.pc .repo { display: flex; align-items: center; gap: 10px; border-bottom: 2px dotted var(--soft); }
+.pc .repo > :first-child {
+  flex: 1; min-width: 0;
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  min-height: 44px;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+.pc .repo > :first-child > span { font-size: 13px; font-weight: 400; text-align: right; }
+.pc .repo > a:first-child:hover { text-decoration: underline; }
+.pc .try, .pc .more {
+  display: inline-flex; align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.pc .try { flex: none; font-size: 14px; color: var(--accent); white-space: nowrap; }
+.pc .more { display: flex; padding: 0; font-size: 15px; color: var(--ink); }
+.pc .try:hover, .pc .more:hover { text-decoration: underline; }
+.pc > :last-child { border-bottom: 0; }
+
+/* ---------- footer ---------- */
+.foot { margin: 8px 0 0; font-size: 13px; line-height: 1.7; text-align: center; color: var(--ink-on-bg); }
+.foot a { color: var(--ink-on-bg); }
+
+/* ---------- case-study pages ---------- */
+article { font-size: 16px; line-height: 1.6; }
+article h1, article h2 { font-family: "Press Start 2P", ui-monospace, monospace; font-weight: 400; line-height: 1.6; overflow-wrap: anywhere; }
+article h1 { margin: 4px 0 10px; font-size: 16px; }
+article h2 { margin: 26px 0 8px; font-size: 12px; }
+article h3 { margin: 20px 0 6px; font-size: 17px; }
+article .meta { margin: 0 0 12px; font-size: 14px; font-weight: 600; }
+article a:not(.btn) { font-weight: 600; text-underline-offset: 3px; }
+article img { display: block; height: auto; border: 3px solid var(--line); }
+article figure { margin: 14px 0; }
+article pre, article table { display: block; max-width: 100%; overflow-x: auto; }
+article pre { padding: 10px; background: var(--soft); }
+article code { font-family: ui-monospace, Consolas, monospace; font-size: .9em; }
+.embed { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin: 16px 0; }
+.embed small { font-size: 14px; line-height: 1.5; }
+.embed iframe { display: block; width: 100%; height: 760px; background: #fff; border: 3px solid var(--line); }
+button.btn { font-family: Inter, system-ui, sans-serif; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .links a:active, .btn:active { transform: none; }
+}
