@@ -3,7 +3,7 @@
 
 [en]
 greeting = "VITOR"
-intro = "AI engineer from Manaus. In my free time I build gadgets for my car, my watch and my city."
+intro = "Engineer from Manaus. Here, I try to keep my passion for tech alive."
 # Spanish in both languages on purpose: the page shows it once, as Spanish.
 motto = "Dios me prepara a fuego lento."
 right_now = "LATELY"
@@ -32,7 +32,7 @@ page_description = "AI engineer from Manaus. What I'm listening to, watching, re
 
 [pt]
 greeting = "VITOR"
-intro = "Engenheiro de IA de Manaus. No tempo livre, crio gadgets pro meu carro, meu relógio e minha cidade."
+intro = "Engenheiro de Manaus. Aqui, tento manter viva minha paixão por tecnologia."
 # Spanish in both languages on purpose: the page shows it once, as Spanish.
 motto = "Dios me prepara a fuego lento."
 right_now = "ULTIMAMENTE"
