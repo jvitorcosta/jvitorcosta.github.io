@@ -130,5 +130,12 @@
       "pushed": "2025-07-14T02:55:22Z",
       "url": "https://github.com/jvitorcosta/clone-tabnews"
     }
-  ]
+  ],
+  "song": {
+    "artist": "Kavinsky",
+    "cover": "https://i.scdn.co/image/ab67616d00001e021c08bca073e89ae32c68ffaa",
+    "playing": true,
+    "title": "Roadgame",
+    "url": "https://open.spotify.com/track/7D1Dq1oEmlKNJltvzTL0wN"
+  }
 }
