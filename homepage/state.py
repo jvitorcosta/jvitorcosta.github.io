@@ -52,14 +52,14 @@ def refresh(
             [to_dict(r) for r in result] if isinstance(result, list) else to_dict(result)
         )
         if today:
-            if not isinstance(state.get("updated"), dict):
-                state["updated"] = {}
-            state["updated"][name] = today
+            _updated(state)[name] = today
         return result
     print(f"::warning::{name} not updated: {reason}", file=sys.stderr)
     stored = state.get(name)
     if stored is None:
         return None
+    if today:  # a value kept from before day tracking: count its silence from the first failure
+        _updated(state).setdefault(name, today)
     try:  # schema drift or a hand edit must not fail the job either
         if isinstance(stored, list):
             return [from_dict(cls, d) for d in stored]
@@ -68,6 +68,12 @@ def refresh(
         print(f"::warning::{name} stored value unreadable: {str(exc) or type(exc).__name__}",
               file=sys.stderr)
         return None
+
+
+def _updated(state: dict) -> dict:
+    if not isinstance(state.get("updated"), dict):
+        state["updated"] = {}
+    return state["updated"]
 
 
 def stale_sources(state: dict, today: str, days: int = 7) -> list[tuple[str, int]]:

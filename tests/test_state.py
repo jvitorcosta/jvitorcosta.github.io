@@ -118,6 +118,30 @@ def test_failed_refresh_keeps_the_old_success_day(capsys):
     assert state["updated"]["book"] == "2026-11-01"
 
 
+def test_failing_source_with_no_success_day_starts_counting(capsys):
+    # A source already broken when day tracking began must still be reported a week later.
+    state = _old_state()
+
+    def boom():
+        raise RuntimeError("down")
+
+    refresh("book", boom, state, Book, today="2026-11-05")
+    assert state["updated"] == {"book": "2026-11-05"}
+    refresh("book", boom, state, Book, today="2026-11-13")
+    assert state["updated"] == {"book": "2026-11-05"}
+    assert stale_sources(state, "2026-11-13") == [("book", 8)]
+
+
+def test_failing_source_with_nothing_stored_is_not_tracked(capsys):
+    state = {}
+
+    def boom():
+        raise RuntimeError("down")
+
+    refresh("book", boom, state, Book, today="2026-11-05")
+    assert "updated" not in state
+
+
 def test_stale_sources_lists_only_those_older_than_a_week():
     state = {"updated": {"book": "2026-10-28", "film": "2026-11-04"}}
     assert stale_sources(state, "2026-11-05") == [("book", 8)]
