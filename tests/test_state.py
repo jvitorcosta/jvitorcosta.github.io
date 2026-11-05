@@ -1,7 +1,7 @@
 import json
 
 from homepage.model import Book, Repo
-from homepage.state import load_state, refresh, save_state
+from homepage.state import load_state, refresh, save_state, stale_sources
 
 BOOK = Book("Dune", "Frank Herbert", "c.jpg", "https://x/dune", 10, 400)
 
@@ -99,3 +99,30 @@ def test_state_json_that_is_not_an_object_is_empty(tmp_path, capsys):
     path.write_text("[1, 2]", encoding="utf-8")
     assert load_state(path) == {}
     assert "::warning::state" in capsys.readouterr().err
+
+
+def test_refresh_records_the_day_of_the_last_success():
+    state = {}
+    refresh("book", lambda: BOOK, state, Book, today="2026-11-05")
+    assert state["updated"]["book"] == "2026-11-05"
+
+
+def test_failed_refresh_keeps_the_old_success_day(capsys):
+    state = _old_state()
+    state["updated"] = {"book": "2026-11-01"}
+
+    def boom():
+        raise RuntimeError("down")
+
+    refresh("book", boom, state, Book, today="2026-11-05")
+    assert state["updated"]["book"] == "2026-11-01"
+
+
+def test_stale_sources_lists_only_those_older_than_a_week():
+    state = {"updated": {"book": "2026-10-28", "film": "2026-11-04"}}
+    assert stale_sources(state, "2026-11-05") == [("book", 8)]
+
+
+def test_stale_sources_ignores_a_broken_updated_table():
+    assert stale_sources({"updated": "yesterday"}, "2026-11-05") == []
+    assert stale_sources({"updated": {"book": "not a date"}}, "2026-11-05") == []

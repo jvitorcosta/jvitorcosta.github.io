@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+from datetime import date
 from pathlib import Path
 from typing import Callable, TypeVar
 
@@ -39,6 +40,7 @@ def refresh(
     fetch: Callable[[], T | list[T] | None],
     state: dict,
     cls: type[T],
+    today: str | None = None,
 ) -> T | list[T] | None:
     try:
         result = fetch()
@@ -49,6 +51,10 @@ def refresh(
         state[name] = (
             [to_dict(r) for r in result] if isinstance(result, list) else to_dict(result)
         )
+        if today:
+            if not isinstance(state.get("updated"), dict):
+                state["updated"] = {}
+            state["updated"][name] = today
         return result
     print(f"::warning::{name} not updated: {reason}", file=sys.stderr)
     stored = state.get(name)
@@ -62,3 +68,23 @@ def refresh(
         print(f"::warning::{name} stored value unreadable: {str(exc) or type(exc).__name__}",
               file=sys.stderr)
         return None
+
+
+def stale_sources(state: dict, today: str, days: int = 7) -> list[tuple[str, int]]:
+    """Sources whose last successful fetch is more than `days` days before today, oldest first."""
+    updated = state.get("updated")
+    if not isinstance(updated, dict):
+        return []
+    try:
+        now = date.fromisoformat(today)
+    except ValueError:
+        return []
+    stale = []
+    for name, day in updated.items():
+        try:
+            age = (now - date.fromisoformat(str(day))).days
+        except ValueError:
+            continue
+        if age > days:
+            stale.append((name, age))
+    return sorted(stale, key=lambda item: -item[1])

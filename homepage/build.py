@@ -6,6 +6,7 @@ import os
 import sys
 from collections.abc import Callable
 from dataclasses import replace
+from datetime import date
 from pathlib import Path
 
 from homepage import http
@@ -17,7 +18,7 @@ from homepage.sources.github import fetch_repos
 from homepage.sources.goodreads import NothingReading, fetch_book
 from homepage.sources.letterboxd import fetch_film
 from homepage.sources.spotify import fetch_song
-from homepage.state import load_state, refresh, save_state
+from homepage.state import load_state, refresh, save_state, stale_sources
 
 LIVE_DIR = Path("assets") / "live"
 
@@ -35,8 +36,10 @@ def build(
     root: Path,
     sources: dict[str, Callable[[], object]] | None = None,
     get: Callable[..., bytes] = http.get,
+    today: str | None = None,
 ) -> Path:
     root = Path(root)
+    today = today or date.today().isoformat()
     sources = sources if sources is not None else default_sources()
     content = load_content(root)
     state_path = root / "data" / "state.json"
@@ -58,8 +61,8 @@ def build(
         used.add(path)
         return path
 
-    song = refresh("song", sources["song"], state, Song)
-    film = refresh("film", sources["film"], state, Film)
+    song = refresh("song", sources["song"], state, Song, today)
+    film = refresh("film", sources["film"], state, Film, today)
     book_fetch = sources["book"]
 
     def book_or_finished() -> Book:
@@ -72,9 +75,9 @@ def build(
             last = from_dict(Book, state["book"])
             return replace(last, page=None, pages=None, finished=True)
 
-    book = refresh("book", book_or_finished, state, Book)
+    book = refresh("book", book_or_finished, state, Book, today)
     repo_fetch = sources["repos"]
-    repos = refresh("repos", lambda: repo_fetch() or None, state, Repo) or []
+    repos = refresh("repos", lambda: repo_fetch() or None, state, Repo, today) or []
 
     if song:
         song = replace(song, cover=local(song.cover, "song cover"))
@@ -94,7 +97,21 @@ def build(
     index = root / "index.html"
     index.write_bytes(html.replace("\r\n", "\n").encode("utf-8"))
     save_state(state_path, state)
+    report_stale(state, today)
     return index
+
+
+def report_stale(state: dict, today: str) -> None:
+    """Warn about sources that kept an old value for over a week, and list them in the run summary."""
+    stale = stale_sources(state, today)
+    for name, age in stale:
+        print(f"::warning::{name} has not updated for {age} days", file=sys.stderr)
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not stale or not summary:
+        return
+    rows = "".join(f"| {name} | {state['updated'][name]} | {age} |\n" for name, age in stale)
+    with open(summary, "a", encoding="utf-8") as f:
+        f.write("### Sources not updating\n\n| Source | Last update | Days |\n|---|---|---|\n" + rows)
 
 
 def main() -> None:
