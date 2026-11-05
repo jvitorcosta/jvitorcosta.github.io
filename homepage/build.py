@@ -44,7 +44,7 @@ def build(
     live_dir = root / LIVE_DIR
     used: set[str] = set()
 
-    def local(url: str) -> str:
+    def local(url: str, label: str) -> str:
         """Cache a remote image and return its site path; never keep the remote URL."""
         if not url:
             return ""
@@ -53,7 +53,7 @@ def build(
         try:
             path = cache_image(url, live_dir, get)
         except Exception as exc:
-            print(f"::warning::image not cached: {exc}", file=sys.stderr)
+            print(f"::warning::{label} image not cached: {exc}", file=sys.stderr)
             return ""
         used.add(path)
         return path
@@ -65,14 +65,14 @@ def build(
     repos = refresh("repos", lambda: repo_fetch() or None, state, Repo) or []
 
     if song:
-        song = replace(song, cover=local(song.cover))
+        song = replace(song, cover=local(song.cover, "song cover"))
     if film:
-        film = replace(film, poster=local(film.poster))
+        film = replace(film, poster=local(film.poster, "film poster"))
     if book:
-        book = replace(book, cover=local(book.cover))
+        book = replace(book, cover=local(book.cover, "book cover"))
     content = replace(
         content,
-        party=[replace(m, picture=local(m.picture)) for m in content.party],
+        party=[replace(m, picture=local(m.picture, f"party {m.repo} picture")) for m in content.party],
     )
 
     live_dir.mkdir(parents=True, exist_ok=True)

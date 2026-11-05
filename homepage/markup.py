@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 from homepage.content import Content
 
-ICONS = "https://cdn.jsdelivr.net/npm/simple-icons@11.14.0/icons"
+ICONS = "assets/icons"  # simple-icons 11.14.0, vendored
 # platform: (display name, brand colour of the round profile icon)
 PLATFORMS = {
     "spotify": ("Spotify", "#1db954"),

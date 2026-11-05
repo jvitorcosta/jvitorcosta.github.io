@@ -18,7 +18,9 @@ def cache_image(url: str, dest: Path, get: Callable[..., bytes] = http.get) -> s
     dest.mkdir(parents=True, exist_ok=True)
     target = dest / name
     if not target.exists():
-        target.write_bytes(get(url))
+        tmp = target.with_name(target.name + ".tmp")
+        tmp.write_bytes(get(url))
+        tmp.replace(target)
     return f"{SITE_DIR}/{name}"
 
 

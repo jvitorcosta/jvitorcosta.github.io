@@ -116,7 +116,7 @@ def _top() -> str:
         for key, label, colour in PALETTES
     )
     return (f'<header class="top"><div class="sw" role="group" aria-label="Colours">{dots}</div>'
-            '<button type="button" data-lang-toggle aria-label="Switch language">EN ▸PT</button>'
+            '<button type="button" data-lang-toggle aria-label="EN ▸PT, switch language">EN ▸PT</button>'
             "</header>")
 
 

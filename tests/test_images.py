@@ -27,3 +27,25 @@ def test_prune_removes_unused(tmp_path):
     (tmp_path / "drop.jpg").write_bytes(b"2")
     prune(tmp_path, {"assets/live/keep.jpg"})
     assert [p.name for p in Path(tmp_path).iterdir()] == ["keep.jpg"]
+
+
+def test_stale_tmp_file_is_not_cached(tmp_path):
+    url = "https://x/p.jpg"
+    p = cache_image(url, tmp_path, get=lambda u: b"first")
+    name = p.split("/")[-1]
+    (tmp_path / name).unlink()
+    (tmp_path / (name + ".tmp")).write_bytes(b"partial")
+    cache_image(url, tmp_path, get=lambda u: b"full")
+    assert (tmp_path / name).read_bytes() == b"full"
+    assert not (tmp_path / (name + ".tmp")).exists()
+
+
+def test_failed_download_leaves_no_file(tmp_path):
+    def boom(u):
+        raise OSError("x")
+
+    try:
+        cache_image("https://x/p.jpg", tmp_path, get=boom)
+    except OSError:
+        pass
+    assert list(tmp_path.iterdir()) == []

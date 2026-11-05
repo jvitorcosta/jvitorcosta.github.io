@@ -126,3 +126,10 @@ def test_second_build_is_byte_identical(site):
 def test_missing_song_renders_shell(site):
     build(site, sources(song=lambda: None), get=fake_get)
     assert "data-field" in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_image_warning_names_the_item(site, capsys):
+    build(site, sources(), get=failing_get)
+    err = capsys.readouterr().err
+    assert "::warning::film poster image not cached: offline" in err
+    assert "::warning::book cover image not cached: offline" in err

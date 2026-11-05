@@ -347,3 +347,22 @@ def test_work_section(tmp_path):
     work = section(render(tmp_path), "work")
     assert "Qubika · Nubank" in work
     assert 'href="https://www.linkedin.com/in/jvpro/"' in work
+
+
+def test_no_external_image_sources(tmp_path):
+    html = render(tmp_path, content(party=[member("car-cyberdeck", emoji="🚗")]))
+    srcs = re.findall(r'src="([^"]*)"', html)
+    assert srcs and not [s for s in srcs if re.match(r"(https?:)?//", s)]
+    for icon in ("spotify", "letterboxd", "goodreads", "strava"):
+        assert f'src="assets/icons/{icon}.svg"' in html
+
+
+def test_language_toggle_label_contains_visible_text(tmp_path):
+    html = render(tmp_path)
+    assert 'data-lang-toggle aria-label="EN ▸PT, switch language">EN ▸PT</button>' in html
+
+
+def test_vendored_icons_are_plain_svgs():
+    for icon in ("spotify", "letterboxd", "goodreads", "strava"):
+        svg = (ROOT / "assets" / "icons" / f"{icon}.svg").read_text(encoding="utf-8")
+        assert svg.startswith("<svg") and "<script" not in svg and "href" not in svg
