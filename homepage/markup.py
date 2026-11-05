@@ -47,11 +47,16 @@ def safe_url(url: str) -> str:
     return ""
 
 
+def content_version(data: bytes) -> str:
+    """Short content hash, the same for CRLF and LF checkouts of a text file.
+    curriculum-vitae's cv/site.py computes the same value for the pages it copies here."""
+    return hashlib.sha256(data.replace(b"\r\n", b"\n")).hexdigest()[:8]
+
+
 @cache
 def versioned(path: str) -> str:
     """Site-relative asset URL with a content hash, so browsers refetch it when the file changes."""
-    digest = hashlib.sha256((SITE_ROOT / path).read_bytes()).hexdigest()[:8]
-    return f"{path}?v={digest}"
+    return f"{path}?v={content_version((SITE_ROOT / path).read_bytes())}"
 
 
 def warn(message: str) -> None:

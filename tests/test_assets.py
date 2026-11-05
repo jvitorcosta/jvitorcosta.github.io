@@ -235,3 +235,11 @@ def test_copied_pages_point_at_the_current_assets(page):
     for asset in ("site.css", "site.js"):
         current = versioned(f"assets/{asset}").split("?v=")[1]
         assert f"{asset}?v={current}" in html, f"{page.name}: re-copy the case pages ({asset})"
+
+
+def test_asset_version_ignores_line_endings():
+    # Windows checks files out with CRLF, the GitHub runner with LF: both must get the same ?v=,
+    # or pages copied from a Windows build disagree with the homepage built on GitHub.
+    from homepage.markup import content_version
+    assert content_version(b"a {}\r\nb {}\r\n") == content_version(b"a {}\nb {}\n")
+    assert content_version(b"a {}\n") != content_version(b"b {}\n")
