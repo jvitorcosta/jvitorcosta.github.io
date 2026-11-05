@@ -12,7 +12,7 @@
 - `data/state.json`, the last good value of every source, used when a source is down.
 - `assets/live/`, the covers and posters downloaded for the current page.
 
-The `state` branch holds only those files. Deleting it is safe: the next run starts from empty state and rebuilds it.
+The `state` branch holds only those files. Deleting it is safe: the next run starts from empty state and creates it again. If the branch exists but cannot be fetched, the run fails instead of deploying a page built from empty state.
 
 ## What is not in git any more
 
