@@ -1,6 +1,9 @@
 """Checks on assets/site.css and assets/site.js: palette contrast, storage guards, Spotify timeout."""
 
+import json
 import re
+import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -166,3 +169,24 @@ def test_fonts_are_self_hosted():
     assert text.index("@font-face") < text.index(".pal-pocket")
     for licence in ("OFL-Inter.txt", "OFL-PressStart2P.txt"):
         assert (ROOT / "assets" / "fonts" / licence).is_file()
+
+
+def _cover_src(data: dict) -> str:
+    # Runs the real coverSrc() from site.js, together with safeHttps() which it calls.
+    source = js()
+    funcs = "".join(re.search(rf"(?ms)^  function {name}\(.*?^  \}}\n", source).group(0)
+                    for name in ("safeHttps", "coverSrc"))
+    script = funcs + f"process.stdout.write(coverSrc({json.dumps(data)}));"
+    return subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="needs node")
+def test_spotify_cover_prefers_the_inline_image():
+    # The inline cover keeps visitors' browsers off Spotify's CDN; only JPEG/PNG data URIs pass.
+    jpeg = "data:image/jpeg;base64,/9j/AAA="
+    assert _cover_src({"cover_data": jpeg, "cover": "https://i.scdn.co/image/a"}) == jpeg
+    assert _cover_src({"cover_data": "data:image/png;base64,iVBO", "cover": ""}) == "data:image/png;base64,iVBO"
+    assert _cover_src({"cover_data": "data:image/svg+xml;base64,PHN2Zz4=",
+                       "cover": "https://i.scdn.co/image/a"}) == "https://i.scdn.co/image/a"
+    assert _cover_src({"cover_data": "javascript:alert(1)", "cover": "http://x"}) == ""
+    assert _cover_src({"cover": "https://i.scdn.co/image/a"}) == "https://i.scdn.co/image/a"
