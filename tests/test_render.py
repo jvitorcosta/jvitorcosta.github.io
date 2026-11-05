@@ -107,7 +107,7 @@ def test_palette_and_language_buttons(tmp_path):
     html = render(tmp_path)
     for p, label in (("pocket", "Pocket"), ("night", "Night Menu"), ("nu", "Nu Purple")):
         assert f'<button type="button" data-palette="{p}" aria-label="{label}"' in html
-    assert ('<button type="button" data-lang-toggle aria-label="Switch language">'
+    assert ('<button type="button" data-lang-toggle aria-label="EN ▸PT, switch language">'
             "EN ▸PT</button>") in html
 
 
