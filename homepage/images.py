@@ -9,10 +9,13 @@ from urllib.parse import urlparse
 from homepage import http
 
 SITE_DIR = "assets/live"
+PICTURE_EXTS = {".jpg", ".jpeg", ".png", ".webp"}  # never .svg (scripts) from a remote URL
 
 
 def cache_image(url: str, dest: Path, get: Callable[..., bytes] = http.get) -> str:
-    suffix = posixpath.splitext(urlparse(url).path)[1] or ".jpg"
+    suffix = posixpath.splitext(urlparse(url).path)[1].lower()
+    if suffix not in PICTURE_EXTS:
+        suffix = ".jpg"
     name = hashlib.sha1(url.encode()).hexdigest()[:16] + suffix
     dest = Path(dest)
     dest.mkdir(parents=True, exist_ok=True)

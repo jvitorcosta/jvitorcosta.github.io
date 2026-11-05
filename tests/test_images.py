@@ -49,3 +49,14 @@ def test_failed_download_leaves_no_file(tmp_path):
     except OSError:
         pass
     assert list(tmp_path.iterdir()) == []
+
+
+def test_only_known_picture_extensions_are_kept(tmp_path):
+    def ext(url):
+        return cache_image(url, tmp_path, get=lambda u: b"i").rsplit(".", 1)[1]
+
+    assert ext("https://x/a.JPEG") == "jpeg"
+    assert ext("https://x/a.webp") == "webp"
+    assert ext("https://x/a.png") == "png"
+    for url in ("https://x/evil.svg", "https://x/a.html", "https://x/a.php?x=.png", "https://x/a."):
+        assert ext(url) == "jpg", url
