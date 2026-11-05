@@ -5,7 +5,7 @@
 greeting = "VITOR PINHEIRO"
 # My Chinese name, the same in both languages: the page shows it once, next to the greeting.
 chinese_name = "白玉龙"
-intro = "Engineer from Manaus. Here, I keep a sip of my soul."
+intro = "Engineer, Manaus/Brazil. Here, I keep a sip of my soul."
 # Spanish in both languages on purpose: the page shows it once, as Spanish.
 motto = "Dios me prepara a fuego lento."
 right_now = "LATELY"
@@ -36,7 +36,7 @@ page_description = "AI engineer from Manaus. What I'm listening to, watching, re
 greeting = "VITOR PINHEIRO"
 # My Chinese name, the same in both languages: the page shows it once, next to the greeting.
 chinese_name = "白玉龙"
-intro = "Engenheiro de Manaus. Aqui, guardo um gole da minha alma."
+intro = "Engenheiro, Manaus/Brasil. Aqui eu guardo um pedacinho da minha alma."
 # Spanish in both languages on purpose: the page shows it once, as Spanish.
 motto = "Dios me prepara a fuego lento."
 right_now = "ULTIMAMENTE"
