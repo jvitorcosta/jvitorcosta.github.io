@@ -1,0 +1,133 @@
+<!doctype html><meta charset="utf-8"><title>Homepage mockup</title><body style="background:#1b1b1f;color:#eee;font-family:Inter,sans-serif;padding:24px">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  .stage { display:flex; gap:30px; align-items:flex-start; flex-wrap:wrap; }
+  .notes { max-width:420px; font-size:14.5px; line-height:1.55; } .notes li { margin-bottom:6px; }
+  .gb { width:375px; height:800px; overflow-y:auto; border-radius:34px; border:10px solid #0b0b0c; box-shadow:0 10px 40px rgba(0,0,0,.4); font-family:Inter,sans-serif; background:var(--bg); transition:background .3s; }
+  .gb::-webkit-scrollbar { width:0; }
+  .gb .in { padding:14px 12px 26px; }
+  .gb .px { font-family:"Press Start 2P",monospace; }
+  .gb .box { border:4px solid var(--line); border-radius:6px; padding:12px; background:var(--box); box-shadow:4px 4px 0 var(--shadow); margin-bottom:14px; color:var(--ink); transition:background .3s,color .3s; }
+  .gb .h { font-size:10px; display:flex; justify-content:space-between; align-items:center; }
+  .gb .h a { font-family:Inter; font-size:11px; font-weight:600; color:var(--accent); text-decoration:none; }
+  .gb .cursor { animation:blink 1s steps(1) infinite; } @keyframes blink { 50% { opacity:0; } }
+
+  .top { display:flex; justify-content:space-between; align-items:center; margin:2px 2px 12px; }
+  .sw { display:flex; gap:6px; } .sw button { width:26px; height:26px; border-radius:50%; border:3px solid #0b0b0c; cursor:pointer; padding:0; }
+  .sw button.on { outline:3px solid var(--ink-on-bg); outline-offset:2px; }
+  .lang { font-family:"Press Start 2P"; font-size:9px; color:var(--ink-on-bg); background:transparent; border:2px solid var(--ink-on-bg); padding:6px 8px; border-radius:4px; }
+
+  .trainer { display:flex; gap:12px; align-items:center; }
+  .ava { width:70px; height:70px; background:var(--accent); color:var(--box); border:3px solid var(--line); display:grid; place-items:center; font-size:24px; flex:none; }
+  .small { font-size:13.5px; line-height:1.5; }
+  .links { display:flex; flex-wrap:wrap; gap:6px; margin-top:11px; }
+  .links a { font-size:12px; font-weight:600; color:var(--ink); border:2px solid var(--line); border-radius:4px; padding:7px 10px; text-decoration:none; min-height:36px; display:inline-flex; align-items:center; }
+
+  .menu { list-style:none; margin:6px 0 0; padding:0; }
+  .menu li { border-bottom:2px dotted var(--soft); } .menu li:last-child { border:0; }
+  .menu a.row { display:flex; gap:11px; align-items:center; padding:9px 0; color:inherit; text-decoration:none; min-height:64px; }
+  .menu a.row:hover .t { text-decoration:underline; }
+  .menu img.th { width:46px; height:46px; object-fit:cover; border:3px solid var(--line); flex:none; }
+  .menu img.th.tall { height:66px; }
+  .stv { width:46px; height:46px; display:grid; place-items:center; background:#fc4c02; color:#fff; border:3px solid var(--line); font-size:20px; flex:none; }
+  .menu .body { flex:1; min-width:0; font-size:12.5px; line-height:1.45; }
+  .menu .t { display:block; font-size:14px; font-weight:700; }
+  .menu .k { font-size:8px; letter-spacing:.5px; opacity:.75; display:block; margin-bottom:3px; }
+  .menu .go { width:30px; height:30px; flex:none; display:grid; place-items:center; border-radius:50%; background:var(--soft); }
+  .menu .go { width:34px; height:34px; border:2px solid var(--line); } .menu .go img { width:17px; height:17px; filter:invert(1); }
+  .badge { font-family:"Press Start 2P"; font-size:8px; background:var(--hp); color:#08130a; padding:3px 5px; margin-left:4px; vertical-align:middle; }
+  .hp { height:9px; border:2px solid var(--line); background:var(--box); margin-top:5px; width:140px; } .hp i { display:block; height:100%; width:57%; background:var(--hp); }
+
+  .party { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+  .mon { border:3px solid var(--line); border-radius:5px; overflow:hidden; background:var(--box); color:var(--ink); text-decoration:none; display:block; }
+  .mon .pic { height:96px; background:var(--soft); position:relative; display:grid; place-items:center; font-size:30px; }
+  .mon img { width:100%; height:100%; object-fit:cover; position:absolute; inset:0; }
+  .mon .lv { position:absolute; top:5px; left:5px; font-family:"Press Start 2P"; font-size:7px; background:var(--box); color:var(--ink); padding:3px 4px; border:2px solid var(--line); }
+  .mon .n { padding:8px; font-size:12px; line-height:1.35; } .mon .n b { display:block; font-size:13px; margin-bottom:2px; }
+  .pc a { display:flex; justify-content:space-between; gap:8px; padding:10px 0; border-bottom:2px dotted var(--soft); color:var(--ink); text-decoration:none; font-size:13px; min-height:44px; }
+  .pc a span { opacity:.7; font-size:12px; text-align:right; }
+  .foot { font-size:11px; color:var(--ink-on-bg); opacity:.85; text-align:center; margin-top:6px; line-height:1.6; }
+
+  .pal-pocket { --bg:#d7d3c8; --box:#fbfaf4; --ink:#1f2a44; --line:#1f2a44; --shadow:#9aa3b5; --soft:#dfe2ea; --accent:#d63333; --hp:#3fa34d; --ink-on-bg:#1f2a44; }
+  .pal-night  { --bg:#141220; --box:#221d33; --ink:#f2eefc; --line:#4a4168; --shadow:#000;    --soft:#3a3354; --accent:#ff8000; --hp:#00e054; --ink-on-bg:#f2eefc; }
+  .pal-nu     { --bg:#820ad1; --box:#faf5ff; --ink:#2a0845; --line:#2a0845; --shadow:#4a0478; --soft:#ead9fb; --accent:#820ad1; --hp:#ffb703; --ink-on-bg:#ffffff; }
+</style>
+
+<h2>Game Boy homepage, full length, with the palette switch</h2>
+<p class="subtitle">Tap the three dots at the top of the phone to switch palettes, like a visitor would. Scroll inside the phone. Every row and tile is a link.</p>
+
+<div class="stage">
+<div class="gb pal-night" id="gb"><div class="in">
+
+  <div class="top">
+    <div class="sw" role="group" aria-label="Colours">
+      <button title="Pocket" style="background:#fbfaf4" onclick="pal('pocket',this)"></button>
+      <button class="on" title="Night Menu" style="background:#221d33" onclick="pal('night',this)"></button>
+      <button title="Nu Purple" style="background:#820ad1" onclick="pal('nu',this)"></button>
+    </div>
+    <button class="lang">EN ▸PT</button>
+  </div>
+
+  <div class="box">
+    <div class="trainer"><div class="ava px">V</div><div><span class="px" style="font-size:12px">VITOR</span><div class="small" style="margin-top:7px">AI engineer from Manaus. I build gadgets for my car, my watch and my city.</div></div></div>
+    <div class="links"><a href="#">Instagram</a><a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">Email</a></div>
+  </div>
+
+  <div class="box"><div class="h px"><span>▶ RIGHT NOW<span class="cursor">_</span></span></div>
+    <ul class="menu">
+      <li><a class="row" href="#"><img class="th" src="https://placehold.co/120x120/e2348a/fff?text=cover"><div class="body"><span class="k px">LISTENING</span><span class="t">Taxi Lunar <span class="badge">ON</span></span>Geraldo Azevedo</div><span class="go" style="background:#1db954"><img src="https://cdn.jsdelivr.net/npm/simple-icons@11.14.0/icons/spotify.svg"></span></a></li>
+      <li><a class="row" href="#"><img class="th tall" src="https://a.ltrbxd.com/resized/film-poster/9/5/4/6/6/3/954663-hope-2026-0-600-0-900-crop.jpg?v=102a8bfda2"><div class="body"><span class="k px">WATCHED</span><span class="t">Hope (2026)</span>★★★½ ♥ · Nov 5<br><i style="opacity:.75">"começa bem pra caramba…"</i></div><span class="go" style="background:#202830"><img src="https://cdn.jsdelivr.net/npm/simple-icons@11.14.0/icons/letterboxd.svg"></span></a></li>
+      <li><a class="row" href="#"><img class="th tall" src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1536184191l/41721428._SX318_.jpg"><div class="body"><span class="k px">READING</span><span class="t">Can't Hurt Me</span>David Goggins · p. 210 of 366<div class="hp"><i></i></div></div><span class="go" style="background:#553b08"><img src="https://cdn.jsdelivr.net/npm/simple-icons@11.14.0/icons/goodreads.svg"></span></a></li>
+      <li><a class="row" href="#"><div class="stv">🚴</div><div class="body"><span class="k px">MOVING</span><span class="t">Night Ride · 5.0 km</span>24:47 · 12.1 km/h · 3 PRs · Nov 4</div><span class="go" style="background:#fc4c02"><img src="https://cdn.jsdelivr.net/npm/simple-icons@11.14.0/icons/strava.svg"></span></a></li>
+    </ul>
+  </div>
+
+  <div class="box"><div class="h px"><span>▶ MY PARTY</span></div>
+    <div class="party">
+      <a class="mon" href="#"><div class="pic">🚗<span class="lv">DAILY</span></div><div class="n"><b>Car Cyberdeck</b>Spotify as a Pokémon battle on my dashboard</div></a>
+      <a class="mon" href="#"><div class="pic"><img src="https://raw.githubusercontent.com/jvitorcosta/garmin-watchfaces/HEAD/docs/images/pokeface-fr255.jpg"><span class="lv">WRIST</span></div><div class="n"><b>Watch faces</b>Pokémon faces I draw for my Garmin</div></a>
+      <a class="mon" href="#"><div class="pic">📍<span class="lv">CITY</span></div><div class="n"><b>Open Radars</b>every speed camera in Manaus, marked by me</div></a>
+      <a class="mon" href="#"><div class="pic"><img src="https://raw.githubusercontent.com/jvitorcosta/haylou-faces/HEAD/faces/juma/previews/preview-sky.png" style="object-fit:contain;background:#111"><span class="lv">WRIST</span></div><div class="n"><b>Haylou faces</b>I cracked a cheap watch to draw on it</div></a>
+    </div>
+    <p class="small" style="opacity:.7;margin:10px 0 0;font-size:12px">You pick these (up to 6) in one short list in the repo.</p>
+  </div>
+
+  <div class="box pc"><div class="h px" style="margin-bottom:4px"><span>▶ PC BOX</span><a href="#">all on GitHub ›</a></div>
+    <a href="#">SolvedOR <span>my thesis · try it</span></a>
+    <a href="#">Ask Vitor <span>a chatbot that only knows my CV</span></a>
+    <a href="#">Forecast checker <span>try it</span></a>
+    <a href="#">Car CAN lab <span>listening to my car</span></a>
+    <a href="#">Fraud alert explainer <span>AI that explains itself</span></a>
+    <a href="#" style="border:0">+ 9 more <span>›</span></a>
+  </div>
+
+  <div class="box"><div class="h px"><span>▶ WORK</span></div>
+    <p class="small" style="margin:8px 0">5 years building AI for banks and fintech.</p>
+    <div class="small">Qubika · Nubank · EloGroup</div>
+    <div class="links"><a href="#">LinkedIn ›</a></div>
+  </div>
+
+  <div class="foot">Powered by Strava · data from Spotify, Letterboxd, Goodreads<br>Made by me, refreshed every day</div>
+</div></div>
+
+<div class="notes">
+  <b>What changed</b>
+  <ul>
+    <li><b>Three palettes</b> a visitor can switch: Pocket, Night Menu, and <b>Nu Purple</b> (#820AD1). The choice is remembered.</li>
+    <li><b>Spotify</b> is the new row fed by your fork's data address, with the cover and an ON badge (or "Last played").</li>
+    <li><b>Strava is back</b>: last activity, no map.</li>
+    <li>Each row in Right now links to the item, and the round icon on the right goes to <b>your profile</b> on that app.</li>
+    <li><b>My party</b> are the projects you choose; <b>PC box</b> lists the rest automatically, newest first.</li>
+    <li>Tap areas are at least 44px tall, and long text is in a normal font, not the pixel one.</li>
+  </ul>
+</div>
+</div>
+
+<script>
+function pal(p, btn) {
+  const gb = document.getElementById('gb');
+  gb.className = 'gb pal-' + p;
+  document.querySelectorAll('.sw button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+</script>
