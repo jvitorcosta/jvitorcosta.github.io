@@ -82,6 +82,8 @@ def _pc_box(path: Path) -> dict[str, dict[str, str]]:
             _warn(f"pc_box {name} skipped: expected a table with en and pt")
             continue
         texts[name] = {lang: str(text[lang]) for lang in LANGS if text.get(lang)}
+        if text.get("case"):
+            texts[name]["case"] = str(text["case"])
     return texts
 
 

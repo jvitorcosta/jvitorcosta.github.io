@@ -366,3 +366,43 @@ def test_vendored_icons_are_plain_svgs():
     for icon in ("spotify", "letterboxd", "goodreads", "strava"):
         svg = (ROOT / "assets" / "icons" / f"{icon}.svg").read_text(encoding="utf-8")
         assert svg.startswith("<svg") and "<script" not in svg and "href" not in svg
+
+
+def _case_page(tmp_path, slug):
+    (tmp_path / "projects").mkdir(exist_ok=True)
+    (tmp_path / "projects" / f"{slug}.html").write_text("x")
+
+
+def test_pc_box_case_field_links_the_case_page_and_keeps_github_and_try(tmp_path):
+    _case_page(tmp_path, "solvedor")
+    texts = {"or-solver": {"en": "solves school maths", "pt": "resolve contas", "case": "solvedor"}}
+    repos = [repo("or-solver", "desc", "https://solvedor.app")]
+    box = section(render(tmp_path, c=content(pc_box=texts), repos=repos), "pc-box", "work")
+    row = re.search(r'<div class="repo">(.*?)</div>', box, re.S).group(1)
+    assert row.startswith('<a href="projects/solvedor.html">or-solver<span>')
+    assert 'href="https://github.com/jvitorcosta/or-solver"' in row
+    assert 'href="https://solvedor.app"' in row
+
+
+def test_pc_box_case_field_without_the_page_links_github(tmp_path):
+    texts = {"or-solver": {"en": "a", "pt": "b", "case": "solvedor"}}
+    box = section(render(tmp_path, c=content(pc_box=texts), repos=[repo("or-solver")]),
+                  "pc-box", "work")
+    assert "projects/solvedor.html" not in box
+    assert box.count('href="https://github.com/jvitorcosta/or-solver"') == 1
+
+
+def test_pc_box_case_field_must_be_a_plain_slug(tmp_path):
+    _case_page(tmp_path, "solvedor")
+    texts = {"or-solver": {"en": "a", "pt": "b", "case": "../solvedor"}}
+    box = section(render(tmp_path, c=content(pc_box=texts), repos=[repo("or-solver")]),
+                  "pc-box", "work")
+    assert "projects/" not in box
+
+
+def test_work_links_the_resume_case_page_when_it_exists(tmp_path):
+    assert "resume-as-code" not in section(render(tmp_path), "work")
+    _case_page(tmp_path, "resume-as-code")
+    work = section(render(tmp_path), "work")
+    assert ('<a href="projects/resume-as-code.html"><span lang="en">How my resume is built</span>'
+            '<span lang="pt">Como meu currículo é feito</span> ›</a>') in work

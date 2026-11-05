@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 import pytest
@@ -75,8 +76,18 @@ def test_both_languages_have_the_same_keys():
     )
 
 
-def test_pc_box_texts_start_empty():
-    assert load_content(ROOT).pc_box == {}
+JARGON = ("can bus", "ble", "esp32", "lightgbm", "shap", "firmware", "fastapi", "streamlit",
+          "llm", "api")
+
+
+def test_pc_box_texts_are_short_plain_and_bilingual():
+    pc_box = load_content(ROOT).pc_box
+    assert pc_box
+    for name, text in pc_box.items():
+        for lang in ("en", "pt"):
+            assert 0 < len(text[lang]) <= 60, (name, lang)
+            words = text[lang].lower()
+            assert not [j for j in JARGON if re.search(rf"{j}", words)], (name, lang)
 
 
 def test_pc_box_texts_are_loaded(tmp_path):
@@ -115,3 +126,15 @@ def test_non_table_pc_box_entry_is_skipped_with_warning(tmp_path, capsys):
     pc_box = load_content(root).pc_box
     assert "oops" not in pc_box and pc_box["ask-vitor"]["en"] == "a"
     assert "::warning::pc_box oops" in capsys.readouterr().err
+
+
+def test_pc_box_case_field_is_loaded(tmp_path):
+    root = _copy_data(tmp_path)
+    (root / "data" / "pc_box.toml").write_text(
+        '[or-solver-streamlit]\nen = "a"\npt = "b"\ncase = "solvedor"\n', encoding="utf-8"
+    )
+    assert load_content(root).pc_box["or-solver-streamlit"]["case"] == "solvedor"
+
+
+def test_real_pc_box_links_solvedor_case():
+    assert load_content(ROOT).pc_box["or-solver-streamlit"]["case"] == "solvedor"

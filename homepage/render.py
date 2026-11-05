@@ -7,6 +7,7 @@ Every user-facing text is written in both languages as
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from homepage.content import Content, PartyMember
@@ -24,6 +25,8 @@ FONTS = ("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700"
 PC_BOX_ROWS = 8
 PALETTES = (("pocket", "Pocket", "#fbfaf4"), ("night", "Night Menu", "#221d33"),
             ("nu", "Nu Purple", "#820ad1"))
+CASE_SLUG = re.compile(r"[a-z0-9][a-z0-9-]*")
+RESUME_CASE = "resume-as-code"
 TRAINER_LINKS = (("instagram", "Instagram"), ("github", "GitHub"),
                  ("linkedin", "LinkedIn"), ("email", "Email"))
 
@@ -57,10 +60,18 @@ def _party(p: Page, repos: list[Repo], site_root: Path) -> str:
             f'<div class="party">{"".join(tiles)}</div></section>')
 
 
+def _case_page(slug: str, site_root: Path) -> str:
+    """projects/<slug>.html when that page is in the site, else ""."""
+    if CASE_SLUG.fullmatch(slug) and (site_root / "projects" / f"{slug}.html").exists():
+        return f"projects/{slug}.html"
+    return ""
+
+
 def _repo(p: Page, r: Repo, site_root: Path) -> str:
-    case_study = site_root / "projects" / f"{r.name}.html"
-    href = f"projects/{r.name}.html" if case_study.exists() else safe_url(r.url)
     text = p.c.pc_box.get(r.name, {})
+    case = _case_page(text.get("case", ""), site_root) or _case_page(r.name, site_root)
+    github = safe_url(r.url)
+    href = case or github
     if text.get("en") and text.get("pt"):
         desc = f"<span>{p.both({lang: clip(text[lang], 60) for lang in ('en', 'pt')})}</span>"
     elif r.description:
@@ -70,6 +81,9 @@ def _repo(p: Page, r: Repo, site_root: Path) -> str:
     demo_url = safe_url(r.homepage)
     demo = (f' <a class="try" href="{esc(demo_url)}">{p.t("try_it")} ›</a>'
             if demo_url else "")
+    if case and github:  # the name opens the story; the code stays one tap away
+        demo += f' <a class="try" href="{esc(github)}">GitHub ›</a>'
+
     name = (f'<a href="{esc(href)}">{esc(r.name)}{desc}</a>' if href
             else f'<span class="name">{esc(r.name)}{desc}</span>')
     return f'<div class="repo">{name}{demo}</div>'
@@ -99,12 +113,15 @@ def _trainer(p: Page) -> str:
             f'<p class="small">{p.t("intro")}</p></div></div>{nav}</section>')
 
 
-def _work(p: Page) -> str:
+def _work(p: Page, site_root: Path) -> str:
     companies = list(dict.fromkeys(j.company for j in p.c.jobs))
     names = f'<p class="small companies">{esc(" · ".join(companies))}</p>' if companies else ""
     linkedin = safe_url(p.c.links.get("linkedin", ""))
-    link = (f'<div class="links"><a href="{esc(linkedin)}">LinkedIn ›</a></div>'
-            if linkedin else "")
+    links = [f'<a href="{esc(linkedin)}">LinkedIn ›</a>'] if linkedin else []
+    resume = _case_page(RESUME_CASE, site_root)
+    if resume:
+        links.append(f'<a href="{resume}">{p.t("resume_case")} ›</a>')
+    link = f'<div class="links">{"".join(links)}</div>' if links else ""
     return (f'<section class="box" id="work"><h2 class="h px"><span>▶ {p.t("work")}</span></h2>'
             f'<p class="small">{p.t("work_line")}</p>{names}{link}</section>')
 
@@ -173,7 +190,7 @@ def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: 
         right_now(p, live),
         _party(p, repos, site_root),
         _pc_box(p, repos, site_root),
-        _work(p),
+        _work(p, site_root),
         _footer(p, live),
     ]
     body = "\n".join(s for s in sections if s)
