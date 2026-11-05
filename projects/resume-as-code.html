@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="pal-night">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,48 +13,24 @@
 <meta property="og:image" content="https://jvitorcosta.github.io/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<style>
-:root { --bg:#fbfaf7; --fg:#1d1d1f; --muted:#5f6368; --line:#e6e3dc; --card:#ffffff; --accent:#d1361a; }
-@media (prefers-color-scheme: dark) {
-  :root { --bg:#121212; --fg:#ececec; --muted:#a0a0a0; --line:#2a2a2a; --card:#1b1b1b; --accent:#ff6b4a; }
-}
-* { box-sizing:border-box; }
-body { margin:0; background:var(--bg); color:var(--fg);
-  font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
-main { max-width:720px; margin:0 auto; padding:56px 20px 80px; }
-a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
-h1 { font-size:2.2rem; line-height:1.15; margin:0 0 4px; }
-h2 { font-size:1.15rem; margin:44px 0 12px; letter-spacing:.02em; }
-.headline { color:var(--muted); font-size:1.1rem; margin:0 0 20px; }
-.links { display:flex; flex-wrap:wrap; gap:10px 18px; margin:18px 0 8px; font-size:.95rem; }
-.btn { border:1px solid var(--accent); border-radius:999px; padding:6px 14px; }
-.cards { display:grid; gap:14px; }
-.card { display:block; background:var(--card); border:1px solid var(--line); border-radius:12px;
-  padding:16px 18px; color:var(--fg); }
-.card:hover { border-color:var(--accent); text-decoration:none; }
-.card strong { display:block; margin-bottom:4px; } .card span { color:var(--muted); font-size:.95rem; }
-.jobs { list-style:none; padding:0; margin:0; }
-.jobs li { display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-bottom:1px solid var(--line); }
-.jobs .when { color:var(--muted); white-space:nowrap; font-size:.92rem; }
-.meta { color:var(--muted); font-size:.95rem; margin:0 0 24px; }
-.skills { color:var(--muted); font-size:.95rem; }
-article h2 { margin-top:32px; }
-article img { max-width:100%; height:auto; border:1px solid var(--line); border-radius:12px; }
-.cover { margin:0 0 28px; }
-.cover img { display:block; width:100%; background:#fff; }
-.embed { margin:0 0 28px; }
-.embed small { display:block; color:var(--muted); margin-top:8px; }
-.embed iframe { width:100%; height:760px; border:1px solid var(--line); border-radius:12px; background:#fff; }
-button.btn { background:none; color:var(--accent); font:inherit; cursor:pointer; }
-footer { color:var(--muted); font-size:.85rem; margin-top:56px; }
-@media (max-width:520px) { main { padding-top:36px; } .jobs li { flex-direction:column; gap:0; } }
-</style>
+<script>try{var p=localStorage.getItem("palette");if(/^(pocket|night|nu)$/.test(p)){var h=document.documentElement;h.className="pal-"+p;h.setAttribute("data-pal",p)}}catch(e){}try{var h=document.documentElement,l=(navigator.language||"").toLowerCase().indexOf("pt")?"en":"pt";try{var s=localStorage.getItem("lang");if(s=="en"||s=="pt")l=s}catch(e){}h.lang=l}catch(e){}</script>
+<link rel="stylesheet" href="../assets/site.css">
 
 </head>
 <body>
+<header class="top">
+<a href="../index.html">&larr; Vitor</a>
+<span class="palettes" role="group" aria-label="Colours" data-aria-en="Colours" data-aria-pt="Cores">
+<button type="button" data-palette="pocket" aria-label="Pocket" data-aria-en="Pocket" data-aria-pt="Pocket"></button>
+<button type="button" data-palette="night" aria-label="Night Menu" data-aria-en="Night Menu" data-aria-pt="Menu Noturno"></button>
+<button type="button" data-palette="nu" aria-label="Nu Purple" data-aria-en="Nu Purple" data-aria-pt="Roxo Nu"></button>
+</span>
+<button type="button" data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>
+</header>
 <main>
-<p><a href="../index.html">&larr; Vitor Pinheiro</a></p>
+<div class="box">
 <article>
+<div lang="en">
 <h1>My resume, as code</h1>
 <p class="meta">Personal project, 2026</p>
 <h2>The problem</h2>
@@ -67,7 +43,24 @@ footer { color:var(--muted); font-size:.85rem; margin-top:56px; }
 <p>Tailoring a resume now starts from one trusted record instead of a pile of old copies. This website is built from the same record, so it never goes stale. Personal data, like my phone number and the companies I apply to, stays out of the repository.</p>
 <p><strong>Stack:</strong> Python, uv, pandoc, Typst, pytest, Claude</p>
 
+</div>
+<div lang="pt">
+<h1>Meu currículo, como código</h1>
+<p class="meta">Projeto pessoal, 2026</p>
+<h2>O problema</h2>
+<p>Eu tinha umas vinte versões do meu currículo no Google Docs, cada uma adaptada pra uma vaga diferente, cada uma desatualizada do seu próprio jeito. Adaptar o currículo pra uma vaga nova significava reescrever os tópicos na mão, e as versões foram se afastando aos poucos até se contradizerem.</p>
+<h2>O que eu construí</h2>
+<p>Um repositório onde toda a minha carreira vive em Markdown puro: cada cargo, cada conquista com algumas formas de escrever já aprovadas, habilidades, formação e projetos pessoais. Uma pequena CLI em Python faz o trabalho mecânico. Ela cria uma pasta por candidatura, gera arquivos PDF e Word limpos, de uma coluna só, com pandoc e Typst, e mantém um controle de em que pé está cada candidatura.</p>
+<p>Eu adapto cada currículo com o Claude, seguindo uma regra escrita no próprio repositório: toda afirmação precisa ter origem no registro mestre. Reescrever e reordenar pode; números, ferramentas ou cargos novos, não. Quando uma vaga pede algo que eu nunca fiz, isso entra como lacuna na lista em vez de ser preenchido.</p>
+<p>Antes de construir, passei por todos os pontos em que meus currículos antigos discordavam e resolvi cada fato, um por um, então o registro mestre é a versão que eu consigo defender numa entrevista.</p>
+<h2>Resultado</h2>
+<p>Adaptar um currículo agora começa de um registro confiável, e não de uma pilha de cópias antigas. Este site é gerado a partir do mesmo registro, então nunca fica desatualizado. Dados pessoais, como meu telefone e as empresas pra onde eu me candidato, ficam fora do repositório.</p>
+<p><strong>Stack:</strong> Python, uv, pandoc, Typst, pytest, Claude</p>
+
+</div>
 </article>
+</div>
 </main>
+<script src="../assets/site.js" defer></script>
 </body>
 </html>
