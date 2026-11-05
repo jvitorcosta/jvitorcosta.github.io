@@ -182,6 +182,7 @@ header.top > a:hover { text-decoration: underline; }
 @keyframes blink { 50% { opacity: 0; } }
 
 .small { margin: 0; font-size: 15px; line-height: 1.5; }
+.motto { margin: 6px 0 0; font-size: 14px; font-style: italic; color: var(--accent); }
 #work .small { margin: 8px 0 0; }
 
 /* Trainer card */

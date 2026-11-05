@@ -495,6 +495,13 @@ def test_trainer_card_shows_the_pixel_avatar(tmp_path):
     assert '>V</div>' not in html
 
 
+def test_trainer_card_shows_the_motto_once_in_spanish(tmp_path):
+    # The motto is Spanish in both languages, so it is written once and read out as Spanish.
+    html = render(tmp_path)
+    assert html.count('<p class="motto" lang="es">') == 1
+    assert "“Dios me prepara a fuego lento.”" in html
+
+
 def test_tab_and_home_screen_icons(tmp_path):
     head = render(tmp_path).split("</head>")[0]
     assert '<link rel="icon" href="favicon.svg" type="image/svg+xml">' in head
