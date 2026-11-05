@@ -80,7 +80,7 @@ def test_sections_in_order(tmp_path):
 
 def test_every_text_in_both_languages(tmp_path):
     html = render(tmp_path)
-    for key in ("greeting", "intro", "right_now", "listening", "watched", "reading", "moving",
+    for key in ("greeting", "intro", "right_now", "last_played", "watched", "reading", "moving",
                 "party", "pc_box", "all_on_github", "work", "work_line", "footer"):
         for lang in ("en", "pt"):
             text = esc(STRINGS[lang][key])
@@ -168,8 +168,17 @@ def test_spotify_row(tmp_path):
     for field in ("cover", "title", "artist", "label"):
         assert f'data-field="{field}"' in row
     assert f'<a class="row" href="{SONG.url}"' in row
-    assert 'data-playing="true"' in row
-    assert ">ON<" in row
+
+
+def test_saved_song_never_renders_as_playing(tmp_path):
+    # SONG.playing is True, but the build ran hours ago: only site.js's live fetch may say ON.
+    html = render(tmp_path)
+    row = re.search(r'<li id="spotify-row".*?</li>', html, re.S).group(0)
+    assert 'data-playing="false"' in row and 'data-playing="true"' not in row
+    assert '<span class="badge" data-field="badge" hidden>ON</span>' in row
+    label = re.search(r'data-field="label">(.*?)</span></span>', row, re.S).group(0)
+    assert esc(STRINGS["en"]["last_played"]) in label
+    assert esc(STRINGS["en"]["listening"]) not in label
 
 
 def test_spotify_row_says_last_played_when_not_playing(tmp_path):

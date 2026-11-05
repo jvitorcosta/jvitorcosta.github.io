@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 from homepage.markup import Page, clip, esc, safe_url
 from homepage.model import Activity, Book, Film, LiveData, Song
 
@@ -27,10 +29,13 @@ def _thumb(src: str, tall: bool = False, field: str = "") -> str:
 
 
 def _song(p: Page, song: Song | None) -> str:
-    """Spotify row. Without a saved song it is a hidden, empty shell that site.js fills."""
+    """Spotify row. Without a saved song it is a hidden, empty shell that site.js fills.
+
+    The saved song is hours old by the time anyone reads the page, so it always renders as
+    "last played"; only site.js's live fetch may switch the row to playing (ON, bars).
+    """
     shell = song is None
-    if shell:
-        song = Song("", "", "", "", False)
+    song = Song("", "", "", "", False) if shell else replace(song, playing=False)
     label_key = "listening" if song.playing else "last_played"
     s = p.c.strings
     labels = " ".join(
