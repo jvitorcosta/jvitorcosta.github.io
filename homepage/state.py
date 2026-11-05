@@ -14,7 +14,15 @@ def load_state(path: Path) -> dict[str, dict]:
     path = Path(path)
     if not path.exists():
         return {}
-    return json.loads(path.read_text(encoding="utf-8"))
+    try:
+        state = json.loads(path.read_text(encoding="utf-8"))
+    except (ValueError, UnicodeDecodeError) as exc:  # a broken file must never fail the job
+        print(f"::warning::state file unreadable, starting empty: {exc}", file=sys.stderr)
+        return {}
+    if not isinstance(state, dict):
+        print("::warning::state file is not a JSON object, starting empty", file=sys.stderr)
+        return {}
+    return state
 
 
 def save_state(path: Path, state: dict) -> None:
@@ -46,6 +54,11 @@ def refresh(
     stored = state.get(name)
     if stored is None:
         return None
-    if isinstance(stored, list):
-        return [from_dict(cls, d) for d in stored]
-    return from_dict(cls, stored)
+    try:  # schema drift or a hand edit must not fail the job either
+        if isinstance(stored, list):
+            return [from_dict(cls, d) for d in stored]
+        return from_dict(cls, stored)
+    except Exception as exc:
+        print(f"::warning::{name} stored value unreadable: {str(exc) or type(exc).__name__}",
+              file=sys.stderr)
+        return None

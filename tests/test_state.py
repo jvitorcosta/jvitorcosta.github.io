@@ -67,3 +67,35 @@ def test_state_roundtrip(tmp_path):
 
 def test_load_state_missing(tmp_path):
     assert load_state(tmp_path / "nope.json") == {}
+
+
+def _boom():
+    raise RuntimeError("down")
+
+
+def test_unreadable_stored_value_is_dropped_with_warning(capsys):
+    state = {"book": {"title": "Dune"}}  # schema drift: fields missing
+    assert refresh("book", _boom, state, Book) is None
+    err = capsys.readouterr().err
+    assert "::warning::book not updated: down" in err
+    assert "::warning::book stored value unreadable:" in err
+
+
+def test_unreadable_stored_list_is_dropped_with_warning(capsys):
+    state = {"repos": [{"name": "a"}, "not a dict"]}
+    assert refresh("repos", _boom, state, Repo) is None
+    assert "::warning::repos stored value unreadable:" in capsys.readouterr().err
+
+
+def test_invalid_state_json_is_empty_with_warning(tmp_path, capsys):
+    path = tmp_path / "state.json"
+    path.write_text("{not json", encoding="utf-8")
+    assert load_state(path) == {}
+    assert "::warning::state" in capsys.readouterr().err
+
+
+def test_state_json_that_is_not_an_object_is_empty(tmp_path, capsys):
+    path = tmp_path / "state.json"
+    path.write_text("[1, 2]", encoding="utf-8")
+    assert load_state(path) == {}
+    assert "::warning::state" in capsys.readouterr().err

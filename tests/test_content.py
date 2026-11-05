@@ -91,3 +91,27 @@ def test_missing_pc_box_file_is_empty(tmp_path):
     root = _copy_data(tmp_path)
     (root / "data" / "pc_box.toml").unlink(missing_ok=True)
     assert load_content(root).pc_box == {}
+
+
+@pytest.mark.parametrize("text", [
+    "[activity\nsport = ",  # not TOML
+    '[activity]\nsport = "Ride"\nemoji = "🚴"\n',  # incomplete
+    '[activity]\nsport = "Ride"\nemoji = "🚴"\ntitle = "x"\nmoving_min = "25"\n'
+    'detail = ""\ndate = "2026-11-04"\n',  # wrong type
+    'activity = "Ride"\n',  # not a table
+])
+def test_bad_activity_file_skips_the_row_with_warning(tmp_path, capsys, text):
+    root = _copy_data(tmp_path)
+    (root / "data" / "activity.toml").write_text(text, encoding="utf-8")
+    assert load_content(root).activity is None
+    assert "::warning::activity" in capsys.readouterr().err
+
+
+def test_non_table_pc_box_entry_is_skipped_with_warning(tmp_path, capsys):
+    root = _copy_data(tmp_path)
+    (root / "data" / "pc_box.toml").write_text(
+        'oops = "text"\n[ask-vitor]\nen = "a"\npt = "b"\n', encoding="utf-8"
+    )
+    pc_box = load_content(root).pc_box
+    assert "oops" not in pc_box and pc_box["ask-vitor"]["en"] == "a"
+    assert "::warning::pc_box oops" in capsys.readouterr().err
