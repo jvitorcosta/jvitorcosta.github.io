@@ -97,7 +97,7 @@ def test_head(tmp_path):
     assert '<link rel="canonical" href="https://jvitorcosta.github.io/">' in html
     assert '<link rel="stylesheet" href="assets/site.css">' in html
     assert '<script src="assets/site.js" defer></script>' in html
-    assert "family=Inter" in html and "Press+Start+2P" in html
+    assert "fonts.googleapis.com" not in html and "fonts.gstatic.com" not in html
     ld = re.search(r'<script type="application/ld\+json">(.*?)</script>', html).group(1)
     assert '"addressLocality": "Manaus"' in ld and '"addressCountry": "BR"' in ld
     assert "https://github.com/jvitorcosta" in ld and "instagram" not in ld
@@ -471,3 +471,11 @@ def test_early_palette_script_runs_before_the_stylesheet(tmp_path):
     assert "pocket|night|nu" in script
     assert '"pal-"+p' in script and 'setAttribute("data-pal",p)' in script
     assert script.count("{") == script.count("}") and script.count("(") == script.count(")")
+
+
+def test_page_requests_no_third_party_fonts(tmp_path):
+    html = render(tmp_path)
+    assert "googleapis" not in html and "gstatic" not in html
+    assert 'rel="preconnect"' not in html
+    hosts = re.findall(r'(?:src|href)="(https?://[^"/]+)', html.split("</head>")[0])
+    assert hosts == ["https://jvitorcosta.github.io"]  # canonical link only

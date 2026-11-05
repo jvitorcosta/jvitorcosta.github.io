@@ -20,8 +20,6 @@ __all__ = ["clip", "render_home", "safe_url"]
 SITE = "https://jvitorcosta.github.io/"
 OG_IMAGE = SITE + "og-image.png"
 GITHUB_REPOS = "https://github.com/jvitorcosta?tab=repositories"
-FONTS = ("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700"
-         "&family=Press+Start+2P&display=swap")
 PC_BOX_ROWS = 8
 # key, English name, Portuguese name, swatch colour
 PALETTES = (("pocket", "Pocket", "Pocket", "#fbfaf4"),
@@ -187,9 +185,6 @@ def _head(p: Page) -> str:
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <script>{EARLY_PALETTE}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{FONTS.replace("&", "&amp;")}">
 <link rel="stylesheet" href="assets/site.css">
 <script src="assets/site.js" defer></script>
 <script type="application/ld+json">{_json_ld(p.c.links)}</script>

@@ -148,3 +148,20 @@ def test_language_switch_updates_translated_aria_labels():
 
 def test_footer_outside_main_keeps_the_column():
     assert re.search(r"body > footer\.foot", css())
+
+
+def test_fonts_are_self_hosted():
+    text = css()
+    assert "googleapis" not in text and "gstatic" not in text
+    faces = re.findall(r"@font-face\s*\{([^}]*)\}", text)
+    families = {re.search(r"font-family:\s*'([^']+)'", f).group(1) for f in faces}
+    assert families == {"Inter", "Press Start 2P"}
+    for face in faces:
+        assert "font-display: swap" in face and "unicode-range:" in face
+        for src in re.findall(r"url\(([^)]+)\)", face):
+            assert not re.match(r"(https?:)?//", src)
+            assert (CSS_PATH.parent / src.strip("'\"")).is_file(), src
+    # @font-face rules come first, before any other rule
+    assert text.index("@font-face") < text.index(".pal-pocket")
+    for licence in ("OFL-Inter.txt", "OFL-PressStart2P.txt"):
+        assert (ROOT / "assets" / "fonts" / licence).is_file()
