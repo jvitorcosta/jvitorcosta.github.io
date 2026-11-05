@@ -68,7 +68,7 @@ img { max-width: 100%; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
 
-.px, .h, .k, .lv, .badge, .ava, [data-lang-toggle] {
+.px, .h, .k, .lv, .badge, [data-lang-toggle] {
   font-family: "Press Start 2P", ui-monospace, monospace;
   font-weight: 400;
   letter-spacing: .5px;
@@ -188,11 +188,11 @@ header.top > a:hover { text-decoration: underline; }
 .trainer { display: flex; gap: 12px; align-items: center; }
 .ava {
   flex: none;
-  display: grid; place-items: center;
+  display: block;
   width: 72px; height: 72px;
-  font-size: 26px;
-  color: var(--box);
-  background: var(--accent);
+  padding: 4px;
+  box-sizing: border-box;
+  background: var(--soft);
   border: 3px solid var(--line);
 }
 h1.name { margin: 0 0 8px; font-size: 14px; line-height: 1.5; }

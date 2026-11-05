@@ -117,7 +117,7 @@ def _trainer(p: Page) -> str:
                     for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
     nav = f'<nav class="links">{links}</nav>' if links else ""
     return (f'<section class="box" id="trainer"><div class="trainer">'
-            f'<div class="ava px" aria-hidden="true">V</div><div>'
+            '<img class="ava" src="assets/avatar.png" alt="" width="72" height="72"><div>'
             f'<h1 class="px name">{p.t("greeting")}</h1>'
             f'<p class="small">{p.t("intro")}</p></div></div>{nav}</section>')
 
@@ -187,6 +187,7 @@ def _head(p: Page) -> str:
 <meta property="og:image" content="{OG_IMAGE}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script>{EARLY_PALETTE}</script>
 <link rel="stylesheet" href="assets/site.css">
 <script src="assets/site.js" defer></script>

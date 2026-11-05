@@ -487,3 +487,15 @@ def test_page_requests_no_third_party_fonts(tmp_path):
     assert 'rel="preconnect"' not in html
     hosts = re.findall(r'(?:src|href)="(https?://[^"/]+)', html.split("</head>")[0])
     assert hosts == ["https://jvitorcosta.github.io"]  # canonical link only
+
+
+def test_trainer_card_shows_the_pixel_avatar(tmp_path):
+    html = render(tmp_path)
+    assert '<img class="ava" src="assets/avatar.png" alt="" width="72" height="72">' in html
+    assert '>V</div>' not in html
+
+
+def test_tab_and_home_screen_icons(tmp_path):
+    head = render(tmp_path).split("</head>")[0]
+    assert '<link rel="icon" href="favicon.svg" type="image/svg+xml">' in head
+    assert '<link rel="apple-touch-icon" href="apple-touch-icon.png">' in head
