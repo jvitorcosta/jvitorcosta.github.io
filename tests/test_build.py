@@ -175,3 +175,20 @@ def test_no_summary_when_every_source_is_fresh(site, monkeypatch, tmp_path):
     monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
     build(site, sources(), get=fake_get, today="2026-11-05")
     assert not summary.exists()
+
+
+def test_stale_sources_are_handed_to_the_alert_job(site, monkeypatch, tmp_path):
+    # The workflow fails a job after the deploy when this output is set, so GitHub emails.
+    state_path = site / "data" / "state.json"
+    state_path.write_text(json.dumps({"updated": {"book": "2026-10-26", "film": "2026-10-20"}}), encoding="utf-8")
+    output = tmp_path / "output.txt"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    build(site, sources(book=boom, film=boom), get=fake_get, today="2026-11-05")
+    assert output.read_text(encoding="utf-8") == "stale=film book\n"
+
+
+def test_no_output_when_every_source_is_fresh(site, monkeypatch, tmp_path):
+    output = tmp_path / "output.txt"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    build(site, sources(), get=fake_get, today="2026-11-05")
+    assert not output.exists()

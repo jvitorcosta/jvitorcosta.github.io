@@ -102,16 +102,22 @@ def build(
 
 
 def report_stale(state: dict, today: str) -> None:
-    """Warn about sources that kept an old value for over a week, and list them in the run summary."""
+    """Warn about sources that kept an old value for over a week, list them in the run summary,
+    and hand their names to the workflow's alert job (step output `stale`)."""
     stale = stale_sources(state, today)
     for name, age in stale:
         print(f"::warning::{name} has not updated for {age} days", file=sys.stderr)
-    summary = os.environ.get("GITHUB_STEP_SUMMARY")
-    if not stale or not summary:
+    if not stale:
         return
-    rows = "".join(f"| {name} | {state['updated'][name]} | {age} |\n" for name, age in stale)
-    with open(summary, "a", encoding="utf-8") as f:
-        f.write("### Sources not updating\n\n| Source | Last update | Days |\n|---|---|---|\n" + rows)
+    output = os.environ.get("GITHUB_OUTPUT")
+    if output:
+        with open(output, "a", encoding="utf-8") as f:
+            f.write(f"stale={' '.join(name for name, _ in stale)}\n")
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        rows = "".join(f"| {name} | {state['updated'][name]} | {age} |\n" for name, age in stale)
+        with open(summary, "a", encoding="utf-8") as f:
+            f.write("### Sources not updating\n\n| Source | Last update | Days |\n|---|---|---|\n" + rows)
 
 
 def main() -> None:
