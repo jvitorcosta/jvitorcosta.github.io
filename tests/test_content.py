@@ -87,7 +87,8 @@ def test_pc_box_texts_are_short_plain_and_bilingual():
         for lang in ("en", "pt"):
             assert 0 < len(text[lang]) <= 60, (name, lang)
             words = text[lang].lower()
-            assert not [j for j in JARGON if re.search(rf"{j}", words)], (name, lang)
+            found = [j for j in JARGON if re.search(r"\b" + re.escape(j) + r"\b", words)]
+            assert not found, (name, lang, found)
 
 
 def test_pc_box_texts_are_loaded(tmp_path):
