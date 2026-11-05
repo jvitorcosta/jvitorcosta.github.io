@@ -110,3 +110,31 @@ def test_spotify_fetch_has_timeout():
 
 def test_fetched_data_never_goes_through_innerhtml():
     assert "innerHTML" not in js()
+
+
+def _rule(selector_pattern: str) -> str:
+    m = re.search(rf"(?m)^{selector_pattern}\s*\{{([^}}]*)\}}", css())
+    assert m, f"no rule for {selector_pattern}"
+    return m.group(1)
+
+
+def test_brand_icons_contrast_with_their_circle():
+    """simple-icons SVGs are black; site.css inverts them to white only on the dark circles."""
+    from homepage.markup import PLATFORMS
+
+    assert "invert" not in _rule(r"\.go img")
+    inverted = set(re.findall(r'\.go img\[src\$="/([\w-]+)\.svg"\]', css()))
+    for platform, (_, circle) in PLATFORMS.items():
+        icon = "#ffffff" if platform in inverted else "#000000"
+        assert contrast(icon, circle) >= 3.0, f"{platform} icon on {circle}"
+
+
+def test_language_toggle_name_contains_visible_text():
+    source = js()
+    assert re.search(r'setAttribute\("aria-label",\s*label', source)
+
+
+@pytest.mark.parametrize("selector", [r"\.k", r"\.badge", r"\.mon \.lv"])
+def test_pixel_labels_are_at_least_10px(selector):
+    size = re.search(r"font-size:\s*(\d+)px", _rule(selector))
+    assert size and int(size.group(1)) >= 10

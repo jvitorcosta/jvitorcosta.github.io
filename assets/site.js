@@ -140,7 +140,10 @@
     if (LANGS.indexOf(code) < 0) return;
     root.lang = code;
     each("button[data-lang-toggle]", function (b) {
-      b.textContent = code === "pt" ? "PT ▸EN" : "EN ▸PT";
+      // WCAG 2.5.3: the accessible name starts with the visible text.
+      var label = code === "pt" ? "PT ▸EN" : "EN ▸PT";
+      b.textContent = label;
+      b.setAttribute("aria-label", label + (code === "pt" ? ", mudar idioma" : ", switch language"));
     });
     var row = document.getElementById("spotify-row");
     if (row && row.hasAttribute("data-filled")) spotifyLabel(row);

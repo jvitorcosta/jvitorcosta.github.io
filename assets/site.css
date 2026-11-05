@@ -207,7 +207,7 @@ a.row:hover .t { text-decoration: underline; }
 }
 .menu .body { flex: 1; min-width: 0; font-size: 14px; line-height: 1.45; }
 .menu .t { display: block; font-size: 15px; font-weight: 700; }
-.k { display: block; margin-bottom: 4px; font-size: 9px; line-height: 1.5; }
+.k { display: block; margin-bottom: 4px; font-size: 10px; line-height: 1.5; }
 [data-field=artist] { display: block; }
 .review { display: block; margin-top: 2px; }
 .go {
@@ -217,13 +217,15 @@ a.row:hover .t { text-decoration: underline; }
   border: 2px solid var(--line);
   border-radius: 50%;
 }
-.go img { width: 18px; height: 18px; filter: invert(1); }
+/* simple-icons are black: black reads on the bright brand circles; the dark ones get a white icon. */
+.go img { width: 18px; height: 18px; }
+.go img[src$="/letterboxd.svg"], .go img[src$="/goodreads.svg"] { filter: invert(1); }
 
 .badge {
   display: inline-block;
   margin-left: 4px;
   padding: 3px 5px;
-  font-size: 8px;
+  font-size: 10px;
   line-height: 1.2;
   vertical-align: middle;
   color: #08130a;
@@ -282,7 +284,7 @@ a.row:hover .t { text-decoration: underline; }
 .mon .lv {
   position: absolute; top: 6px; left: 6px;
   padding: 3px 4px;
-  font-size: 8px;
+  font-size: 10px;
   color: var(--ink);
   background: var(--box);
   border: 2px solid var(--line);
