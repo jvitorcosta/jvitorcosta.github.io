@@ -124,26 +124,43 @@ def _trainer(p: Page) -> str:
             f'<p class="motto" lang="es">“{esc(p.c.strings["en"]["motto"])}”</p></div></div>{nav}</section>')
 
 
+def _month(p: Page, text: str) -> dict[str, str]:
+    """"Feb 2026" in both languages ("fev 2026"); anything else stays as written."""
+    en = p.c.strings["en"]["months"].split()
+    month, _, year = text.partition(" ")
+    if month not in en:
+        return {lang: text for lang in p.c.strings}
+    return {lang: f'{s["months"].split()[en.index(month)]} {year}' for lang, s in p.c.strings.items()}
+
+
 def _work(p: Page, site_root: Path) -> str:
-    companies = list(dict.fromkeys(j.company for j in p.c.jobs))
-    names = f'<p class="small companies">{esc(" · ".join(companies))}</p>' if companies else ""
+    roles = []
+    for j in p.c.jobs:
+        start, end = _month(p, j.start), _month(p, j.end)
+        dates = p.both({lang: f"{start[lang]} – {end[lang]}" for lang in ("en", "pt")})
+        roles.append(f"<li><b>{esc(j.title)}</b>{esc(j.company)} · {dates}</li>")
+    jobs = f'<ol class="jobs">{"".join(roles)}</ol>' if roles else ""
     linkedin = safe_url(p.c.links.get("linkedin", ""))
-    links = [f'<a href="{esc(linkedin)}">LinkedIn ›</a>'] if linkedin else []
+    link = f'<div class="links"><a href="{esc(linkedin)}">LinkedIn ›</a></div>' if linkedin else ""
     resume = _case_page(RESUME_CASE, site_root)
     if resume:
-        links.append(f'<a href="{resume}">{p.t("resume_case")} ›</a>')
-    link = f'<div class="links">{"".join(links)}</div>' if links else ""
+        link += f'<p class="small aside"><a href="{resume}">{p.t("resume_case")} ›</a></p>'
     return (f'<section class="box" id="work"><h2 class="h px"><span>{ARROW}{p.t("work")}</span></h2>'
-            f'<p class="small">{p.t("work_line")}</p>{names}{link}</section>')
+            f'<p class="small">{p.t("work_line")}</p>{jobs}{link}</section>')
 
 
 def _aria(en: str, pt: str) -> str:
     return f'aria-label="{en}" data-aria-en="{en}" data-aria-pt="{pt}"'
 
 
+def _title(en: str, pt: str) -> str:
+    """A hover name; site.js swaps it to data-title-<lang> when the language changes."""
+    return f'title="{en}" data-title-en="{en}" data-title-pt="{pt}"'
+
+
 def _top() -> str:
     dots = "".join(
-        f'<button type="button" data-palette="{key}" {_aria(en, pt)} '
+        f'<button type="button" data-palette="{key}" {_aria(en, pt)} {_title(en, pt)} '
         f'style="background:{colour}"></button>'
         for key, en, pt, colour in PALETTES
     )
@@ -195,6 +212,33 @@ def _head(p: Page) -> str:
 <script src="{versioned("assets/site.js")}" defer></script>
 <script type="application/ld+json">{_json_ld(p.c.links)}</script>
 </head>"""
+
+
+def render_404(content: Content) -> str:
+    """GitHub Pages serves 404.html for any missing path, so every URL in it is root-relative."""
+    p = Page(content)
+    return f"""<!doctype html>
+<html lang="en" class="pal-night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>{esc(content.strings["en"]["not_found_title"])}</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>{EARLY_PALETTE}</script>
+<link rel="stylesheet" href="/{versioned("assets/site.css")}">
+<script src="/{versioned("assets/site.js")}" defer></script>
+</head>
+<body>
+<main class="in">
+{_top()}
+<section class="box" id="not-found"><h1 class="h px"><span>{ARROW}404</span></h1>
+<p class="small">{p.t("not_found")}</p>
+<div class="links"><a href="/">{p.t("back_home")}</a></div></section>
+</main>
+</body>
+</html>
+"""
 
 
 def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: Path) -> str:

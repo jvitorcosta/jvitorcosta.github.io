@@ -184,6 +184,13 @@ header.top > a:hover { text-decoration: underline; }
 .small { margin: 0; font-size: 15px; line-height: 1.5; }
 .motto { margin: 6px 0 0; font-size: 14px; font-style: italic; color: var(--accent); }
 #work .small { margin: 8px 0 0; }
+/* Work: one line per role, title in bold over company and dates. */
+.jobs { list-style: none; margin: 10px 0 0; padding: 0; font-size: 14px; line-height: 1.45; }
+.jobs li { padding: 8px 0; border-bottom: 2px dotted var(--soft); }
+.jobs li:last-child { border-bottom: 0; }
+.jobs b { display: block; font-size: 15px; }
+#work .aside { margin-top: 12px; font-size: 14px; }
+#work .aside a { color: var(--ink); text-underline-offset: 3px; }
 
 /* Trainer card */
 .trainer { display: flex; gap: 12px; align-items: center; }
@@ -219,6 +226,11 @@ h1.name .zh {
   text-decoration: none;
   cursor: pointer;
 }
+/* On a phone the four trainer links make a 2x2 grid instead of leaving one alone on a row. */
+@media (max-width: 420px) {
+  #trainer .links { display: grid; grid-template-columns: 1fr 1fr; }
+  #trainer .links a { justify-content: center; }
+}
 .links a:hover, .btn:hover { text-decoration: underline; }
 .links a:active, .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--shadow); }
 
@@ -248,7 +260,7 @@ a.row:hover .t { text-decoration: underline; }
   display: grid; place-items: center;
   width: 46px; height: 46px;
   font-size: 22px;
-  background: #fc4c02;
+  background: var(--soft);
   border: 3px solid var(--line);
 }
 .menu .body { flex: 1; min-width: 0; font-size: 14px; line-height: 1.45; }

@@ -227,3 +227,12 @@ def test_strava_is_only_used_when_its_secrets_are_set(monkeypatch):
     monkeypatch.setenv("STRAVA_CLIENT_SECRET", "s")
     monkeypatch.setenv("STRAVA_REFRESH_TOKEN", "r")
     assert "activity" in default_sources()
+
+
+def test_build_writes_a_404_page_in_the_site_style(site):
+    build(site, sources(), get=fake_get, today="2026-11-07")
+    page = (site / "404.html").read_text(encoding="utf-8")
+    assert re.search(r'href="/assets/site\.css\?v=[0-9a-f]{8}"', page)
+    assert 'href="/"' in page
+    assert '<meta name="robots" content="noindex">' in page
+    assert "\r" not in page
