@@ -10,15 +10,22 @@
   },
   "film": {
     "liked": true,
-    "poster": "https://a.ltrbxd.com/resized/film-poster/1/0/4/0/2/9/0/1040290-street-fighter-2026-0-230-0-345-crop.jpg?v=5cc9002644",
-    "rating": 3.5,
-    "review": "os flashbacks de anime são muito bem feitos podia ser o john cena como Guile o filme é meio duvidoso em alguns momentos",
-    "title": "Street Fighter",
-    "url": "https://letterboxd.com/zubu/film/street-fighter-2026/",
-    "watched": "2026-11-05",
+    "poster": "https://a.ltrbxd.com/resized/film-poster/1/2/8/4/6/3/6/1284636-clayface-0-230-0-345-crop.jpg?v=eb305849d5",
+    "rating": 4.0,
+    "review": "Interessante como só o carinho da casada acalma esse pilantra Dormi em alguma parte do filme, não lembro oq aconteceu no miolo",
+    "title": "Clayface",
+    "url": "https://letterboxd.com/zubu/film/clayface/",
+    "watched": "2026-11-06",
     "year": "2026"
   },
   "repos": [
+    {
+      "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
+      "homepage": "",
+      "name": "open-radars-manaus",
+      "pushed": "2026-11-06T18:08:12Z",
+      "url": "https://github.com/jvitorcosta/open-radars-manaus"
+    },
     {
       "description": "Copier template for new Python projects: uv, Ruff, strict mypy, pytest, pre-commit, CI on three OSes and a full Claude Code setup",
       "homepage": "",
@@ -83,13 +90,6 @@
       "url": "https://github.com/jvitorcosta/operations-research-ortools"
     },
     {
-      "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
-      "homepage": "",
-      "name": "open-radars-manaus",
-      "pushed": "2026-11-05T22:16:41Z",
-      "url": "https://github.com/jvitorcosta/open-radars-manaus"
-    },
-    {
       "description": "Listen-only CAN bus toolkit with an ELM327 adapter: find the signals your car doesn't expose over OBD-II",
       "homepage": "",
       "name": "car-can-lab",
@@ -126,16 +126,16 @@
     }
   ],
   "song": {
-    "artist": "The Weeknd",
-    "cover": "https://i.scdn.co/image/ab67616d00001e028863bc11d2aa12b54f5aeb36",
-    "playing": true,
-    "title": "Save Your Tears",
-    "url": "https://open.spotify.com/track/5QO79kh1waicV47BqGRL3g"
+    "artist": "Vulgo FK",
+    "cover": "https://i.scdn.co/image/ab67616d00001e023aff972cb6057a5a924e928d",
+    "playing": false,
+    "title": "Celine",
+    "url": "https://open.spotify.com/track/1aDGzQHWNCMy3pF1Stqjk7"
   },
   "updated": {
-    "book": "2026-11-06",
-    "film": "2026-11-06",
-    "repos": "2026-11-06",
-    "song": "2026-11-06"
+    "book": "2026-11-07",
+    "film": "2026-11-07",
+    "repos": "2026-11-07",
+    "song": "2026-11-07"
   }
 }
