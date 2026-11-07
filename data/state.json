@@ -1,4 +1,14 @@
 {
+  "activity": {
+    "date": "2026-11-06",
+    "detail": "30.6 km/h",
+    "distance_km": 23.8,
+    "emoji": "🚴",
+    "moving_min": 47,
+    "sport": "Ride",
+    "title": "Lunch Ride",
+    "url": "https://www.strava.com/activities/20885035443"
+  },
   "book": {
     "author": "David Goggins",
     "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1536184191l/41721428._SX318_.jpg",
@@ -19,6 +29,13 @@
     "year": "2026"
   },
   "repos": [
+    {
+      "description": "ESP32 touchscreens and a Garmin watch app for the car: Spotify as a Pokémon battle, plus LED light control",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-07T06:02:01Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
     {
       "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
       "homepage": "",
@@ -97,13 +114,6 @@
       "url": "https://github.com/jvitorcosta/car-can-lab"
     },
     {
-      "description": "ESP32 touchscreens and a Garmin watch app for the car: Spotify as a Pokémon battle, plus LED light control",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-05T22:16:29Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
-    },
-    {
       "description": "Unofficial tools to talk to the Haylou RT smartwatch over Bluetooth and build and preview custom watch faces",
       "homepage": "",
       "name": "haylou-rt-tools",
@@ -133,6 +143,7 @@
     "url": "https://open.spotify.com/track/1aDGzQHWNCMy3pF1Stqjk7"
   },
   "updated": {
+    "activity": "2026-11-07",
     "book": "2026-11-07",
     "film": "2026-11-07",
     "repos": "2026-11-07",
