@@ -6,6 +6,7 @@ date and the activity link. Never the map, start/end points, heart rate or other
 from __future__ import annotations
 
 import json
+import sys
 from collections.abc import Callable
 
 from homepage import http
@@ -13,6 +14,7 @@ from homepage.model import Activity
 
 TOKEN_URL = "https://www.strava.com/oauth/token"
 ACTIVITIES_URL = "https://www.strava.com/api/v3/athlete/activities?per_page=10"
+ACTIVITY_URL = "https://www.strava.com/api/v3/activities"
 EMOJI = {
     "Ride": "🚴", "MountainBikeRide": "🚵", "GravelRide": "🚴", "EBikeRide": "🚴", "VirtualRide": "🚴",
     "Run": "🏃", "TrailRun": "🏃", "VirtualRun": "🏃", "Walk": "🚶", "Hike": "🥾", "Swim": "🏊",
@@ -33,10 +35,18 @@ def fetch_activity(
         "client_id": client_id, "client_secret": client_secret,
         "grant_type": "refresh_token", "refresh_token": refresh_token,
     }))["access_token"]
-    activities = json.loads(get(ACTIVITIES_URL, headers={"Authorization": f"Bearer {token}"}))
+    headers = {"Authorization": f"Bearer {token}"}
+    activities = json.loads(get(ACTIVITIES_URL, headers=headers))
     for a in activities:
         if a.get("visibility") == "only_me":
             continue
+        # The list sends pr_count 0; the activity's own page has the real count. Without it the
+        # row still shows, just without PRs.
+        try:
+            detail = json.loads(get(f"{ACTIVITY_URL}/{a['id']}", headers=headers))
+            a = dict(a, pr_count=detail.get("pr_count", a.get("pr_count")))
+        except Exception as exc:
+            print(f"::warning::Strava PR count not read: {exc}", file=sys.stderr)
         return _row(a)
     return None
 
