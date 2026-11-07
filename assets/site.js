@@ -173,6 +173,10 @@
       var label = el.getAttribute("data-aria-" + code);
       if (label) el.setAttribute("aria-label", label);
     });
+    each("[data-title-en]", function (el) {
+      var title = el.getAttribute("data-title-" + code);
+      if (title) el.setAttribute("title", title);
+    });
     var row = document.getElementById("spotify-row");
     if (row && row.hasAttribute("data-filled")) spotifyLabel(row);
   }

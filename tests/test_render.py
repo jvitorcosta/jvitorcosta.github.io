@@ -142,7 +142,7 @@ def test_all_rows_missing_hides_the_box(tmp_path):
     html = render(tmp_path, lv=LiveData(None, None, None, None))
     # only the hidden Spotify shell is left, so the box stays hidden until JS fills it
     assert '<section class="box" id="right-now" hidden>' in html
-    assert len(re.findall(r"<li[ >]", html)) == 1
+    assert len(re.findall(r"<li[ >]", section(html, "right-now", "party"))) == 1
 
 
 def test_spotify_shell_when_no_song(tmp_path):
@@ -207,8 +207,8 @@ def test_escapes_and_clips(tmp_path):
     html = render(tmp_path, lv=live(film=film))
     assert "Tom &amp; Jerry &lt;3 &quot;Live&quot;" in html
     assert "<3" not in html
-    clipped = clip(title, 48)
-    assert len(clipped) == 48 and clipped.endswith("…")
+    clipped = clip(title, 80)
+    assert len(clipped) == 80 and clipped.endswith("…")
     assert esc(clipped) in html
     assert "r" * 69 + "…" in html and "r" * 70 not in html
 
@@ -354,7 +354,7 @@ def test_no_powered_by_strava(tmp_path):
 
 def test_work_section(tmp_path):
     work = section(render(tmp_path), "work")
-    assert "Qubika · Nubank" in work
+    assert "Qubika · " in work and "Nubank · " in work
     assert 'href="https://www.linkedin.com/in/jvpro/"' in work
 
 
@@ -522,3 +522,34 @@ def test_trainer_card_shows_the_full_name_and_the_chinese_name(tmp_path):
     assert name.count("VITOR PINHEIRO") == 2  # English and Portuguese spans
     # Written once, marked as Chinese so it is read out and drawn with a font that has the glyphs.
     assert name.count('<span class="zh" lang="zh-Hans">白玉龙</span>') == 1
+
+
+def test_clip_cuts_at_a_word_boundary():
+    review = "Interessante como só o carinho da casada acalma esse pilantra Dormi em pé"
+    assert clip(review, 70) == "Interessante como só o carinho da casada acalma esse pilantra Dormi…"
+
+
+def test_long_titles_wrap_instead_of_being_cut(tmp_path):
+    title = "Can't Hurt Me: Master Your Mind and Defy the Odds"
+    book = Book(title, BOOK.author, BOOK.cover, BOOK.url, 210, 366)
+    assert esc(title) in render(tmp_path, lv=live(book=book))
+
+
+def test_footer_names_every_source_and_the_real_cadence(tmp_path):
+    foot = render(tmp_path).split('<footer class="foot">')[1]
+    assert "Spotify, Letterboxd, Goodreads, Strava and GitHub" in foot
+    assert "twice a day" in foot and "duas vezes por dia" in foot
+
+
+def test_work_lists_each_role_with_its_dates(tmp_path):
+    work = section(render(tmp_path), "work")
+    assert '<ol class="jobs">' in work
+    assert "<b>Senior AI/ML Engineer</b>" in work
+    assert ('Qubika · <span lang="en">Feb 2026 – Jul 2026</span>'
+            '<span lang="pt">fev 2026 – jul 2026</span>') in work
+    assert work.index("Qubika") < work.index("Nubank")
+
+
+def test_palette_dots_have_a_visible_name(tmp_path):
+    top = render(tmp_path).split('<header class="top">')[1].split("</header>")[0]
+    assert 'title="Night Menu" data-title-en="Night Menu" data-title-pt="Menu Noturno"' in top

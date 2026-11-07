@@ -4,5 +4,6 @@ __pycache__/
 
 # Built by the daily job and published straight to Pages; state lives on the `state` branch.
 index.html
+404.html
 data/state.json
 assets/live/

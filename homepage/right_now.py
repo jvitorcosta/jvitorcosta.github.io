@@ -87,7 +87,7 @@ def _film(p: Page, film: Film) -> str:
     review = (f'<br><i class="review">“{esc(clip(film.review, 70))}”</i>'
               if film.review else "")
     body = (f'<span class="k px">{p.t("watched")}</span>'
-            f'<span class="t">{esc(clip(film.title, 48))}{year}</span>{detail}{review}')
+            f'<span class="t">{esc(clip(film.title, 80))}{year}</span>{detail}{review}')
     inner = _thumb(film.poster, tall=True) + f'<div class="body">{body}</div>'
     return f"<li>{_row(film.url, inner)}{p.go('letterboxd')}</li>"
 
@@ -99,7 +99,7 @@ def _book(p: Page, book: Book) -> str:
         detail += " · " + p.t("page_of", page=book.page, pages=book.pages)
         bar = f'<div class="hp"><i style="width:{round(100 * book.page / book.pages)}%"></i></div>'
     body = (f'<span class="k px">{p.t("finished" if book.finished else "reading")}</span>'
-            f'<span class="t">{esc(clip(book.title, 48))}</span>{detail}{bar}')
+            f'<span class="t">{esc(clip(book.title, 80))}</span>{detail}{bar}')
     inner = _thumb(book.cover, tall=True) + f'<div class="body">{body}</div>'
     return f"<li>{_row(book.url, inner)}{p.go('goodreads')}</li>"
 

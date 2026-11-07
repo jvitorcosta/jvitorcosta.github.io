@@ -13,7 +13,7 @@ from homepage import http
 from homepage.content import load_content
 from homepage.images import cache_image, prune
 from homepage.model import Activity, Book, Film, LiveData, Repo, Song, from_dict
-from homepage.render import render_home
+from homepage.render import render_404, render_home
 from homepage.sources.github import fetch_repos
 from homepage.sources.goodreads import NothingReading, fetch_book
 from homepage.sources.letterboxd import fetch_film
@@ -106,6 +106,7 @@ def build(
     html = render_home(content, live, repos, root)
     index = root / "index.html"
     index.write_bytes(html.replace("\r\n", "\n").encode("utf-8"))
+    (root / "404.html").write_bytes(render_404(content).replace("\r\n", "\n").encode("utf-8"))
     save_state(state_path, state)
     report_stale(state, today)
     return index

@@ -25,8 +25,14 @@ PLATFORMS = {
 
 
 def clip(text: str, n: int) -> str:
-    """Shorten text to at most n characters, ending with … when cut."""
-    return text if len(text) <= n else text[: n - 1].rstrip() + "…"
+    """Shorten text to at most n characters, ending with … when cut. The cut lands on a word
+    boundary unless that would drop more than half of what fits."""
+    if len(text) <= n:
+        return text
+    cut = text[: n - 1]
+    if text[n - 1] != " " and cut.rfind(" ") > n // 2:
+        cut = cut[: cut.rfind(" ")]
+    return cut.rstrip() + "…"
 
 
 def esc(text: str) -> str:
