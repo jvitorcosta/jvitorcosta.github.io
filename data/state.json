@@ -30,6 +30,13 @@
   },
   "repos": [
     {
+      "description": "Streamlit app that shows where a daily forecast goes wrong: by series, weekday, holiday and benchmark",
+      "homepage": "https://forecast-error-analysis.streamlit.app",
+      "name": "timeseries-analysis-streamlit",
+      "pushed": "2026-11-07T13:43:40Z",
+      "url": "https://github.com/jvitorcosta/timeseries-analysis-streamlit"
+    },
+    {
       "description": "ESP32 touchscreens and a Garmin watch app for the car: Spotify as a Pokémon battle, plus LED light control",
       "homepage": "",
       "name": "car-cyberdeck",
@@ -56,13 +63,6 @@
       "name": "or-solver-streamlit",
       "pushed": "2026-11-05T22:17:38Z",
       "url": "https://github.com/jvitorcosta/or-solver-streamlit"
-    },
-    {
-      "description": "Streamlit app that shows where a daily forecast goes wrong: by series, weekday, holiday and benchmark",
-      "homepage": "https://forecast-error-analysis.streamlit.app",
-      "name": "timeseries-analysis-streamlit",
-      "pushed": "2026-11-05T22:17:32Z",
-      "url": "https://github.com/jvitorcosta/timeseries-analysis-streamlit"
     },
     {
       "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
@@ -136,11 +136,11 @@
     }
   ],
   "song": {
-    "artist": "Vulgo FK",
-    "cover": "https://i.scdn.co/image/ab67616d00001e023aff972cb6057a5a924e928d",
+    "artist": "Kendrick Lamar",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02c027ad28821777b00dcaa888",
     "playing": false,
-    "title": "Celine",
-    "url": "https://open.spotify.com/track/1aDGzQHWNCMy3pF1Stqjk7"
+    "title": "All The Stars (with SZA) - From \"Black Panther: The Album\"",
+    "url": "https://open.spotify.com/track/3GCdLUSnKSMJhs4Tj6CV3s"
   },
   "updated": {
     "activity": "2026-11-07",
