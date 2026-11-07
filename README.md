@@ -8,7 +8,7 @@ My corner of the internet: who I am, what I'm listening to, watching and reading
 
 ## What's on the page
 
-- **Lately:** the last song on Spotify, film on Letterboxd, book on Goodreads and workout, refreshed every day.
+- **Lately:** the last song on Spotify, film on Letterboxd, book on Goodreads and activity on Strava, refreshed twice a day.
 - **My party:** the projects I'm proudest of, as tiles, each linking to a case study or its repo.
 - **Recent repos:** my latest public GitHub repos, pulled from the GitHub API.
 - **Work:** a one-line summary and the companies I've worked with.
@@ -57,5 +57,5 @@ All hand-written text lives in `data/`, so content changes never touch code:
 | `data/strings.toml` | every piece of page text, in English and Portuguese |
 | `data/party.toml` | the project tiles |
 | `data/links.toml` | profile links |
-| `data/activity.toml` | the latest workout |
+| `data/activity.toml` | the activity row when Strava is off |
 | `data/pc_box.toml` | the PC box |

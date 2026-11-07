@@ -1,4 +1,5 @@
-# Last activity, edited by hand (no Strava API: its terms only allow showing data to the athlete).
+# Fallback for the activity row, used only when the Strava secrets are not set or Strava has
+# never answered yet (see docs/deploy.md). With Strava on, the row comes from my latest activity.
 # Never add maps, routes, start/end points, heart rate or other health data.
 # distance_km: leave out for activities without distance (weights, boxing); the row shows duration.
 # url: the Strava activity page; empty means the row is not a link.

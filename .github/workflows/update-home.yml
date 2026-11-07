@@ -57,6 +57,10 @@ jobs:
         run: uv run --locked --no-dev python -m homepage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # My Strava API app (docs/deploy.md). Without them the row comes from data/activity.toml.
+          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
 
       - name: Save state
         run: |

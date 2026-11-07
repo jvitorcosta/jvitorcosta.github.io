@@ -193,3 +193,37 @@ def test_no_output_when_every_source_is_fresh(site, monkeypatch, tmp_path):
     monkeypatch.setenv("GITHUB_OUTPUT", str(output))
     build(site, sources(), get=fake_get, today="2026-11-05")
     assert not output.exists()
+
+
+STRAVA = __import__("homepage.model", fromlist=["Activity"]).Activity(
+    "Ride", "🚴", "Lunch Ride", 23.8, 47, "30.6 km/h · 12 PRs", "2026-11-06",
+    "https://www.strava.com/activities/1")
+
+
+def test_strava_activity_replaces_the_hand_written_one(site):
+    build(site, sources(activity=lambda: STRAVA), get=fake_get, today="2026-11-06")
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert "Lunch Ride · 23.8 km" in html and "Night Ride" not in html
+    assert load_state(site / "data" / "state.json")["activity"]["title"] == "Lunch Ride"
+
+
+def test_strava_down_keeps_the_last_strava_activity(site):
+    build(site, sources(activity=lambda: STRAVA), get=fake_get)
+    build(site, sources(activity=boom), get=fake_get)
+    assert "Lunch Ride" in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_strava_down_with_nothing_saved_falls_back_to_the_hand_written_row(site):
+    build(site, sources(activity=boom), get=fake_get)
+    assert "Night Ride" in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_strava_is_only_used_when_its_secrets_are_set(monkeypatch):
+    from homepage.build import default_sources
+    for key in ("STRAVA_CLIENT_ID", "STRAVA_CLIENT_SECRET", "STRAVA_REFRESH_TOKEN"):
+        monkeypatch.delenv(key, raising=False)
+    assert "activity" not in default_sources()
+    monkeypatch.setenv("STRAVA_CLIENT_ID", "1")
+    monkeypatch.setenv("STRAVA_CLIENT_SECRET", "s")
+    monkeypatch.setenv("STRAVA_REFRESH_TOKEN", "r")
+    assert "activity" in default_sources()

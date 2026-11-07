@@ -30,3 +30,26 @@ Then open http://localhost:8000. The local build starts from your local `data/st
 ## Pages setting
 
 Settings → Pages → Build and deployment → Source must be **GitHub Actions**. With "Deploy from a branch" the site would serve `main` as-is, which has no `index.html`.
+
+## Strava
+
+The activity row reads my latest Strava activity through my own Strava API app. It keeps only the
+sport, title, distance, moving time, speed or pace, PR count, date and link: never the map,
+start/end points, heart rate or other health data. Private ("only me") activities are skipped.
+
+One-time setup:
+
+1. Create an app at https://www.strava.com/settings/api. Website: `https://jvitorcosta.github.io`,
+   Authorization Callback Domain: `localhost`.
+2. Open this URL (with the app's Client ID) and click Authorize:
+   `https://www.strava.com/oauth/authorize?client_id=CLIENT_ID&response_type=code&redirect_uri=http://localhost&approval_prompt=force&scope=activity:read`
+3. The browser lands on a `localhost` page that fails to load. Copy the `code=` value from its address bar.
+4. Exchange it for a refresh token:
+   ```bash
+   curl -X POST https://www.strava.com/oauth/token -d client_id=CLIENT_ID -d client_secret=CLIENT_SECRET -d code=CODE -d grant_type=authorization_code
+   ```
+5. In the repo: Settings → Secrets and variables → Actions → New repository secret. Add
+   `STRAVA_CLIENT_ID`, `STRAVA_CLIENT_SECRET` and `STRAVA_REFRESH_TOKEN` (the `refresh_token` from step 4).
+
+Without the secrets, or until Strava first answers, the row comes from `data/activity.toml`.
+If Strava stops answering for a week (a revoked app, say), the run turns red like any other source.
