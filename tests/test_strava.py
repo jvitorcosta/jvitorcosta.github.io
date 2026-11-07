@@ -10,8 +10,11 @@ FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "strava-activities.js
 CREDS = {"client_id": "id", "client_secret": "secret", "refresh_token": "refresh"}
 
 
-def fake(activities):
+def fake(activities, details=None):
+    """`details` maps an activity id to what the single-activity request returns; by default it
+    echoes the list entry, as a raising callable it fails."""
     calls = []
+    by_id = {str(a["id"]): a for a in activities}
 
     def post(url, data):
         calls.append(("post", url, data))
@@ -19,19 +22,25 @@ def fake(activities):
 
     def get(url, headers=None):
         calls.append(("get", url, headers))
-        return json.dumps(activities).encode()
+        if "/athlete/activities" in url:
+            return json.dumps(activities).encode()
+        activity_id = url.rsplit("/", 1)[1]
+        detail = (details or {}).get(activity_id, by_id[activity_id])
+        if callable(detail):
+            detail()
+        return json.dumps(detail).encode()
 
     return calls, get, post
 
 
-def fetch(activities=FIXTURE):
-    calls, get, post = fake(activities)
+def fetch(activities=FIXTURE, details=None):
+    calls, get, post = fake(activities, details)
     return fetch_activity(**CREDS, get=get, post=post), calls
 
 
 def test_refreshes_the_token_then_reads_the_latest_activities():
     _, calls = fetch()
-    (kind, url, data), (kind2, url2, headers) = calls
+    (kind, url, data), (kind2, url2, headers) = calls[:2]
     assert (kind, url) == ("post", "https://www.strava.com/oauth/token")
     assert data == {"client_id": "id", "client_secret": "secret",
                     "grant_type": "refresh_token", "refresh_token": "refresh"}
@@ -46,6 +55,23 @@ def test_ride_becomes_the_row_with_speed_and_prs():
     assert act.detail == "30.6 km/h · 12 PRs"
     assert act.date == "2026-11-06"
     assert act.url == "https://www.strava.com/activities/20885035443"
+
+
+def test_pr_count_comes_from_the_activity_itself():
+    # The list endpoint sends pr_count 0; only the single-activity request has the real number.
+    listed = dict(FIXTURE[0], pr_count=0)
+    act, calls = fetch([listed], details={"20885035443": dict(FIXTURE[0], pr_count=12)})
+    assert act.detail == "30.6 km/h · 12 PRs"
+    assert calls[-1] == ("get", "https://www.strava.com/api/v3/activities/20885035443",
+                         {"Authorization": "Bearer access"})
+
+
+def test_failed_activity_request_keeps_the_listed_values():
+    def down():
+        raise OSError("503")
+
+    act, _ = fetch([dict(FIXTURE[0], pr_count=0)], details={"20885035443": down})
+    assert act.title == "Lunch Ride" and act.detail == "30.6 km/h"
 
 
 def test_run_shows_pace_and_no_prs():
