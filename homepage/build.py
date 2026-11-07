@@ -12,24 +12,31 @@ from pathlib import Path
 from homepage import http
 from homepage.content import load_content
 from homepage.images import cache_image, prune
-from homepage.model import Book, Film, LiveData, Repo, Song, from_dict
+from homepage.model import Activity, Book, Film, LiveData, Repo, Song, from_dict
 from homepage.render import render_home
 from homepage.sources.github import fetch_repos
 from homepage.sources.goodreads import NothingReading, fetch_book
 from homepage.sources.letterboxd import fetch_film
 from homepage.sources.spotify import fetch_song
+from homepage.sources.strava import fetch_activity
 from homepage.state import load_state, refresh, save_state, stale_sources
 
 LIVE_DIR = Path("assets") / "live"
 
 
 def default_sources(token: str | None = None) -> dict[str, Callable[[], object]]:
-    return {
+    sources: dict[str, Callable[[], object]] = {
         "song": fetch_song,
         "film": fetch_film,
         "book": fetch_book,
         "repos": lambda: fetch_repos(token=token),
     }
+    # Strava only when the workflow has my app's secrets; otherwise data/activity.toml is the row.
+    strava = [os.environ.get(k) for k in ("STRAVA_CLIENT_ID", "STRAVA_CLIENT_SECRET", "STRAVA_REFRESH_TOKEN")]
+    if all(strava):
+        client_id, client_secret, refresh_token = strava
+        sources["activity"] = lambda: fetch_activity(client_id, client_secret, refresh_token)
+    return sources
 
 
 def build(
@@ -78,6 +85,9 @@ def build(
     book = refresh("book", book_or_finished, state, Book, today)
     repo_fetch = sources["repos"]
     repos = refresh("repos", lambda: repo_fetch() or None, state, Repo, today) or []
+    activity = content.activity  # the hand-written row, when Strava is off or has nothing yet
+    if "activity" in sources:
+        activity = refresh("activity", sources["activity"], state, Activity, today) or activity
 
     if song:
         song = replace(song, cover=local(song.cover, "song cover"))
@@ -92,7 +102,7 @@ def build(
 
     live_dir.mkdir(parents=True, exist_ok=True)
     prune(live_dir, used)
-    live = LiveData(song=song, film=film, book=book, activity=content.activity)
+    live = LiveData(song=song, film=film, book=book, activity=activity)
     html = render_home(content, live, repos, root)
     index = root / "index.html"
     index.write_bytes(html.replace("\r\n", "\n").encode("utf-8"))
