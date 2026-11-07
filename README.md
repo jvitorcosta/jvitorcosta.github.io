@@ -19,7 +19,7 @@ It works in English and Portuguese and has three colour themes, all with no trac
 
 A small Python package (`homepage/`, standard library only) renders a single static `index.html`:
 
-1. A GitHub Actions workflow runs every morning and on every push to `main`.
+1. A GitHub Actions workflow runs twice a day (05:00 and 17:00 in Manaus) and on every push to `main`.
 2. It fetches each source. A source that fails keeps its last good value, so the page never goes blank.
 3. Covers and posters are downloaded into `assets/live/`, so visitors never load images from third-party sites.
 4. The page is published straight to GitHub Pages. What the build must remember between runs lives on the `state` branch, never on `main`.
