@@ -68,13 +68,15 @@ def render(tmp_path, c=None, lv=None, repos=None):
 
 
 def section(html, start, end=None):
+    """The box with id `start`, up to its closing tag (`end` is kept for older call sites)."""
     i = html.index(f'id="{start}"')
-    return html[i:html.index(f'id="{end}"')] if end else html[i:]
+    return html[i:html.index("</section>", i)]
 
 
 def test_sections_in_order(tmp_path):
+    # Code order is the wide-screen order, left column first; phones move Work back to the end.
     html = render(tmp_path)
-    idx = [html.index(f'id="{s}"') for s in ("trainer", "party", "right-now", "pc-box", "work")]
+    idx = [html.index(f'id="{s}"') for s in ("trainer", "party", "work", "right-now", "pc-box")]
     assert idx == sorted(idx)
     assert html.startswith("<!doctype html>")
     assert '<html lang="en" class="pal-night">' in html
@@ -563,7 +565,7 @@ def test_long_titles_wrap_instead_of_being_cut(tmp_path):
 
 def test_footer_names_every_source_and_the_real_cadence(tmp_path):
     foot = render(tmp_path).split('<footer class="foot">')[1]
-    assert "Spotify, Letterboxd, Goodreads, Strava and GitHub" in foot
+    assert "Spotify, Letterboxd, MyAnimeList, Goodreads, Strava and GitHub" in foot
     assert "twice a day" in foot and "duas vezes por dia" in foot
 
 
@@ -606,11 +608,17 @@ def test_coursework_comes_after_the_other_unpinned_rows(tmp_path):
     assert re.findall(r"<b>(r\d)", box) == ["r2", "r3", "r0", "r1"]
 
 
-def test_sections_sit_in_two_columns_in_phone_order(tmp_path):
+def test_sections_sit_in_two_columns_and_phones_show_work_last(tmp_path):
     html = render(tmp_path)
     side = re.search(r'<div class="col side">(.*?)</div><!-- /side -->', html, re.S).group(1)
-    assert 'id="trainer"' in side and 'id="party"' in side and 'id="right-now"' not in side
+    assert 'id="trainer"' in side and 'id="party"' in side and 'id="work"' in side
+    assert 'id="right-now"' not in side
     rest = html.split("<!-- /side -->")[1]
-    for s in ("right-now", "pc-box", "work"):
+    for s in ("right-now", "pc-box"):
         assert f'id="{s}"' in rest
+    css = (ROOT / "assets" / "site.css").read_text(encoding="utf-8")
+    phone = css[css.index("@media (max-width: 899px)"):]
+    phone = phone[:phone.index("\n}")]
+    assert ".col { display: contents; }" in phone and "#work { order: 1; }" in phone
+    assert "position: sticky" not in css
     assert html.index('<div class="cols">') > html.index('<header class="top">')

@@ -265,8 +265,9 @@ def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: 
     # Two columns on a wide screen (assets/site.css), one on a phone. The code order is the phone
     # order, which screen readers and the keyboard follow too: who I am and my projects, then
     # the rest.
-    side = [_trainer(p), _party(p, repos, site_root)]
-    rest = [right_now(p, live), _pc_box(p, repos, site_root), _work(p, site_root)]
+    # Wide screens: who I am, what I build and where I work on the left. Phones show Work last (CSS).
+    side = [_trainer(p), _party(p, repos, site_root), _work(p, site_root)]
+    rest = [right_now(p, live), _pc_box(p, repos, site_root)]
     body = (f'{_top()}\n<div class="cols">\n'
             f'<div class="col side">\n{chr(10).join(s for s in side if s)}\n</div><!-- /side -->\n'
             f'<div class="col">\n{chr(10).join(s for s in rest if s)}\n</div>\n</div>')

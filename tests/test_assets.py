@@ -250,6 +250,7 @@ def test_two_columns_only_on_wide_screens():
     wide = re.search(r"@media \(min-width: 900px\) \{(.*?)\n\}", text, re.S).group(1)
     assert re.search(r"\.cols \{[^}]*display: flex", wide)
     assert "max-width: 1000px" in wide
-    # The pinned side column only when the window is tall enough to show all of it.
-    pinned = re.search(r"@media \(min-width: 900px\) and \(min-height: \d+px\) \{(.*?)\n\}", text, re.S).group(1)
-    assert re.search(r"\.side \{[^}]*position: sticky", pinned)
+    # Work sits in the left column, so it is too tall to pin; phones put Work back last.
+    assert "position: sticky" not in text
+    phone = re.search(r"@media \(max-width: 899px\) \{(.*?)\n\}", text, re.S).group(1)
+    assert "#work { order: 1; }" in phone
