@@ -578,3 +578,13 @@ def test_coursework_comes_after_the_other_unpinned_rows(tmp_path):
     repos = [repo(f"r{i}") for i in range(4)]
     box = section(render(tmp_path, c=content(pc_box=texts), repos=repos), "pc-box", "work")
     assert re.findall(r"<b>(r\d)", box) == ["r2", "r3", "r0", "r1"]
+
+
+def test_sections_sit_in_two_columns_in_phone_order(tmp_path):
+    html = render(tmp_path)
+    side = re.search(r'<div class="col side">(.*?)</div><!-- /side -->', html, re.S).group(1)
+    assert 'id="trainer"' in side and 'id="party"' in side and 'id="right-now"' not in side
+    rest = html.split("<!-- /side -->")[1]
+    for s in ("right-now", "pc-box", "work"):
+        assert f'id="{s}"' in rest
+    assert html.index('<div class="cols">') > html.index('<header class="top">')
