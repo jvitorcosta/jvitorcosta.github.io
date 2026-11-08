@@ -567,7 +567,7 @@ def test_long_titles_wrap_instead_of_being_cut(tmp_path):
 
 
 @pytest.mark.parametrize("box, en, pt, zh", [
-    ("party", "MY FAVORITES", "MEUS FAVORITOS", "我的最爱"),
+    ("party", "FAVORITES", "FAVORITOS", "最爱"),
     ("right-now", "LATELY", "ULTIMAMENTE", "最近"),
     ("pc-box", "PROJECTS", "PROJETOS", "项目"),
     ("work", "EXPERIENCE", "EXPERIÊNCIA", "经历"),

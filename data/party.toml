@@ -1,4 +1,4 @@
-# My favorites (party in code): the projects shown as tiles, in this order. At most 6.
+# Favorites (party in code): the projects shown as tiles, in this order. At most 6.
 # repo     GitHub repo name under jvitorcosta
 # tag      small label on the tile (DAILY, WRIST, CITY...)
 # picture  optional; site-relative path or https URL. Without one the tile shows `emoji`.
@@ -31,8 +31,8 @@ tag = "WRIST"
 picture = "https://raw.githubusercontent.com/jvitorcosta/garmin-watchfaces/HEAD/docs/images/pokeface-fr255.jpg"
 name_en = "Watch faces"
 name_pt = "Mostradores"
-blurb_en = "Faces I code for my Garmin: a Pokémon battle and mission control"
-blurb_pt = "Mostradores que eu programo pro Garmin: batalha Pokémon e controle de missão"
+blurb_en = "Faces I code for my Garmin"
+blurb_pt = "Mostradores que eu programo pro Garmin"
 
 [[member]]
 repo = "open-radars-manaus"
