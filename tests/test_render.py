@@ -4,7 +4,7 @@ import tomllib
 from pathlib import Path
 
 from homepage.content import Content, Job, PartyMember
-from homepage.model import Activity, Book, Film, LiveData, Repo, Song
+from homepage.model import Activity, Anime, Book, Film, LiveData, Repo, Song
 from homepage.render import clip, render_home, safe_url
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,7 +14,7 @@ LINKS = {
     "instagram": "", "github": "https://github.com/jvitorcosta",
     "linkedin": "https://www.linkedin.com/in/jvpro/", "email": "mailto:joaovpro17@gmail.com",
     "spotify": "", "letterboxd": "https://letterboxd.com/zubu/", "goodreads": GOODREADS,
-    "strava": "",
+    "strava": "", "myanimelist": "https://myanimelist.net/animelist/yulong17",
 }
 SONG = Song("Taxi Lunar", "Geraldo Azevedo", "assets/live/c.jpg",
             "https://open.spotify.com/track/1", True)
@@ -22,6 +22,8 @@ FILM = Film("Hope", "2026", 3.5, True, "2026-11-05", "começa bem pra caramba",
             "assets/live/p.jpg", "https://letterboxd.com/zubu/film/hope/")
 BOOK = Book("Can't Hurt Me", "David Goggins", "assets/live/b.jpg",
             "https://www.goodreads.com/book/1", 210, 366)
+ANIME = Anime("Cyberpunk: Edgerunners", "assets/live/a.jpg",
+              "https://myanimelist.net/anime/42310/Cyberpunk__Edgerunners", True, 1, 10, None, "2026-11-08")
 ACTIVITY = Activity("Ride", "🚴", "Night Ride", 5.0, 25, "12.1 km/h · 3 PRs", "2026-11-04", "")
 
 
@@ -56,7 +58,7 @@ def content(**kw):
 
 
 def live(**kw):
-    base = dict(song=SONG, film=FILM, book=BOOK, activity=ACTIVITY)
+    base = dict(song=SONG, film=FILM, book=BOOK, activity=ACTIVITY, anime=ANIME)
     base.update(kw)
     return LiveData(**base)
 
@@ -131,7 +133,7 @@ def test_empty_links_are_not_rendered(tmp_path):
 
 
 def test_missing_live_value_omits_row(tmp_path):
-    html = render(tmp_path, lv=live(book=None))
+    html = render(tmp_path, lv=live(book=None, anime=None))
     assert esc(STRINGS["en"]["reading"]) not in html
     assert esc(BOOK.title) not in html
     assert 'class="hp"' not in html
@@ -196,9 +198,33 @@ def test_progress_bar_width(tmp_path):
     assert "width:57%" in html
 
 
+def test_anime_row_shows_episode_progress_after_the_film(tmp_path):
+    html = render(tmp_path)
+    row = html[html.index(ANIME.url) - 30:html.index("Can&#x27;t Hurt Me")]
+    assert '<span lang="en">WATCHING</span><span lang="pt">ASSISTINDO</span>' in row
+    assert '<span lang="en">ep 1 of 10</span><span lang="pt">ep 1 de 10</span>' in row
+    assert "width:10%" in row and "Cyberpunk: Edgerunners" in row
+    assert 'href="https://myanimelist.net/animelist/yulong17"' in row
+    assert html.index(FILM.url) < html.index(ANIME.url) < html.index(BOOK.url)
+
+
+def test_finished_anime_shows_my_score(tmp_path):
+    anime = Anime("Death Note", "", "https://myanimelist.net/anime/1535", False, 37, 37, 9, "2026-11-07")
+    html = render(tmp_path, lv=live(anime=anime))
+    row = html[html.index(anime.url) - 30:html.index("Can&#x27;t Hurt Me")]
+    assert '<span lang="en">FINISHED</span>' in row and "9/10" in row
+    assert 'class="hp"' not in row and "ep 37" not in row
+
+
+def test_airing_anime_without_episode_count_has_no_bar(tmp_path):
+    anime = Anime("One Piece", "", "https://myanimelist.net/anime/21", True, 3, 0, None, "2026-11-07")
+    html = render(tmp_path, lv=live(anime=anime, book=None))
+    assert '<span lang="en">ep 3</span>' in html and 'class="hp"' not in html
+
+
 def test_progress_bar_needs_both_numbers(tmp_path):
     book = Book(BOOK.title, BOOK.author, BOOK.cover, BOOK.url, None, 366)
-    assert 'class="hp"' not in render(tmp_path, lv=live(book=book))
+    assert 'class="hp"' not in render(tmp_path, lv=live(book=book, anime=None))
 
 
 def test_escapes_and_clips(tmp_path):
@@ -362,7 +388,7 @@ def test_no_external_image_sources(tmp_path):
     html = render(tmp_path, content(party=[member("car-cyberdeck", emoji="🚗")]))
     srcs = re.findall(r'src="([^"]*)"', html)
     assert srcs and not [s for s in srcs if re.match(r"(https?:)?//", s)]
-    for icon in ("spotify", "letterboxd", "goodreads", "strava"):
+    for icon in ("spotify", "letterboxd", "myanimelist", "goodreads", "strava"):
         assert re.search(rf'src="assets/icons/{icon}\.svg\?v=[0-9a-f]{{8}}"', html)
 
 
@@ -372,7 +398,7 @@ def test_language_toggle_label_contains_visible_text(tmp_path):
 
 
 def test_vendored_icons_are_plain_svgs():
-    for icon in ("spotify", "letterboxd", "goodreads", "strava"):
+    for icon in ("spotify", "letterboxd", "myanimelist", "goodreads", "strava"):
         svg = (ROOT / "assets" / "icons" / f"{icon}.svg").read_text(encoding="utf-8")
         assert svg.startswith("<svg") and "<script" not in svg and "href" not in svg
 

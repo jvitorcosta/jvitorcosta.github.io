@@ -1,0 +1,18 @@
+[
+  {"status": 6, "score": 0, "num_watched_episodes": 0, "updated_at": 1794168900,
+   "anime_title": "Perfect Blue", "anime_title_eng": "", "anime_num_episodes": 1,
+   "anime_url": "/anime/437/Perfect_Blue",
+   "anime_image_path": "https://cdn.myanimelist.net/r/192x272/images/anime/1254/134212.jpg?s=698d"},
+  {"status": 1, "score": 0, "num_watched_episodes": 1, "updated_at": 1794168827,
+   "anime_title": "Cyberpunk: Edgerunners", "anime_title_eng": "", "anime_num_episodes": 10,
+   "anime_url": "/anime/42310/Cyberpunk__Edgerunners", "notes": "private note",
+   "anime_image_path": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be1"},
+  {"status": 2, "score": 10, "num_watched_episodes": 1, "updated_at": 1794168247,
+   "anime_title": "Shin Evangelion Movie:||", "anime_title_eng": "Evangelion: 3.0+1.0 Thrice Upon a Time",
+   "anime_num_episodes": 1, "anime_url": "/anime/3786/Evangelion_Movie_4__Kan",
+   "anime_image_path": "https://cdn.myanimelist.net/r/192x272/images/anime/1422/113533.jpg?s=0714"},
+  {"status": 2, "score": 9, "num_watched_episodes": 37, "updated_at": 1794100000,
+   "anime_title": "Death Note", "anime_title_eng": "Death Note", "anime_num_episodes": 37,
+   "anime_url": "/anime/1535/Death_Note",
+   "anime_image_path": "https://cdn.myanimelist.net/r/192x272/images/anime/9/9453.jpg?s=b89d"}
+]

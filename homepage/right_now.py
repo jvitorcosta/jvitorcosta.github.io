@@ -1,11 +1,11 @@
-"""The four live rows of the Right now box: Spotify, Letterboxd, Goodreads, Strava."""
+"""The live rows of the Right now box: Spotify, Letterboxd, MyAnimeList, Goodreads, Strava."""
 
 from __future__ import annotations
 
 from dataclasses import replace
 
 from homepage.markup import ARROW, Page, clip, esc, safe_url
-from homepage.model import Activity, Book, Film, LiveData, Song
+from homepage.model import Activity, Anime, Book, Film, LiveData, Song
 
 SPOTIFY_ENDPOINT = "https://spotify-now-playing-ashen-two.vercel.app/api/now-playing.json"
 
@@ -92,6 +92,23 @@ def _film(p: Page, film: Film) -> str:
     return f"<li>{_row(film.url, inner)}{p.go('letterboxd')}</li>"
 
 
+def _anime(p: Page, anime: Anime) -> str:
+    """What I'm watching, with episode progress; else the last one I finished, with my score."""
+    bar = ""
+    if not anime.watching:
+        detail = (f'<span aria-hidden="true">★</span> {anime.score}/10 · ' if anime.score else "")
+        detail += p.date(anime.date)
+    elif anime.episodes:
+        detail = p.t("ep_of", ep=anime.episode, eps=anime.episodes)
+        bar = f'<div class="hp"><i style="width:{round(100 * anime.episode / anime.episodes)}%"></i></div>'
+    else:
+        detail = p.t("ep", ep=anime.episode)
+    body = (f'<span class="k px">{p.t("anime_watching" if anime.watching else "finished")}</span>'
+            f'<span class="t">{esc(clip(anime.title, 80))}</span>{detail}{bar}')
+    inner = _thumb(anime.cover, tall=True) + f'<div class="body">{body}</div>'
+    return f"<li>{_row(anime.url, inner)}{p.go('myanimelist')}</li>"
+
+
 def _book(p: Page, book: Book) -> str:
     detail = esc(book.author)
     bar = ""
@@ -134,7 +151,8 @@ def _activity(p: Page, act: Activity) -> str:
 def right_now(p: Page, live: LiveData) -> str:
     others = [
         render(p, value)
-        for render, value in ((_film, live.film), (_book, live.book), (_activity, live.activity))
+        for render, value in ((_film, live.film), (_anime, live.anime), (_book, live.book),
+                              (_activity, live.activity))
         if value is not None
     ]
     # Hidden while only the empty Spotify shell is in it; site.js reveals it after a fetch.

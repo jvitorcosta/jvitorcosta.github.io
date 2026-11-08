@@ -39,6 +39,18 @@ class Book:
 
 
 @dataclass(frozen=True)
+class Anime:
+    title: str
+    cover: str
+    url: str
+    watching: bool  # else the latest one finished
+    episode: int
+    episodes: int  # 0 while unknown (still airing)
+    score: int | None
+    date: str  # ISO date of the last list update
+
+
+@dataclass(frozen=True)
 class Activity:
     sport: str
     emoji: str
@@ -65,6 +77,7 @@ class LiveData:
     film: Film | None
     book: Book | None
     activity: Activity | None
+    anime: Anime | None = None
 
 
 def to_dict(obj: Any) -> dict:

@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from homepage.build import build
-from homepage.model import Book, Film, Repo, Song
+from homepage.build import build, default_sources
+from homepage.model import Anime, Book, Film, Repo, Song
 from homepage.state import load_state, save_state
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -236,3 +236,24 @@ def test_build_writes_a_404_page_in_the_site_style(site):
     assert 'href="/"' in page
     assert '<meta name="robots" content="noindex">' in page
     assert "\r" not in page
+
+
+ANIME = Anime("Cyberpunk: Edgerunners", "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg",
+              "https://myanimelist.net/anime/42310", True, 1, 10, None, "2026-11-08")
+
+
+def test_anime_row_with_a_local_cover(site):
+    build(site, sources(anime=lambda: ANIME), get=fake_get)
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert "Cyberpunk: Edgerunners" in html and "cdn.myanimelist.net" not in html
+    assert load_state(site / "data" / "state.json")["anime"]["title"] == "Cyberpunk: Edgerunners"
+
+
+def test_failing_anime_source_keeps_the_last_one(site):
+    build(site, sources(anime=lambda: ANIME), get=fake_get)
+    build(site, sources(anime=boom), get=fake_get)
+    assert "Cyberpunk: Edgerunners" in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_default_sources_include_my_anime_list():
+    assert "anime" in default_sources()
