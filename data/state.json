@@ -9,6 +9,16 @@
     "title": "Night Ride",
     "url": "https://www.strava.com/activities/20864802993"
   },
+  "anime": {
+    "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
+    "date": "2026-11-08",
+    "episode": 1,
+    "episodes": 10,
+    "score": null,
+    "title": "Cyberpunk: Edgerunners",
+    "url": "https://myanimelist.net/anime/42310/Cyberpunk__Edgerunners",
+    "watching": true
+  },
   "book": {
     "author": "David Goggins",
     "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1536184191l/41721428._SX318_.jpg",
@@ -144,6 +154,7 @@
   },
   "updated": {
     "activity": "2026-11-08",
+    "anime": "2026-11-08",
     "book": "2026-11-08",
     "film": "2026-11-08",
     "repos": "2026-11-08",
