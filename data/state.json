@@ -40,18 +40,18 @@
   },
   "repos": [
     {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-08T20:33:49Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
       "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
       "homepage": "",
       "name": "open-radars-manaus",
       "pushed": "2026-11-08T19:00:34Z",
       "url": "https://github.com/jvitorcosta/open-radars-manaus"
-    },
-    {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-08T18:23:32Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Streamlit app that shows where a daily forecast goes wrong: by series, weekday, holiday and benchmark",
