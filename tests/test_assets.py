@@ -11,7 +11,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 CSS_PATH = ROOT / "assets" / "site.css"
 JS_PATH = ROOT / "assets" / "site.js"
-PALETTES = ("pocket", "night", "nu")
+PALETTES = ("night", "nu")
 STRAVA_ORANGE = "#fc5200"
 
 
@@ -72,11 +72,12 @@ def test_nu_purple_is_820AD1():
     assert palette("nu")["bg"] == "#820ad1"
 
 
-def test_light_scheme_default_is_pocket():
-    """Without JS, a light-mode phone gets Pocket: the media block repeats Pocket's values."""
+def test_light_scheme_default_is_nu_purple():
+    """Without JS, a light-mode phone gets Nu Purple: the media block repeats its values."""
     m = re.search(r"@media \(prefers-color-scheme: light\)\s*\{\s*[^{]+\{([^}]*)\}", css())
     assert m, "missing prefers-color-scheme: light block"
-    assert variables(m.group(1)) == palette("pocket")
+    assert variables(m.group(1)) == palette("nu")
+    assert "pocket" not in css() and "pocket" not in js()
 
 
 def test_lang_rule_never_hides_html_element():
@@ -166,7 +167,7 @@ def test_fonts_are_self_hosted():
             assert not re.match(r"(https?:)?//", src)
             assert (CSS_PATH.parent / src.strip("'\"")).is_file(), src
     # @font-face rules come first, before any other rule
-    assert text.index("@font-face") < text.index(".pal-pocket")
+    assert text.index("@font-face") < text.index(".pal-night")
     for licence in ("OFL-Inter.txt", "OFL-PressStart2P.txt"):
         assert (ROOT / "assets" / "fonts" / licence).is_file()
 

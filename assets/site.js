@@ -4,7 +4,7 @@
   "use strict";
 
   var root = document.documentElement;
-  var PALETTES = ["pocket", "night", "nu"];
+  var PALETTES = ["night", "nu"];
   var LANGS = ["en", "pt"];
   var SPOTIFY_TIMEOUT_MS = 4000;
 
@@ -31,7 +31,7 @@
   function initialPalette() {
     var stored = load("palette");
     if (PALETTES.indexOf(stored) >= 0) return stored;
-    return prefersLight() ? "pocket" : "night";
+    return prefersLight() ? "nu" : "night";
   }
 
   function initialLang() {

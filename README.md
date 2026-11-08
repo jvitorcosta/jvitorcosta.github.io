@@ -11,7 +11,7 @@ My corner of the internet: who I am, what I'm listening to, watching and reading
 - **Lately:** the last song on Spotify, film on Letterboxd, anime on MyAnimeList, book on Goodreads and activity on Strava, refreshed twice a day.
 - **My favorites:** the projects I'm proudest of, as tiles, each linking to a case study or its repo.
 - **Recent repos:** my latest public GitHub repos, pulled from the GitHub API.
-- **Work:** a one-line summary and the companies I've worked with.
+- **Experience:** a one-line summary and the companies I've worked with.
 
 It works in English and Portuguese and has three colour themes, all with no tracking and no cookies.
 
@@ -58,4 +58,4 @@ All hand-written text lives in `data/`, so content changes never touch code:
 | `data/party.toml` | the project tiles |
 | `data/links.toml` | profile links |
 | `data/activity.toml` | the activity row when Strava is off |
-| `data/pc_box.toml` | the PC box |
+| `data/pc_box.toml` | the Projects box |

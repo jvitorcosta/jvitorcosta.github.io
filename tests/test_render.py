@@ -3,6 +3,8 @@ import re
 import tomllib
 from pathlib import Path
 
+import pytest
+
 from homepage.content import Content, Job, PartyMember
 from homepage.model import Activity, Anime, Book, Film, LiveData, Repo, Song
 from homepage.render import clip, render_home, safe_url
@@ -109,8 +111,9 @@ def test_head(tmp_path):
 
 def test_palette_and_language_buttons(tmp_path):
     html = render(tmp_path)
-    for p, label in (("pocket", "Pocket"), ("night", "Night Menu"), ("nu", "Nu Purple")):
+    for p, label in (("night", "Night Menu"), ("nu", "Nu Purple")):
         assert f'<button type="button" data-palette="{p}" aria-label="{label}"' in html
+    assert 'data-palette="pocket"' not in html
     assert ('<button type="button" data-lang-toggle aria-label="EN > PT, switch language">'
             "EN > PT</button>") in html
 
@@ -479,7 +482,7 @@ def test_star_text_variants(tmp_path):
 def test_palette_labels_follow_the_language(tmp_path):
     top = render(tmp_path).split("</header>")[0]
     assert 'role="group" aria-label="Colours" data-aria-en="Colours" data-aria-pt="Cores"' in top
-    for en, pt in (("Pocket", "Pocket"), ("Night Menu", "Menu Noturno"), ("Nu Purple", "Roxo Nu")):
+    for en, pt in (("Night Menu", "Menu Noturno"), ("Nu Purple", "Roxo Nu")):
         assert f'aria-label="{en}" data-aria-en="{en}" data-aria-pt="{pt}"' in top
 
 
@@ -496,7 +499,7 @@ def test_early_palette_script_runs_before_the_stylesheet(tmp_path):
     script = m.group(1)
     assert script.lstrip().startswith("try{") and "catch(e){}" in script
     assert 'localStorage.getItem("palette")' in script
-    assert "pocket|night|nu" in script
+    assert "/^(night|nu)$/" in script
     assert '"pal-"+p' in script and 'setAttribute("data-pal",p)' in script
     assert script.count("{") == script.count("}") and script.count("(") == script.count(")")
 
@@ -561,6 +564,18 @@ def test_long_titles_wrap_instead_of_being_cut(tmp_path):
     title = "Can't Hurt Me: Master Your Mind and Defy the Odds"
     book = Book(title, BOOK.author, BOOK.cover, BOOK.url, 210, 366)
     assert esc(title) in render(tmp_path, lv=live(book=book))
+
+
+@pytest.mark.parametrize("box, en, pt, zh", [
+    ("party", "MY FAVORITES", "MEUS FAVORITOS", "我的最爱"),
+    ("right-now", "LATELY", "ULTIMAMENTE", "最近"),
+    ("pc-box", "PROJECTS", "PROJETOS", "项目"),
+    ("work", "EXPERIENCE", "EXPERIÊNCIA", "经历"),
+])
+def test_section_headings_carry_a_chinese_subtitle(tmp_path, box, en, pt, zh):
+    heading = re.search(r"<h2 .*?</h2>", section(render(tmp_path), box), re.S).group(0)
+    assert f'<span lang="en">{en}</span><span lang="pt">{esc(pt)}</span>' in heading
+    assert f'<span class="zh" lang="zh-Hans">{zh}</span>' in heading
 
 
 def test_footer_names_every_source_and_the_real_cadence(tmp_path):

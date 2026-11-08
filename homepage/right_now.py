@@ -160,5 +160,5 @@ def right_now(p: Page, live: LiveData) -> str:
     rows = [_song(p, live.song)] + others
     return (f'<section class="box" id="right-now"{hidden}>'
             f'<h2 class="h px"><span>{ARROW}{p.t("right_now")}'
-            f'<span class="cursor" aria-hidden="true">_</span></span></h2>'
+            f'<span class="cursor" aria-hidden="true">_</span>{p.zh("right_now")}</span></h2>'
             f'<ul class="menu">{"".join(rows)}</ul></section>')
