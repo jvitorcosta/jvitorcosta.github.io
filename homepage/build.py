@@ -12,11 +12,12 @@ from pathlib import Path
 from homepage import http
 from homepage.content import load_content
 from homepage.images import cache_image, prune
-from homepage.model import Activity, Book, Film, LiveData, Repo, Song, from_dict
+from homepage.model import Activity, Anime, Book, Film, LiveData, Repo, Song, from_dict
 from homepage.render import render_404, render_home
 from homepage.sources.github import fetch_repos
 from homepage.sources.goodreads import NothingReading, fetch_book
 from homepage.sources.letterboxd import fetch_film
+from homepage.sources.myanimelist import fetch_anime
 from homepage.sources.spotify import fetch_song
 from homepage.sources.strava import fetch_activity
 from homepage.state import load_state, refresh, save_state, stale_sources
@@ -29,6 +30,7 @@ def default_sources(token: str | None = None) -> dict[str, Callable[[], object]]
         "song": fetch_song,
         "film": fetch_film,
         "book": fetch_book,
+        "anime": fetch_anime,
         "repos": lambda: fetch_repos(token=token),
     }
     # Strava only when the workflow has my app's secrets; otherwise data/activity.toml is the row.
@@ -85,6 +87,7 @@ def build(
     book = refresh("book", book_or_finished, state, Book, today)
     repo_fetch = sources["repos"]
     repos = refresh("repos", lambda: repo_fetch() or None, state, Repo, today) or []
+    anime = refresh("anime", sources["anime"], state, Anime, today) if "anime" in sources else None
     activity = content.activity  # the hand-written row, when Strava is off or has nothing yet
     if "activity" in sources:
         activity = refresh("activity", sources["activity"], state, Activity, today) or activity
@@ -95,6 +98,8 @@ def build(
         film = replace(film, poster=local(film.poster, "film poster"))
     if book:
         book = replace(book, cover=local(book.cover, "book cover"))
+    if anime:
+        anime = replace(anime, cover=local(anime.cover, "anime cover"))
     content = replace(
         content,
         party=[replace(m, picture=local(m.picture, f"party {m.repo} picture")) for m in content.party],
@@ -102,7 +107,7 @@ def build(
 
     live_dir.mkdir(parents=True, exist_ok=True)
     prune(live_dir, used)
-    live = LiveData(song=song, film=film, book=book, activity=activity)
+    live = LiveData(song=song, film=film, book=book, activity=activity, anime=anime)
     html = render_home(content, live, repos, root)
     index = root / "index.html"
     index.write_bytes(html.replace("\r\n", "\n").encode("utf-8"))

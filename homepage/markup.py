@@ -19,6 +19,7 @@ ICONS = "assets/icons"  # pixel app tiles, drawn by tools/pixel_icons.py
 PLATFORMS = {
     "spotify": ("Spotify", "#121212"),
     "letterboxd": ("Letterboxd", "#202830"),
+    "myanimelist": ("MyAnimeList", "#2e51a2"),
     "goodreads": ("Goodreads", "#382110"),
     "strava": ("Strava", "#fc4c02"),
 }
