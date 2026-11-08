@@ -30,18 +30,18 @@
   },
   "repos": [
     {
+      "description": "ESP32 touchscreens and a Garmin watch app for the car: Spotify as a Pokémon battle, plus LED light control",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-08T16:47:51Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
       "description": "Streamlit app that shows where a daily forecast goes wrong: by series, weekday, holiday and benchmark",
       "homepage": "https://forecast-error-analysis.streamlit.app",
       "name": "timeseries-analysis-streamlit",
       "pushed": "2026-11-07T13:43:40Z",
       "url": "https://github.com/jvitorcosta/timeseries-analysis-streamlit"
-    },
-    {
-      "description": "ESP32 touchscreens and a Garmin watch app for the car: Spotify as a Pokémon battle, plus LED light control",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-07T06:15:45Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
@@ -136,11 +136,11 @@
     }
   ],
   "song": {
-    "artist": "Delacruz",
-    "cover": "https://i.scdn.co/image/ab67616d00001e0248711eb415b610e965f9994b",
+    "artist": "Nagalli",
+    "cover": "https://i.scdn.co/image/ab67616d00001e024b5ceb2515a32f3115323ae8",
     "playing": false,
-    "title": "Explícito",
-    "url": "https://open.spotify.com/track/49rx4aGIWcHgTUdDFNPjrm"
+    "title": "CONFISSÕES PT2",
+    "url": "https://open.spotify.com/track/0Q1ySdDoHDiotYn4nbMXNm"
   },
   "updated": {
     "activity": "2026-11-08",
