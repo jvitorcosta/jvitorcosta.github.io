@@ -262,15 +262,14 @@ def render_404(content: Content) -> str:
 def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: Path) -> str:
     p = Page(content)
     site_root = Path(site_root)
-    sections = [
-        _top(),
-        _trainer(p),
-        _party(p, repos, site_root),
-        right_now(p, live),
-        _pc_box(p, repos, site_root),
-        _work(p, site_root),
-    ]
-    body = "\n".join(s for s in sections if s)
+    # Two columns on a wide screen (assets/site.css), one on a phone. The code order is the phone
+    # order, which screen readers and the keyboard follow too: who I am and my projects, then
+    # the rest.
+    side = [_trainer(p), _party(p, repos, site_root)]
+    rest = [right_now(p, live), _pc_box(p, repos, site_root), _work(p, site_root)]
+    body = (f'{_top()}\n<div class="cols">\n'
+            f'<div class="col side">\n{chr(10).join(s for s in side if s)}\n</div><!-- /side -->\n'
+            f'<div class="col">\n{chr(10).join(s for s in rest if s)}\n</div>\n</div>')
     # The footer sits outside <main> so it is the page's contentinfo landmark.
     return (f'<!doctype html>\n<html lang="en" class="pal-night">\n{_head(p)}\n'
             f'<body>\n<main class="in">\n{body}\n</main>\n{_footer(p, live)}\n'

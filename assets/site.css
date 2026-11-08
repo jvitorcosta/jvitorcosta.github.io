@@ -99,6 +99,19 @@ body > footer.foot { margin-top: 8px; padding-bottom: 28px; }
 body > header.top { display: flex; flex-wrap: wrap; padding-top: 12px; }
 main > header.top { padding: 0; }
 
+/* Homepage on a wide screen: two columns, who I am and my projects on the left, the rest on the
+   right. Case pages keep the narrow reading column. */
+@media (min-width: 900px) {
+  main:has(> .cols), body:has(.cols) > footer.foot { max-width: 1000px; }
+  .cols { display: flex; gap: 16px; align-items: flex-start; }
+  .col { flex: 1; min-width: 0; }
+}
+/* The left column stays in view while the right one scrolls, when the window is tall enough to
+   show all of it (else its bottom would be out of reach). */
+@media (min-width: 900px) and (min-height: 760px) {
+  .side { position: sticky; top: 12px; }
+}
+
 /* ---------- top bar: palette dots, language, back link ---------- */
 .top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 0 0 10px; }
 .sw, .palettes { display: flex; gap: 2px; }
