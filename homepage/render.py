@@ -20,7 +20,7 @@ __all__ = ["clip", "render_home", "safe_url"]
 SITE = "https://jvitorcosta.github.io/"
 OG_IMAGE = SITE + "og-image.png"
 GITHUB_REPOS = "https://github.com/jvitorcosta?tab=repositories"
-PC_BOX_ROWS = 8
+PC_BOX_ROWS = 5  # with 5 the right column ends about level with the left on a laptop
 COURSEWORK = {"uni", "course"}
 # key, English name, Portuguese name, swatch colour
 PALETTES = (("pocket", "Pocket", "Pocket", "#fbfaf4"),
