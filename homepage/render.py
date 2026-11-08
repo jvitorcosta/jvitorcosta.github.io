@@ -23,8 +23,7 @@ GITHUB_REPOS = "https://github.com/jvitorcosta?tab=repositories"
 PC_BOX_ROWS = 5  # with 5 the right column ends about level with the left on a laptop
 COURSEWORK = {"uni", "course"}
 # key, English name, Portuguese name, swatch colour
-PALETTES = (("pocket", "Pocket", "Pocket", "#fbfaf4"),
-            ("night", "Night Menu", "Menu Noturno", "#221d33"),
+PALETTES = (("night", "Night Menu", "Menu Noturno", "#221d33"),
             ("nu", "Nu Purple", "Roxo Nu", "#820ad1"))
 CASE_SLUG = re.compile(r"[a-z0-9][a-z0-9-]*")
 RESUME_CASE = "resume-as-code"
@@ -66,7 +65,7 @@ def _party(p: Page, repos: list[Repo], site_root: Path) -> str:
                      else f'<div class="mon">{inner}</div>')
     if not tiles:
         return ""
-    return (f'<section class="box" id="party"><h2 class="h px"><span>{ARROW}{p.t("party")}</span></h2>'
+    return (f'<section class="box" id="party"><h2 class="h px"><span>{ARROW}{p.t("party")}{p.zh("party")}</span></h2>'
             f'<div class="party">{"".join(tiles)}</div></section>')
 
 
@@ -126,7 +125,7 @@ def _pc_box(p: Page, repos: list[Repo], site_root: Path) -> str:
     if extra > 0:
         rows.append(f'<a class="more" href="{GITHUB_REPOS}">{p.t("more", n=extra)}'
                     f' <span aria-hidden="true">›</span></a>')
-    return (f'<section class="box pc" id="pc-box"><h2 class="h px"><span>{ARROW}{p.t("pc_box")}</span>'
+    return (f'<section class="box pc" id="pc-box"><h2 class="h px"><span>{ARROW}{p.t("pc_box")}{p.zh("pc_box")}</span>'
             f'<a href="{GITHUB_REPOS}">{p.t("all_on_github")}</a></h2>{"".join(rows)}</section>')
 
 
@@ -163,7 +162,7 @@ def _work(p: Page, site_root: Path) -> str:
     resume = _case_page(RESUME_CASE, site_root)
     if resume:
         link += f'<p class="small aside"><a href="{resume}">{p.t("resume_case")} ›</a></p>'
-    return (f'<section class="box" id="work"><h2 class="h px"><span>{ARROW}{p.t("work")}</span></h2>'
+    return (f'<section class="box" id="work"><h2 class="h px"><span>{ARROW}{p.t("work")}{p.zh("work")}</span></h2>'
             f'<p class="small">{p.t("work_line")}</p>{jobs}{link}</section>')
 
 

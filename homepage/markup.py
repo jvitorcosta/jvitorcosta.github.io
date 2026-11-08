@@ -84,6 +84,10 @@ class Page:
     def both(text: dict[str, str]) -> str:
         return "".join(f'<span lang="{lang}">{esc(text[lang])}</span>' for lang in ("en", "pt"))
 
+    def zh(self, key: str) -> str:
+        """The Chinese subtitle of a section heading (strings[key_zh]), shown in both languages."""
+        return f' <span class="zh" lang="zh-Hans">{esc(self.c.strings["en"][f"{key}_zh"])}</span>'
+
     def date(self, iso: str) -> str:
         try:
             d = date.fromisoformat(iso[:10])
