@@ -1,7 +1,7 @@
 [
   {"id": 20885035443, "name": "Lunch Ride", "sport_type": "Ride", "type": "Ride",
-   "start_date_local": "2026-11-06T12:32:51Z", "distance": 23838.3, "moving_time": 2808,
-   "elapsed_time": 3214, "average_speed": 8.489, "pr_count": 12, "visibility": "everyone",
+   "start_date_local": "2026-11-06T12:32:51Z", "distance": 11919.2, "moving_time": 2808,
+   "elapsed_time": 3214, "average_speed": 4.245, "pr_count": 12, "visibility": "everyone",
    "average_heartrate": 151.2, "map": {"summary_polyline": "abc123"},
    "start_latlng": [-3.1, -60.0], "end_latlng": [-3.1, -60.0]},
   {"id": 2, "name": "Morning Run", "sport_type": "Run", "type": "Run",

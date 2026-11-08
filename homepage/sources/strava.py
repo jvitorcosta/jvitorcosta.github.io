@@ -22,6 +22,9 @@ EMOJI = {
 }
 # Sports Strava shows as a pace rather than a speed.
 PACE = {"Run", "TrailRun", "VirtualRun", "Walk", "Hike"}
+# Outdoor rides above either speed were in the car; my bike rides average 9-14 km/h, top 50.
+RIDES = {"Ride", "MountainBikeRide", "GravelRide", "EBikeRide"}
+DRIVE_AVERAGE_KMH, DRIVE_TOP_KMH = 30, 60
 
 
 def fetch_activity(
@@ -38,7 +41,7 @@ def fetch_activity(
     headers = {"Authorization": f"Bearer {token}"}
     activities = json.loads(get(ACTIVITIES_URL, headers=headers))
     for a in activities:
-        if a.get("visibility") == "only_me":
+        if a.get("visibility") == "only_me" or _drive(a):
             continue
         # The list sends pr_count 0; the activity's own page has the real count. Without it the
         # row still shows, just without PRs.
@@ -49,6 +52,15 @@ def fetch_activity(
             print(f"::warning::Strava PR count not read: {exc}", file=sys.stderr)
         return _row(a)
     return None
+
+
+def _drive(a: dict) -> bool:
+    """A car trip saved as a ride (laps pressed at speed cameras): faster than any bike ride."""
+    if (a.get("sport_type") or a.get("type")) not in RIDES:
+        return False
+    meters, seconds = float(a.get("distance") or 0), int(a.get("moving_time") or 0)
+    average = meters / seconds * 3.6 if seconds else 0
+    return average > DRIVE_AVERAGE_KMH or float(a.get("max_speed") or 0) * 3.6 > DRIVE_TOP_KMH
 
 
 def _row(a: dict) -> Activity:

@@ -12,24 +12,24 @@ title_en = "Ask Vitor"
 title_pt = "Pergunte ao Vitor"
 tag = "ai"
 pin = true
-en = "ask a little bot about me, it only read my CV"
-pt = "pergunte sobre mim a um robozinho que só leu meu currículo"
+en = "a bot about me on my own PC that says when it doesn't know"
+pt = "um robô sobre mim no meu PC que admite quando não sabe"
 
 [fraud-alert-explainer]
 title_en = "Fraud alert explainer"
 title_pt = "Explicador de fraude"
 tag = "ai"
 pin = true
-en = "spots card fraud and says why in plain words"
-pt = "pega fraude no cartão e explica o motivo com clareza"
+en = "flags card fraud and explains why, then checks the reasons"
+pt = "aponta fraude no cartão, explica e confere cada motivo"
 
 [timeseries-analysis-streamlit]
 title_en = "Forecast checker"
 title_pt = "Conferidor de previsões"
 tag = "data"
 pin = true
-en = "an app that checks how close a forecast got"
-pt = "um app que mostra o quanto uma previsão acertou"
+en = "finds the days and holidays a forecast gets wrong"
+pt = "acha os dias e feriados em que a previsão erra"
 
 [or-solver-streamlit]
 title_en = "SolvedOR"
@@ -43,36 +43,36 @@ case = "solvedor"
 title_en = "Project starter kit"
 title_pt = "Kit inicial de projeto"
 tag = "tool"
-en = "my starter kit for every new coding project"
-pt = "meu kit inicial pra todo projeto novo de código"
+en = "one command starts a project with tests, checks and AI setup"
+pt = "um comando cria um projeto com testes, checagens e IA"
 
 [haylou-faces]
 title_en = "Haylou watch faces"
 title_pt = "Mostradores Haylou"
 tag = "gadget"
-en = "I cracked a cheap watch to draw on it"
-pt = "eu hackeei um relógio baratinho pra desenhar nele"
+en = "custom faces for a cheap watch, made with my own tools"
+pt = "mostradores pra um relógio barato, com minhas ferramentas"
 
 [haylou-rt-tools]
 title_en = "Haylou watch tools"
 title_pt = "Ferramentas do Haylou"
 tag = "gadget"
-en = "the tools I made to talk to my cheap Haylou watch"
-pt = "as ferramentas que eu fiz pra falar com meu relógio Haylou"
+en = "I figured out a cheap watch's Bluetooth, no manual needed"
+pt = "decifrei o Bluetooth de um relógio barato, sem manual"
 
 [car-can-lab]
 title_en = "Car signal lab"
 title_pt = "Laboratório do carro"
 tag = "gadget"
-en = "listens in on my car's hidden signals, like gear and fuel"
-pt = "escuta os sinais escondidos do carro, tipo marcha e gasolina"
+en = "a tool to hunt my car's hidden signals, like gear and fuel"
+pt = "caçando sinais escondidos do carro, tipo marcha e gasolina"
 
 [loan-EDA-python]
 title_en = "Unpaid loans study"
 title_pt = "Estudo de calotes"
 tag = "data"
-en = "digging into why some people don't pay back loans"
-pt = "investigando por que tem gente que não paga empréstimo"
+en = "50k loans: who won't pay back, and where to draw the line"
+pt = "50 mil empréstimos: quem não paga e onde pôr o limite"
 
 [operations-research-ortools]
 title_en = "Best-plan homework"
@@ -85,8 +85,8 @@ pt = "dever da faculdade: achar o melhor plano com matemática"
 title_en = "Physics lab reports"
 title_pt = "Relatórios de física"
 tag = "uni"
-en = "my uni physics lab reports, done with code"
-pt = "meus relatórios de física da faculdade, feitos com código"
+en = "uni physics labs analysed in code, with a classmate"
+pt = "laboratórios de física da faculdade em código, com um colega"
 
 [quality-engineering-python]
 title_en = "Factory quality charts"

@@ -51,8 +51,8 @@ def test_refreshes_the_token_then_reads_the_latest_activities():
 def test_ride_becomes_the_row_with_speed_and_prs():
     act, _ = fetch()
     assert act.sport == "Ride" and act.emoji == "🚴" and act.title == "Lunch Ride"
-    assert act.distance_km == 23.8 and act.moving_min == 47
-    assert act.detail == "30.6 km/h · 12 PRs"
+    assert act.distance_km == 11.9 and act.moving_min == 47
+    assert act.detail == "15.3 km/h · 12 PRs"
     assert act.date == "2026-11-06"
     assert act.url == "https://www.strava.com/activities/20885035443"
 
@@ -61,7 +61,7 @@ def test_pr_count_comes_from_the_activity_itself():
     # The list endpoint sends pr_count 0; only the single-activity request has the real number.
     listed = dict(FIXTURE[0], pr_count=0)
     act, calls = fetch([listed], details={"20885035443": dict(FIXTURE[0], pr_count=12)})
-    assert act.detail == "30.6 km/h · 12 PRs"
+    assert act.detail == "15.3 km/h · 12 PRs"
     assert calls[-1] == ("get", "https://www.strava.com/api/v3/activities/20885035443",
                          {"Authorization": "Bearer access"})
 
@@ -71,7 +71,7 @@ def test_failed_activity_request_keeps_the_listed_values():
         raise OSError("503")
 
     act, _ = fetch([dict(FIXTURE[0], pr_count=0)], details={"20885035443": down})
-    assert act.title == "Lunch Ride" and act.detail == "30.6 km/h"
+    assert act.title == "Lunch Ride" and act.detail == "15.3 km/h"
 
 
 def test_run_shows_pace_and_no_prs():
@@ -90,6 +90,21 @@ def test_private_activities_are_skipped():
     hidden = dict(FIXTURE[0], visibility="only_me")
     act, _ = fetch([hidden, FIXTURE[1]])
     assert act.title == "Morning Run"
+
+
+@pytest.mark.parametrize("drive", [
+    {"distance": 9658.4, "moving_time": 1019, "max_speed": 24.54},  # 34.1 km/h average
+    {"distance": 9000.0, "moving_time": 1800, "max_speed": 19.0},  # 18 km/h, but 68 km/h top
+])
+def test_drives_logged_as_rides_are_skipped(drive):
+    # Laps pressed in the car for open-radars-manaus get saved as rides.
+    act, _ = fetch([dict(FIXTURE[0], **drive), FIXTURE[1]])
+    assert act.title == "Morning Run"
+
+
+def test_fast_bike_ride_still_shows():
+    act, _ = fetch([dict(FIXTURE[0], max_speed=14.0)])
+    assert act.title == "Lunch Ride"
 
 
 def test_no_activities_means_no_row():

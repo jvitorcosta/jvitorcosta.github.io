@@ -19,7 +19,7 @@ def test_loads_starting_party_in_order():
     ]
     first = content.party[0]
     assert first.name["en"] == "Car Cyberdeck"
-    assert first.blurb["en"] == "Spotify as a Pokémon battle on my dashboard"
+    assert first.blurb["en"] == "My car's cyberdeck: lights by touch, voice or watch, synced to the music"
     assert set(first.name) == set(first.blurb) == {"en", "pt"}
 
 
@@ -72,7 +72,7 @@ def test_both_languages_have_the_same_keys():
     assert required <= set(strings["en"])
     assert all(v.strip() for lang in strings.values() for v in lang.values())
     assert strings["en"]["page_title"] == (
-        "Vitor Pinheiro · engineer from Manaus"
+        "Vitor Pinheiro · software engineer from Manaus"
     )
 
 
