@@ -33,8 +33,15 @@
       "description": "ESP32 touchscreens and a Garmin watch app for the car: Spotify as a Pokémon battle, plus LED light control",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-08T16:47:51Z",
+      "pushed": "2026-11-08T17:24:01Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
+      "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
+      "homepage": "",
+      "name": "open-radars-manaus",
+      "pushed": "2026-11-08T17:15:37Z",
+      "url": "https://github.com/jvitorcosta/open-radars-manaus"
     },
     {
       "description": "Streamlit app that shows where a daily forecast goes wrong: by series, weekday, holiday and benchmark",
@@ -42,13 +49,6 @@
       "name": "timeseries-analysis-streamlit",
       "pushed": "2026-11-07T13:43:40Z",
       "url": "https://github.com/jvitorcosta/timeseries-analysis-streamlit"
-    },
-    {
-      "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
-      "homepage": "",
-      "name": "open-radars-manaus",
-      "pushed": "2026-11-06T18:08:12Z",
-      "url": "https://github.com/jvitorcosta/open-radars-manaus"
     },
     {
       "description": "Copier template for new Python projects: uv, Ruff, strict mypy, pytest, pre-commit, CI on three OSes and a full Claude Code setup",
