@@ -21,6 +21,7 @@ SITE = "https://jvitorcosta.github.io/"
 OG_IMAGE = SITE + "og-image.png"
 GITHUB_REPOS = "https://github.com/jvitorcosta?tab=repositories"
 PC_BOX_ROWS = 8
+COURSEWORK = {"uni", "course"}
 # key, English name, Portuguese name, swatch colour
 PALETTES = (("pocket", "Pocket", "Pocket", "#fbfaf4"),
             ("night", "Night Menu", "Menu Noturno", "#221d33"),
@@ -93,14 +94,31 @@ def _repo(p: Page, r: Repo, site_root: Path) -> str:
     if case and github:  # the name opens the story; the code stays one tap away
         demo += f' <a class="try" href="{esc(github)}">GitHub ›</a>'
 
-    name = (f'<a href="{esc(href)}">{esc(r.name)}{desc}</a>' if href
-            else f'<span class="name">{esc(r.name)}{desc}</span>')
+    if text.get("title_en") and text.get("title_pt"):
+        title = p.both({lang: text[f"title_{lang}"] for lang in ("en", "pt")})
+    else:
+        title = esc(r.name)
+    tag_key = f'tag_{text.get("tag", "")}'
+    if tag_key in p.c.strings["en"]:
+        title += f' <span class="tag">{p.t(tag_key)}</span>'
+    name = (f'<a href="{esc(href)}"><b>{title}</b>{desc}</a>' if href
+            else f'<span class="name"><b>{title}</b>{desc}</span>')
     return f'<div class="repo">{name}{demo}</div>'
 
 
 def _pc_box(p: Page, repos: list[Repo], site_root: Path) -> str:
     party = {m.repo for m in p.c.party}
     rest = [r for r in repos if r.name not in party]
+    # Pinned rows lead, in the order data/pc_box.toml lists them; then the rest newest first,
+    # with coursework last so it never pushes my own projects under "+ n more".
+    pinned = [name for name, text in p.c.pc_box.items() if text.get("pin")]
+
+    def order(r: Repo) -> tuple[int, bool]:
+        if r.name in pinned:
+            return pinned.index(r.name), False
+        return len(pinned), p.c.pc_box.get(r.name, {}).get("tag") in COURSEWORK
+
+    rest.sort(key=order)
     if not rest:
         return ""
     rows = [_repo(p, r, site_root) for r in rest[:PC_BOX_ROWS]]
@@ -247,8 +265,8 @@ def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: 
     sections = [
         _top(),
         _trainer(p),
-        right_now(p, live),
         _party(p, repos, site_root),
+        right_now(p, live),
         _pc_box(p, repos, site_root),
         _work(p, site_root),
     ]

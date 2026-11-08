@@ -375,6 +375,17 @@ a.mon:hover b { text-decoration: underline; }
 .pc .more { display: flex; padding: 0; font-size: 15px; color: var(--ink); }
 .pc .try:hover, .pc .more:hover { text-decoration: underline; }
 .pc > :last-child { border-bottom: 0; }
+/* What kind of project a row is (AI, data, uni...), as a small outlined chip after its name. */
+.pc .tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 5px;
+  font-size: 11px; font-weight: 700; line-height: 1.4;
+  text-transform: uppercase; letter-spacing: .04em;
+  vertical-align: 2px;
+  border: 2px solid var(--line);
+  border-radius: 3px;
+}
 
 /* ---------- footer ---------- */
 .foot { margin: 8px 0 0; font-size: 13px; line-height: 1.7; text-align: center; color: var(--ink-on-bg); }
