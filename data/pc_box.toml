@@ -1,54 +1,103 @@
 # Short hand-written text for PC box repos, in both languages: plain words for friends,
 # at most 60 characters each. Portuguese to be reviewed by Vitor.
-# Repos not listed here show their GitHub description.
+# Repos not listed here show their repo name and GitHub description.
+# title_en, title_pt  the row's name; without them the row shows the repo name
+# tag   ai, data, tool, gadget, uni or course (labels in strings.toml, tag_<name>)
+# pin   true puts the row at the top, in the order of this file; the rest stay newest first
 # case  optional; the row's name links to projects/<case>.html when that page exists
 #       (the GitHub and "try it" links stay).
 
+[ask-vitor]
+title_en = "Ask Vitor"
+title_pt = "Pergunte ao Vitor"
+tag = "ai"
+pin = true
+en = "ask a little bot about me, it only read my CV"
+pt = "pergunte sobre mim a um robozinho que só leu meu currículo"
+
+[fraud-alert-explainer]
+title_en = "Fraud alert explainer"
+title_pt = "Explicador de fraude"
+tag = "ai"
+pin = true
+en = "spots card fraud and says why in plain words"
+pt = "pega fraude no cartão e explica o motivo com clareza"
+
 [timeseries-analysis-streamlit]
+title_en = "Forecast checker"
+title_pt = "Conferidor de previsões"
+tag = "data"
+pin = true
 en = "an app that checks how close a forecast got"
 pt = "um app que mostra o quanto uma previsão acertou"
 
 [or-solver-streamlit]
+title_en = "SolvedOR"
+title_pt = "SolvedOR"
+tag = "uni"
 en = "solves textbook maths problems right in your browser"
 pt = "resolve problemas de matemática de livro no navegador"
 case = "solvedor"
 
 [python-uv-claude-template]
+title_en = "Project starter kit"
+title_pt = "Kit inicial de projeto"
+tag = "tool"
 en = "my starter kit for every new coding project"
 pt = "meu kit inicial pra todo projeto novo de código"
 
+[haylou-faces]
+title_en = "Haylou watch faces"
+title_pt = "Mostradores Haylou"
+tag = "gadget"
+en = "I cracked a cheap watch to draw on it"
+pt = "eu hackeei um relógio baratinho pra desenhar nele"
+
 [haylou-rt-tools]
+title_en = "Haylou watch tools"
+title_pt = "Ferramentas do Haylou"
+tag = "gadget"
 en = "the tools I made to talk to my cheap Haylou watch"
 pt = "as ferramentas que eu fiz pra falar com meu relógio Haylou"
 
 [car-can-lab]
+title_en = "Car signal lab"
+title_pt = "Laboratório do carro"
+tag = "gadget"
 en = "listens in on my car's hidden signals, like gear and fuel"
 pt = "escuta os sinais escondidos do carro, tipo marcha e gasolina"
 
-[fraud-alert-explainer]
-en = "spots card fraud and says why in plain words"
-pt = "pega fraude no cartão e explica o motivo com clareza"
-
-[ask-vitor]
-en = "ask a little bot about me, it only read my CV"
-pt = "pergunte sobre mim a um robozinho que só leu meu currículo"
-
 [loan-EDA-python]
+title_en = "Unpaid loans study"
+title_pt = "Estudo de calotes"
+tag = "data"
 en = "digging into why some people don't pay back loans"
 pt = "investigando por que tem gente que não paga empréstimo"
 
 [operations-research-ortools]
+title_en = "Best-plan homework"
+title_pt = "Dever de otimização"
+tag = "uni"
 en = "uni homework: finding the best plan with maths"
 pt = "dever da faculdade: achar o melhor plano com matemática"
 
 [lab-fisica-python]
+title_en = "Physics lab reports"
+title_pt = "Relatórios de física"
+tag = "uni"
 en = "my uni physics lab reports, done with code"
 pt = "meus relatórios de física da faculdade, feitos com código"
 
 [quality-engineering-python]
+title_en = "Factory quality charts"
+title_pt = "Gráficos de qualidade"
+tag = "uni"
 en = "charts that warn when a factory starts making duds"
 pt = "gráficos que avisam quando a fábrica começa a errar"
 
 [clone-tabnews]
+title_en = "TabNews clone"
+title_pt = "Clone do TabNews"
+tag = "course"
 en = "rebuilding a Brazilian tech news site to learn"
 pt = "recriando um site brasileiro de notícias tech pra aprender"

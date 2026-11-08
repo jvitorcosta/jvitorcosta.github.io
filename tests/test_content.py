@@ -13,9 +13,9 @@ def test_loads_starting_party_in_order():
     content = load_content(ROOT)
     assert [(m.repo, m.tag) for m in content.party] == [
         ("car-cyberdeck", "DAILY"),
+        ("or-solver-streamlit", "THESIS"),
         ("garmin-watchfaces", "WRIST"),
         ("open-radars-manaus", "CITY"),
-        ("haylou-faces", "WRIST"),
     ]
     first = content.party[0]
     assert first.name["en"] == "Car Cyberdeck"
@@ -139,3 +139,20 @@ def test_pc_box_case_field_is_loaded(tmp_path):
 
 def test_real_pc_box_links_solvedor_case():
     assert load_content(ROOT).pc_box["or-solver-streamlit"]["case"] == "solvedor"
+
+
+def test_pc_box_rows_have_titles_and_known_tags():
+    content = load_content(ROOT)
+    tags = {k[4:] for k in content.strings["en"] if k.startswith("tag_")}
+    for name, text in content.pc_box.items():
+        assert text.get("title_en") and text.get("title_pt"), name
+        assert text.get("tag") in tags, (name, text.get("tag"))
+
+
+def test_pc_box_title_tag_and_pin_are_loaded(tmp_path):
+    root = _copy_data(tmp_path)
+    (root / "data" / "pc_box.toml").write_text(
+        '[ask-vitor]\nen = "a"\npt = "b"\ntitle_en = "Ask Vitor"\ntitle_pt = "Pergunte"\n'
+        'tag = "ai"\npin = true\n', encoding="utf-8")
+    assert load_content(root).pc_box["ask-vitor"] == {
+        "en": "a", "pt": "b", "title_en": "Ask Vitor", "title_pt": "Pergunte", "tag": "ai", "pin": "true"}

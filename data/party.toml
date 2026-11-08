@@ -15,6 +15,17 @@ blurb_en = "Spotify as a Pokémon battle on my dashboard"
 blurb_pt = "O Spotify virando batalha Pokémon no painel do carro"
 
 [[member]]
+repo = "or-solver-streamlit"
+tag = "THESIS"
+picture = "projects/images/solvedor/chart.png"
+url = "projects/solvedor.html"
+emoji = "📈"
+name_en = "SolvedOR"
+name_pt = "SolvedOR"
+blurb_en = "my thesis: maths homework solved in the browser"
+blurb_pt = "meu TCC: exercícios de matemática resolvidos no navegador"
+
+[[member]]
 repo = "garmin-watchfaces"
 tag = "WRIST"
 picture = "https://raw.githubusercontent.com/jvitorcosta/garmin-watchfaces/HEAD/docs/images/pokeface-fr255.jpg"
@@ -32,12 +43,3 @@ name_en = "Open Radars"
 name_pt = "Open Radars"
 blurb_en = "every speed camera in Manaus, marked by me"
 blurb_pt = "cada radar de Manaus, marcado por mim"
-
-[[member]]
-repo = "haylou-faces"
-tag = "WRIST"
-picture = "https://raw.githubusercontent.com/jvitorcosta/haylou-faces/HEAD/faces/juma/previews/preview-sky.png"
-name_en = "Haylou faces"
-name_pt = "Mostradores Haylou"
-blurb_en = "I cracked a cheap watch to draw on it"
-blurb_pt = "Eu hackeei um relógio baratinho pra desenhar nele"

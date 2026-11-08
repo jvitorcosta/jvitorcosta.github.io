@@ -72,7 +72,7 @@ def section(html, start, end=None):
 
 def test_sections_in_order(tmp_path):
     html = render(tmp_path)
-    idx = [html.index(f'id="{s}"') for s in ("trainer", "right-now", "party", "pc-box", "work")]
+    idx = [html.index(f'id="{s}"') for s in ("trainer", "party", "right-now", "pc-box", "work")]
     assert idx == sorted(idx)
     assert html.startswith("<!doctype html>")
     assert '<html lang="en" class="pal-night">' in html
@@ -142,7 +142,7 @@ def test_all_rows_missing_hides_the_box(tmp_path):
     html = render(tmp_path, lv=LiveData(None, None, None, None))
     # only the hidden Spotify shell is left, so the box stays hidden until JS fills it
     assert '<section class="box" id="right-now" hidden>' in html
-    assert len(re.findall(r"<li[ >]", section(html, "right-now", "party"))) == 1
+    assert len(re.findall(r"<li[ >]", section(html, "right-now", "pc-box"))) == 1
 
 
 def test_spotify_shell_when_no_song(tmp_path):
@@ -248,7 +248,7 @@ def test_pc_box_links_case_study_and_live_demo(tmp_path):
 def test_party_links(tmp_path):
     (tmp_path / "projects").mkdir()
     (tmp_path / "projects" / "car-cyberdeck.html").write_text("x")
-    party = section(render(tmp_path), "party", "pc-box")
+    party = section(render(tmp_path), "party", "right-now")
     assert '<a class="mon" href="projects/car-cyberdeck.html"' in party
     assert '<a class="mon" href="https://github.com/jvitorcosta/garmin-watchfaces"' in party
     assert "🚗" in party and 'src="https://x/w.jpg"' in party
@@ -270,7 +270,7 @@ def test_missing_party_repo_is_skipped_with_warning(tmp_path, capsys):
 def test_repo_without_description_shows_name_only(tmp_path):
     box = section(render(tmp_path, repos=[repo("bare", "")]), "pc-box", "work")
     row = re.search(r'<div class="repo">(.*?)</div>', box, re.S).group(1)
-    assert re.fullmatch(r'\s*<a href="[^"]+">bare</a>\s*', row), row
+    assert re.fullmatch(r'\s*<a href="[^"]+"><b>bare</b></a>\s*', row), row
 
 
 def test_repo_description_is_clipped(tmp_path):
@@ -388,7 +388,7 @@ def test_pc_box_case_field_links_the_case_page_and_keeps_github_and_try(tmp_path
     repos = [repo("or-solver", "desc", "https://solvedor.app")]
     box = section(render(tmp_path, c=content(pc_box=texts), repos=repos), "pc-box", "work")
     row = re.search(r'<div class="repo">(.*?)</div>', box, re.S).group(1)
-    assert row.startswith('<a href="projects/solvedor.html">or-solver<span>')
+    assert row.startswith('<a href="projects/solvedor.html"><b>or-solver</b><span>')
     assert 'href="https://github.com/jvitorcosta/or-solver"' in row
     assert 'href="https://solvedor.app"' in row
 
@@ -427,7 +427,7 @@ def test_section_arrows_are_hidden_from_screen_readers(tmp_path):
 
 
 def test_star_rating_has_a_text_alternative(tmp_path):
-    row = section(render(tmp_path), "right-now", "party")
+    row = section(render(tmp_path), "right-now", "pc-box")
     assert '<span aria-hidden="true">★★★½ ♥</span>' in row
     assert ('<span class="sr"><span lang="en">3.5 stars, liked</span>'
             '<span lang="pt">3,5 estrelas, curtiu</span></span>') in row
@@ -438,7 +438,7 @@ def test_star_text_variants(tmp_path):
         film = Film("F", "2026", rating, liked, "2026-11-05", "", "", "https://x/f")
         m = re.search(r'<span class="sr">(<span lang="en">[^<]*</span>'
                       r'<span lang="pt">[^<]*</span>)</span>', section(
-                          render(tmp_path, lv=live(film=film)), "right-now", "party")
+                          render(tmp_path, lv=live(film=film)), "right-now", "pc-box")
                       .split("Letterboxd")[0].split("F</span>")[-1])
         return m.group(1) if m else ""
 
@@ -553,3 +553,28 @@ def test_work_lists_each_role_with_its_dates(tmp_path):
 def test_palette_dots_have_a_visible_name(tmp_path):
     top = render(tmp_path).split('<header class="top">')[1].split("</header>")[0]
     assert 'title="Night Menu" data-title-en="Night Menu" data-title-pt="Menu Noturno"' in top
+
+
+def test_pc_box_row_has_a_title_and_a_tag(tmp_path):
+    texts = {"ask-vitor": {"en": "a", "pt": "b", "title_en": "Ask Vitor", "title_pt": "Pergunte ao Vitor",
+                           "tag": "ai"}}
+    box = section(render(tmp_path, c=content(pc_box=texts)), "pc-box", "work")
+    assert ('<b><span lang="en">Ask Vitor</span><span lang="pt">Pergunte ao Vitor</span> '
+            '<span class="tag"><span lang="en">AI</span><span lang="pt">IA</span></span></b>') in box
+    assert "<b>solvedor</b>" in box  # no title: the repo name, no tag
+
+
+def test_pinned_repos_lead_the_pc_box_in_file_order(tmp_path):
+    texts = {"r9": {"en": "a", "pt": "b", "pin": "true"}, "r3": {"en": "a", "pt": "b", "pin": "true"}}
+    repos = [repo(f"r{i}") for i in range(12)]
+    box = section(render(tmp_path, c=content(pc_box=texts), repos=repos), "pc-box", "work")
+    names = re.findall(r"<b>(r\d+)</b>", box)
+    assert names[:3] == ["r9", "r3", "r0"] and len(names) == 8
+
+
+def test_coursework_comes_after_the_other_unpinned_rows(tmp_path):
+    texts = {"r0": {"en": "a", "pt": "b", "tag": "uni"}, "r1": {"en": "a", "pt": "b", "tag": "course"},
+             "r2": {"en": "a", "pt": "b", "tag": "gadget"}}
+    repos = [repo(f"r{i}") for i in range(4)]
+    box = section(render(tmp_path, c=content(pc_box=texts), repos=repos), "pc-box", "work")
+    assert re.findall(r"<b>(r\d)", box) == ["r2", "r3", "r0", "r1"]
