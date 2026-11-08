@@ -99,17 +99,18 @@ body > footer.foot { margin-top: 8px; padding-bottom: 28px; }
 body > header.top { display: flex; flex-wrap: wrap; padding-top: 12px; }
 main > header.top { padding: 0; }
 
-/* Homepage on a wide screen: two columns, who I am and my projects on the left, the rest on the
-   right. Case pages keep the narrow reading column. */
+/* Homepage on a wide screen: two columns, who I am, my projects and my work on the left, the live
+   rows and the PC box on the right. Case pages keep the narrow reading column. */
 @media (min-width: 900px) {
   main:has(> .cols), body:has(.cols) > footer.foot { max-width: 1000px; }
   .cols { display: flex; gap: 16px; align-items: flex-start; }
   .col { flex: 1; min-width: 0; }
 }
-/* The left column stays in view while the right one scrolls, when the window is tall enough to
-   show all of it (else its bottom would be out of reach). */
-@media (min-width: 900px) and (min-height: 760px) {
-  .side { position: sticky; top: 12px; }
+/* Phones: one column with Work back at the end, after Lately and the PC box. */
+@media (max-width: 899px) {
+  .cols { display: flex; flex-direction: column; }
+  .col { display: contents; }
+  #work { order: 1; }
 }
 
 /* ---------- top bar: palette dots, language, back link ---------- */
@@ -177,7 +178,7 @@ header.top > a:hover { text-decoration: underline; }
   display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
   gap: 4px 8px;
   margin: 0 0 4px;
-  font-size: 11px;
+  font-size: 16px; /* the pixel font's 8px grid: sharp at 8, 16, 24 */
   line-height: 1.6;
 }
 .h a {
@@ -203,7 +204,10 @@ header.top > a:hover { text-decoration: underline; }
 .jobs li:last-child { border-bottom: 0; }
 .jobs b { display: block; font-size: 15px; }
 #work .aside { margin-top: 12px; font-size: 14px; }
-#work .aside a { color: var(--ink); text-underline-offset: 3px; }
+#work .aside a {
+  display: inline-flex; align-items: center; min-height: 24px;
+  color: var(--ink); text-underline-offset: 3px;
+}
 
 /* Trainer card */
 .trainer { display: flex; gap: 12px; align-items: center; }
