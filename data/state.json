@@ -43,7 +43,7 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-08T20:33:49Z",
+      "pushed": "2026-11-08T20:51:56Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
