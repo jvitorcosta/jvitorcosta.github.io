@@ -196,14 +196,14 @@ def test_no_output_when_every_source_is_fresh(site, monkeypatch, tmp_path):
 
 
 STRAVA = __import__("homepage.model", fromlist=["Activity"]).Activity(
-    "Ride", "🚴", "Lunch Ride", 23.8, 47, "30.6 km/h · 12 PRs", "2026-11-06",
+    "Ride", "🚴", "Lunch Ride", 11.9, 47, "15.3 km/h · 12 PRs", "2026-11-06",
     "https://www.strava.com/activities/1")
 
 
 def test_strava_activity_replaces_the_hand_written_one(site):
     build(site, sources(activity=lambda: STRAVA), get=fake_get, today="2026-11-06")
     html = (site / "index.html").read_text(encoding="utf-8")
-    assert "Lunch Ride · 23.8 km" in html and "Night Ride" not in html
+    assert "Lunch Ride · 11.9 km" in html and "Night Ride" not in html
     assert load_state(site / "data" / "state.json")["activity"]["title"] == "Lunch Ride"
 
 
