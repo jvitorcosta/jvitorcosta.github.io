@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-07",
-    "detail": "34.1 km/h",
-    "distance_km": 9.7,
+    "date": "2026-11-04",
+    "detail": "12.1 km/h · 1 PR",
+    "distance_km": 5.0,
     "emoji": "🚴",
-    "moving_min": 17,
+    "moving_min": 25,
     "sport": "Ride",
-    "title": "Afternoon Ride",
-    "url": "https://www.strava.com/activities/20899289153"
+    "title": "Night Ride",
+    "url": "https://www.strava.com/activities/20864802993"
   },
   "book": {
     "author": "David Goggins",
@@ -30,18 +30,18 @@
   },
   "repos": [
     {
-      "description": "ESP32 touchscreens and a Garmin watch app for the car: Spotify as a Pokémon battle, plus LED light control",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-08T17:24:01Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
-    },
-    {
       "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
       "homepage": "",
       "name": "open-radars-manaus",
-      "pushed": "2026-11-08T17:15:37Z",
+      "pushed": "2026-11-08T19:00:34Z",
       "url": "https://github.com/jvitorcosta/open-radars-manaus"
+    },
+    {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-08T18:23:32Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Streamlit app that shows where a daily forecast goes wrong: by series, weekday, holiday and benchmark",
