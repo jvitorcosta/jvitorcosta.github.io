@@ -249,10 +249,10 @@ def test_clip_leaves_short_text():
 def test_pc_box_excludes_party_and_shows_more(tmp_path):
     repos = [repo("car-cyberdeck"), repo("garmin-watchfaces")] + [repo(f"r{i}") for i in range(12)]
     box = section(render(tmp_path, repos=repos), "pc-box", "work")
-    assert box.count('class="repo"') == 8
-    assert ">r7<" in box and ">r8<" not in box
+    assert box.count('class="repo"') == 5
+    assert ">r4<" in box and ">r5<" not in box
     assert "car-cyberdeck" not in box
-    assert "+ 4 more" in box
+    assert "+ 7 more" in box
     assert 'href="https://github.com/jvitorcosta?tab=repositories"' in box
 
 
@@ -597,7 +597,7 @@ def test_pinned_repos_lead_the_pc_box_in_file_order(tmp_path):
     repos = [repo(f"r{i}") for i in range(12)]
     box = section(render(tmp_path, c=content(pc_box=texts), repos=repos), "pc-box", "work")
     names = re.findall(r"<b>(r\d+)</b>", box)
-    assert names[:3] == ["r9", "r3", "r0"] and len(names) == 8
+    assert names[:3] == ["r9", "r3", "r0"] and len(names) == 5
 
 
 def test_coursework_comes_after_the_other_unpinned_rows(tmp_path):

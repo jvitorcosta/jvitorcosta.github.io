@@ -1,4 +1,4 @@
-# My party: the projects shown as tiles, in this order. At most 6.
+# My favorites (party in code): the projects shown as tiles, in this order. At most 6.
 # repo     GitHub repo name under jvitorcosta
 # tag      small label on the tile (DAILY, WRIST, CITY...)
 # picture  optional; site-relative path or https URL. Without one the tile shows `emoji`.

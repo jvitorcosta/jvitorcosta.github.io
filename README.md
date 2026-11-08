@@ -9,7 +9,7 @@ My corner of the internet: who I am, what I'm listening to, watching and reading
 ## What's on the page
 
 - **Lately:** the last song on Spotify, film on Letterboxd, anime on MyAnimeList, book on Goodreads and activity on Strava, refreshed twice a day.
-- **My party:** the projects I'm proudest of, as tiles, each linking to a case study or its repo.
+- **My favorites:** the projects I'm proudest of, as tiles, each linking to a case study or its repo.
 - **Recent repos:** my latest public GitHub repos, pulled from the GitHub API.
 - **Work:** a one-line summary and the companies I've worked with.
 
