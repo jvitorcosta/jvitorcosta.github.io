@@ -43,7 +43,7 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-09T07:20:33Z",
+      "pushed": "2026-11-09T20:36:24Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
@@ -146,11 +146,11 @@
     }
   ],
   "song": {
-    "artist": "Laura Branigan",
-    "cover": "https://i.scdn.co/image/ab67616d00001e021310670cbb82f06474372cfd",
-    "playing": true,
-    "title": "Self Control",
-    "url": "https://open.spotify.com/track/6JNJERZGJwDVgkmbohBw7u"
+    "artist": "Michael Jackson",
+    "cover": "https://i.scdn.co/image/ab67616d00001e0232a7d87248d1b75463483df5",
+    "playing": false,
+    "title": "Thriller",
+    "url": "https://open.spotify.com/track/2LlQb7Uoj1kKyGhlkBf9aC"
   },
   "updated": {
     "activity": "2026-11-09",
