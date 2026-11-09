@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-04",
-    "detail": "12.1 km/h · 1 PR",
-    "distance_km": 5.0,
-    "emoji": "🚴",
-    "moving_min": 25,
-    "sport": "Ride",
-    "title": "Night Ride",
-    "url": "https://www.strava.com/activities/20864802993"
+    "date": "2026-11-08",
+    "detail": "6:40 /km",
+    "distance_km": 2.3,
+    "emoji": "🏃",
+    "moving_min": 15,
+    "sport": "Run",
+    "title": "Treadmill Running",
+    "url": "https://www.strava.com/activities/20916471582"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -146,11 +146,11 @@
     }
   ],
   "song": {
-    "artist": "Doja Cat",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02d0bbfea6226b5c3707de92ed",
+    "artist": "Naoki Sato",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02a3bf66590dbcb0ac37fd07e6",
     "playing": true,
-    "title": "Say So",
-    "url": "https://open.spotify.com/track/3Dv1eDb0MEgF93GpLXlucZ"
+    "title": "Godzilla-0.0 Devotion",
+    "url": "https://open.spotify.com/track/1As0ihjOMh6oEFGm4XNWgW"
   },
   "updated": {
     "activity": "2026-11-09",
