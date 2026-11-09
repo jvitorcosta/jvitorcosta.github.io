@@ -1,6 +1,6 @@
 # How the site is published
 
-`.github/workflows/update-home.yml` runs every 4 hours (01:00, 05:00, 09:00, 13:00, 17:00 and 21:00 Manaus time), on every push to `main`, and on demand (`gh workflow run update-home.yml`).
+`.github/workflows/update-home.yml` runs every 4 hours (00:00, 04:00, 08:00, 12:00, 16:00 and 20:00 Manaus time), on every push to `main`, and on demand (`gh workflow run update-home.yml`).
 
 1. **build** checks out `main`, restores what earlier runs remembered from the `state` branch, runs `python -m homepage`, saves the new state back to `state`, and uploads the whole folder as a Pages artifact.
 2. **deploy** publishes that artifact to GitHub Pages.

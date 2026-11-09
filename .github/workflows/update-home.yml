@@ -6,7 +6,7 @@ name: Update homepage
 
 on:
   schedule:
-    - cron: "0 1,5,9,13,17,21 * * *" # every 4 hours: 01:00, 05:00, 09:00, 13:00, 17:00, 21:00 in Manaus
+    - cron: "0 0,4,8,12,16,20 * * *" # every 4 hours: 00:00, 04:00, 08:00, 12:00, 16:00, 20:00 in Manaus (UTC-4)
   workflow_dispatch:
   push:
     branches: [main]
