@@ -35,10 +35,10 @@
 }
 
 /* jvitorcosta.github.io: Game Boy menu look, shared by the homepage and the case-study pages.
-   Palettes live on <html> (.pal-night, .pal-nu); site.js picks one and marks it
+   Palettes live on <html> (.pal-night is Red Lantern, .pal-nu); site.js picks one and marks it
    with data-pal. Every text pair below passes WCAG AA (tests/test_assets.py checks them). */
 
-.pal-night { --bg:#141220; --box:#221d33; --ink:#f2eefc; --line:#7a6ea6; --shadow:#000000; --soft:#3a3354; --accent:#ff8000; --hp:#00e054; --ink-on-bg:#f2eefc; --strava:#fc5200; --strava-decoration:none; color-scheme:dark; }
+.pal-night { --bg:#9b1111; --box:#2a0808; --ink:#fbe8c2; --line:#d4a72c; --shadow:#1a0303; --soft:#4d1414; --accent:#ffcc33; --hp:#f5c518; --ink-on-bg:#fff3d6; --strava:#fc5200; --strava-decoration:none; color-scheme:dark; }
 .pal-nu { --bg:#820ad1; --box:#f7f0e1; --ink:#2a0845; --line:#2a0845; --shadow:#4a0478; --soft:#e9dcc2; --accent:#820ad1; --hp:#ffb703; --ink-on-bg:#ffffff; --strava:#c43d00; --strava-decoration:underline; color-scheme:light; }
 
 /* No JS yet (or none at all): a light-mode phone gets Nu Purple. site.js sets data-pal, which ends this. */
@@ -128,7 +128,7 @@ main > header.top { padding: 0; }
   -webkit-appearance: none;
   appearance: none;
 }
-[data-palette=night] { background-color: #221d33; }
+[data-palette=night] { background-color: #d4a72c; }
 [data-palette=nu] { background-color: #820ad1; }
 [data-palette]::before, [data-palette][aria-pressed=true]::after {
   content: "";
