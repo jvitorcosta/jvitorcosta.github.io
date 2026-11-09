@@ -581,7 +581,7 @@ def test_section_headings_carry_a_chinese_subtitle(tmp_path, box, en, pt, zh):
 def test_footer_names_every_source_and_the_real_cadence(tmp_path):
     foot = render(tmp_path).split('<footer class="foot">')[1]
     assert "Spotify, Letterboxd, MyAnimeList, Goodreads, Strava and GitHub" in foot
-    assert "twice a day" in foot and "duas vezes por dia" in foot
+    assert "every 4 hours" in foot and "a cada 4 horas" in foot
 
 
 def test_work_lists_each_role_with_its_dates(tmp_path):

@@ -8,7 +8,7 @@ My corner of the internet: who I am, what I'm listening to, watching and reading
 
 ## What's on the page
 
-- **Lately:** the last song on Spotify, film on Letterboxd, anime on MyAnimeList, book on Goodreads and activity on Strava, refreshed twice a day.
+- **Lately:** the last song on Spotify, film on Letterboxd, anime on MyAnimeList, book on Goodreads and activity on Strava, refreshed every 4 hours.
 - **Favorites:** the projects I'm proudest of, as tiles, each linking to a case study or its repo.
 - **Recent repos:** my latest public GitHub repos, pulled from the GitHub API.
 - **Experience:** a one-line summary and the companies I've worked with.
@@ -19,7 +19,7 @@ It works in English and Portuguese and has three colour themes, all with no trac
 
 A small Python package (`homepage/`, standard library only) renders a single static `index.html`:
 
-1. A GitHub Actions workflow runs twice a day (05:00 and 17:00 in Manaus) and on every push to `main`.
+1. A GitHub Actions workflow runs every 4 hours (01:00, 05:00, 09:00, 13:00, 17:00 and 21:00 in Manaus) and on every push to `main`.
 2. It fetches each source. A source that fails keeps its last good value, so the page never goes blank.
 3. Covers and posters are downloaded into `assets/live/`, so visitors never load images from third-party sites.
 4. The page is published straight to GitHub Pages. What the build must remember between runs lives on the `state` branch, never on `main`.
