@@ -43,7 +43,7 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-08T20:51:56Z",
+      "pushed": "2026-11-08T22:42:50Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
@@ -146,18 +146,18 @@
     }
   ],
   "song": {
-    "artist": "Nagalli",
-    "cover": "https://i.scdn.co/image/ab67616d00001e024b5ceb2515a32f3115323ae8",
-    "playing": false,
-    "title": "CONFISSÕES PT2",
-    "url": "https://open.spotify.com/track/0Q1ySdDoHDiotYn4nbMXNm"
+    "artist": "Doja Cat",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02d0bbfea6226b5c3707de92ed",
+    "playing": true,
+    "title": "Say So",
+    "url": "https://open.spotify.com/track/3Dv1eDb0MEgF93GpLXlucZ"
   },
   "updated": {
-    "activity": "2026-11-08",
-    "anime": "2026-11-08",
-    "book": "2026-11-08",
-    "film": "2026-11-08",
-    "repos": "2026-11-08",
-    "song": "2026-11-08"
+    "activity": "2026-11-09",
+    "anime": "2026-11-09",
+    "book": "2026-11-09",
+    "film": "2026-11-09",
+    "repos": "2026-11-09",
+    "song": "2026-11-09"
   }
 }
