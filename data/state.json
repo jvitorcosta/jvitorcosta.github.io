@@ -43,7 +43,7 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-08T22:42:50Z",
+      "pushed": "2026-11-09T07:20:33Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
@@ -146,11 +146,11 @@
     }
   ],
   "song": {
-    "artist": "Naoki Sato",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02a3bf66590dbcb0ac37fd07e6",
-    "playing": true,
-    "title": "Godzilla-0.0 Divine",
-    "url": "https://open.spotify.com/track/37esbqNwzX6XLd5BhmGJaz"
+    "artist": "2Pac",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02d81a092eb373ded457d94eec",
+    "playing": false,
+    "title": "I Get Around",
+    "url": "https://open.spotify.com/track/74kHlIr01X459gqsSdNilW"
   },
   "updated": {
     "activity": "2026-11-09",
