@@ -47,7 +47,14 @@ def fetch_activity(
         # row still shows, just without PRs.
         try:
             detail = json.loads(get(f"{ACTIVITY_URL}/{a['id']}", headers=headers))
-            a = dict(a, pr_count=detail.get("pr_count", a.get("pr_count")))
+            # Its pr_count can still be lower than the app's (1 against 3 on the 4 Nov ride), so the
+            # segment efforts marked as my best (pr_rank 1) are counted too and the higher one wins.
+            efforts = detail.get("segment_efforts") or []
+            segment_prs = sum(1 for e in efforts if e.get("pr_rank") == 1)
+            pr_count = int(detail.get("pr_count", a.get("pr_count")) or 0)
+            print(f"Strava PRs: {len(efforts)} segments, {segment_prs} segment PRs, pr_count {pr_count}",
+                  file=sys.stderr)
+            a = dict(a, pr_count=max(pr_count, segment_prs))
         except Exception as exc:
             print(f"::warning::Strava PR count not read: {exc}", file=sys.stderr)
         return _row(a)

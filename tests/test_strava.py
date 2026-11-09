@@ -66,6 +66,15 @@ def test_pr_count_comes_from_the_activity_itself():
                          {"Authorization": "Bearer access"})
 
 
+def test_pr_count_counts_segment_prs_when_the_activity_says_fewer(capsys):
+    # The 4 Nov ride: the app shows 3 PRs, the API's pr_count said 1.
+    efforts = [{"pr_rank": 1}, {"pr_rank": 1}, {"pr_rank": 1}, {"pr_rank": 2}, {"pr_rank": None}]
+    detail = dict(FIXTURE[0], pr_count=1, segment_efforts=efforts)
+    act, _ = fetch([dict(FIXTURE[0], pr_count=0)], details={"20885035443": detail})
+    assert act.detail == "15.3 km/h · 3 PRs"
+    assert "5 segments, 3 segment PRs, pr_count 1" in capsys.readouterr().err
+
+
 def test_failed_activity_request_keeps_the_listed_values():
     def down():
         raise OSError("503")
