@@ -17,7 +17,10 @@ So the page leads with me and my projects, and the live rows make it feel curren
 - **Fonts are self-hosted** in `assets/fonts/` (both under the SIL Open Font License), so a
   visit makes no request to Google. The pixel font has no Chinese glyphs, so Chinese text uses
   the system CJK font.
-- **Two palettes:** Night Menu (`night`, dark, the default) and Nu Purple (`nu`, the default
+- **Two palettes:** Red Lantern (`night` in the code, dark, the default: lacquer-red boxes with
+  gold borders and yellow links on an imperial-red page, to go with the Chinese name and
+  subtitles; it replaced the purple-grey Night Menu and kept its code name so saved choices and
+  the case pages still work) and Nu Purple (`nu`, the default
   for systems in light mode). A white palette existed and was removed: the purple one already
   covers light mode, and fewer palettes means fewer colours to keep accessible.
 - **Section headings** are 16px pixel caps with a ▶ before them and a Chinese subtitle after,

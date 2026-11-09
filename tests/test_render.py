@@ -112,7 +112,7 @@ def test_head(tmp_path):
 
 def test_palette_and_language_buttons(tmp_path):
     html = render(tmp_path)
-    for p, label in (("night", "Night Menu"), ("nu", "Nu Purple")):
+    for p, label in (("night", "Red Lantern"), ("nu", "Nu Purple")):
         assert f'<button type="button" data-palette="{p}" aria-label="{label}"' in html
     assert 'data-palette="pocket"' not in html
     assert ('<button type="button" data-lang-toggle aria-label="EN > PT, switch language">'
@@ -483,7 +483,7 @@ def test_star_text_variants(tmp_path):
 def test_palette_labels_follow_the_language(tmp_path):
     top = render(tmp_path).split("</header>")[0]
     assert 'role="group" aria-label="Colours" data-aria-en="Colours" data-aria-pt="Cores"' in top
-    for en, pt in (("Night Menu", "Menu Noturno"), ("Nu Purple", "Roxo Nu")):
+    for en, pt in (("Red Lantern", "Lanterna Vermelha"), ("Nu Purple", "Roxo Nu")):
         assert f'aria-label="{en}" data-aria-en="{en}" data-aria-pt="{pt}"' in top
 
 
@@ -596,7 +596,7 @@ def test_work_lists_each_role_with_its_dates(tmp_path):
 
 def test_palette_dots_have_a_visible_name(tmp_path):
     top = render(tmp_path).split('<header class="top">')[1].split("</header>")[0]
-    assert 'title="Night Menu" data-title-en="Night Menu" data-title-pt="Menu Noturno"' in top
+    assert 'title="Red Lantern" data-title-en="Red Lantern" data-title-pt="Lanterna Vermelha"' in top
 
 
 def test_pc_box_row_has_a_title_and_a_tag(tmp_path):

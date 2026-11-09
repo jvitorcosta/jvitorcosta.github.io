@@ -22,7 +22,7 @@ GITHUB_REPOS = "https://github.com/jvitorcosta?tab=repositories"
 PC_BOX_ROWS = 5  # with 5 the right column ends about level with the left on a laptop
 COURSEWORK = {"uni", "course"}
 # key, English name, Portuguese name, swatch colour
-PALETTES = (("night", "Night Menu", "Menu Noturno", "#221d33"),
+PALETTES = (("night", "Red Lantern", "Lanterna Vermelha", "#d4a72c"),
             ("nu", "Nu Purple", "Roxo Nu", "#820ad1"))
 CASE_SLUG = re.compile(r"[a-z0-9][a-z0-9-]*")
 RESUME_CASE = "resume-as-code"
