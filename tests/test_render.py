@@ -99,7 +99,8 @@ def test_head(tmp_path):
     assert f"<title>{esc(STRINGS['en']['page_title'])}</title>" in html
     assert f'property="og:title" content="{esc(STRINGS["en"]["page_title"])}"' in html
     assert f'property="og:description" content="{esc(STRINGS["en"]["page_description"])}"' in html
-    assert 'property="og:image" content="https://jvitorcosta.github.io/og-image.png"' in html
+    # Versioned so LinkedIn and other link previews refetch the image when it changes.
+    assert re.search(r'property="og:image" content="https://jvitorcosta\.github\.io/og-image\.png\?v=[0-9a-f]{8}"', html)
     assert '<link rel="canonical" href="https://jvitorcosta.github.io/">' in html
     assert re.search(r'<link rel="stylesheet" href="assets/site\.css\?v=[0-9a-f]{8}">', html)
     assert re.search(r'<script src="assets/site\.js\?v=[0-9a-f]{8}" defer></script>', html)

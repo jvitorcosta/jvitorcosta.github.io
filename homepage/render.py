@@ -18,7 +18,6 @@ from homepage.right_now import right_now
 __all__ = ["clip", "render_home", "safe_url"]
 
 SITE = "https://jvitorcosta.github.io/"
-OG_IMAGE = SITE + "og-image.png"
 GITHUB_REPOS = "https://github.com/jvitorcosta?tab=repositories"
 PC_BOX_ROWS = 5  # with 5 the right column ends about level with the left on a laptop
 COURSEWORK = {"uni", "course"}
@@ -220,7 +219,7 @@ def _head(p: Page) -> str:
 <meta property="og:description" content="{description}">
 <meta property="og:url" content="{SITE}">
 <meta property="og:type" content="website">
-<meta property="og:image" content="{OG_IMAGE}">
+<meta property="og:image" content="{SITE}{versioned("og-image.png")}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
