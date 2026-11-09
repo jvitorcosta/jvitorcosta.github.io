@@ -146,11 +146,11 @@
     }
   ],
   "song": {
-    "artist": "Bad Bunny",
-    "cover": "https://i.scdn.co/image/ab67616d00001e022ea1f035463d11e1fc3b193d",
-    "playing": false,
-    "title": "MONACO",
-    "url": "https://open.spotify.com/track/4MjDJD8cW7iVeWInc2Bdyj"
+    "artist": "Max Coveri",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02fc6789beaf73900aeee1bdbd",
+    "playing": true,
+    "title": "Running In The 90's",
+    "url": "https://open.spotify.com/track/0QTz3EXxXp8ucQyRKTh0NR"
   },
   "updated": {
     "activity": "2026-11-09",
