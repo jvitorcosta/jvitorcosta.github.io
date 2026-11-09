@@ -8,12 +8,12 @@ My corner of the internet: who I am, what I'm listening to, watching and reading
 
 ## What's on the page
 
-- **Lately:** the last song on Spotify, film on Letterboxd, anime on MyAnimeList, book on Goodreads and activity on Strava, refreshed every 4 hours.
 - **Favorites:** the projects I'm proudest of, as tiles, each linking to a case study or its repo.
-- **Recent repos:** my latest public GitHub repos, pulled from the GitHub API.
-- **Experience:** a one-line summary and the companies I've worked with.
+- **Lately:** the last song on Spotify, film on Letterboxd, anime on MyAnimeList, book on Goodreads and activity on Strava, refreshed every 4 hours.
+- **Projects:** my other public GitHub repos, a few pinned first, pulled from the GitHub API.
+- **Experience:** a one-line summary and the roles I've had.
 
-It works in English and Portuguese and has three colour themes, all with no tracking and no cookies.
+It works in English and Portuguese and has two colour themes (dark and purple), all with no tracking and no cookies.
 
 ## How it works
 
@@ -27,7 +27,7 @@ A small Python package (`homepage/`, standard library only) renders a single sta
 
 The project case pages in `projects/` are generated from my [curriculum-vitae](https://github.com/jvitorcosta/curriculum-vitae) repo and copied in.
 
-More detail in [docs/deploy.md](docs/deploy.md).
+Everything in detail, from each data source to the design rules, is in [docs/](docs/README.md).
 
 ## Run it locally
 
@@ -55,7 +55,10 @@ All hand-written text lives in `data/`, so content changes never touch code:
 | File | What it holds |
 |---|---|
 | `data/strings.toml` | every piece of page text, in English and Portuguese |
-| `data/party.toml` | the project tiles |
+| `data/party.toml` | the Favorites tiles |
+| `data/pc_box.toml` | names, lines, tags and pins for the Projects rows |
 | `data/links.toml` | profile links |
 | `data/activity.toml` | the activity row when Strava is off |
-| `data/pc_box.toml` | the Projects box |
+| `data/jobs.json` | the Experience roles, copied from curriculum-vitae |
+
+How to change each one is in [docs/content.md](docs/content.md).
