@@ -30,15 +30,22 @@
   },
   "film": {
     "liked": true,
-    "poster": "https://a.ltrbxd.com/resized/film-poster/1/2/8/4/6/3/6/1284636-clayface-0-230-0-345-crop.jpg?v=eb305849d5",
-    "rating": 4.0,
-    "review": "Interessante como só o carinho da casada acalma esse pilantra Dormi em alguma parte do filme, não lembro oq aconteceu no miolo",
-    "title": "Clayface",
-    "url": "https://letterboxd.com/zubu/film/clayface/",
-    "watched": "2026-11-06",
+    "poster": "https://a.ltrbxd.com/resized/film-poster/1/2/6/6/6/8/4/1266684-godzilla-minus-zero-0-230-0-345-crop.jpg?v=38989be61d",
+    "rating": 5.0,
+    "review": "precisamos conversar sobre a habilidade desse bixaum de levar uma coça em todo filme que ele enfrenta o ghidorah -- e sempre acaba bem pra ele filmaço, cru e sem medo de explorar os dramas humanos um dos grandes problemas dos godzillas da universal é esse extremo tempo de tela e banalização da dimensão dos kaijus -- esses filmes japoneses mostram pouquíssimo e sabem dosar essa percepção de escala pra quem assiste",
+    "title": "Godzilla Minus Zero",
+    "url": "https://letterboxd.com/zubu/film/godzilla-minus-zero/",
+    "watched": "2026-11-09",
     "year": "2026"
   },
   "repos": [
+    {
+      "description": "SolvedOR: solve linear and integer programs written like a textbook, in the browser. Live at solvedor.streamlit.app",
+      "homepage": "https://solvedor.streamlit.app",
+      "name": "or-solver-streamlit",
+      "pushed": "2026-11-10T09:56:07Z",
+      "url": "https://github.com/jvitorcosta/or-solver-streamlit"
+    },
     {
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
@@ -66,13 +73,6 @@
       "name": "python-uv-claude-template",
       "pushed": "2026-11-05T22:17:43Z",
       "url": "https://github.com/jvitorcosta/python-uv-claude-template"
-    },
-    {
-      "description": "SolvedOR: solve linear and integer programs written like a textbook, in the browser. Live at solvedor.streamlit.app",
-      "homepage": "https://solvedor.streamlit.app",
-      "name": "or-solver-streamlit",
-      "pushed": "2026-11-05T22:17:38Z",
-      "url": "https://github.com/jvitorcosta/or-solver-streamlit"
     },
     {
       "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
@@ -146,11 +146,11 @@
     }
   ],
   "song": {
-    "artist": "Ginger Root",
-    "cover": "https://i.scdn.co/image/ab67616d00001e028e9876be6bd512f0ff86de9e",
+    "artist": "Justin Timberlake",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02c6ba98fd3f3b396a6c6f7091",
     "playing": true,
-    "title": "Loretta",
-    "url": "https://open.spotify.com/track/4v3icU8NQfjM8uwIz9Ug1h"
+    "title": "Summer Love",
+    "url": "https://open.spotify.com/track/1MBM7CyZbwJpVbbZJnHHRg"
   },
   "updated": {
     "activity": "2026-11-10",
