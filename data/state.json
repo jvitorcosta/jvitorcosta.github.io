@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-08",
-    "detail": "6:40 /km",
-    "distance_km": 2.3,
+    "date": "2026-11-09",
+    "detail": "8:24 /km",
+    "distance_km": 1.7,
     "emoji": "🏃",
-    "moving_min": 15,
+    "moving_min": 14,
     "sport": "Run",
-    "title": "Treadmill Running",
-    "url": "https://www.strava.com/activities/20916471582"
+    "title": "Evening Run",
+    "url": "https://www.strava.com/activities/20927564155"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -146,18 +146,18 @@
     }
   ],
   "song": {
-    "artist": "Selena Gomez",
-    "cover": "https://i.scdn.co/image/ab67616d00001e020e36690135fa1a30d048e604",
+    "artist": "Ginger Root",
+    "cover": "https://i.scdn.co/image/ab67616d00001e028e9876be6bd512f0ff86de9e",
     "playing": true,
-    "title": "Come & Get It",
-    "url": "https://open.spotify.com/track/6LoQHIo74tOzQ8EsLEkhgF"
+    "title": "Loretta",
+    "url": "https://open.spotify.com/track/4v3icU8NQfjM8uwIz9Ug1h"
   },
   "updated": {
-    "activity": "2026-11-09",
-    "anime": "2026-11-09",
-    "book": "2026-11-09",
-    "film": "2026-11-09",
-    "repos": "2026-11-09",
-    "song": "2026-11-09"
+    "activity": "2026-11-10",
+    "anime": "2026-11-10",
+    "book": "2026-11-10",
+    "film": "2026-11-10",
+    "repos": "2026-11-10",
+    "song": "2026-11-10"
   }
 }
