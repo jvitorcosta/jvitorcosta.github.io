@@ -146,16 +146,16 @@
     }
   ],
   "song": {
-    "artist": "Aqua",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02f5768db89dd8ac30fd0e414f",
+    "artist": "Lorde",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02187331e276c898d39764cc98",
     "playing": false,
-    "title": "Barbie Girl",
-    "url": "https://open.spotify.com/track/5ZrDlcxIDZyjOzHdYW1ydr"
+    "title": "Royals",
+    "url": "https://open.spotify.com/track/2dLLR6qlu5UJ5gk0dKz0h3"
   },
   "updated": {
     "activity": "2026-11-11",
     "anime": "2026-11-11",
-    "book": "2026-11-10",
+    "book": "2026-11-11",
     "film": "2026-11-11",
     "repos": "2026-11-11",
     "song": "2026-11-11"
