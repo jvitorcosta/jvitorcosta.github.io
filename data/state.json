@@ -146,18 +146,18 @@
     }
   ],
   "song": {
-    "artist": "Britney Spears",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02efc6988972cb04105f002cd4",
-    "playing": true,
-    "title": "Toxic",
-    "url": "https://open.spotify.com/track/6I9VzXrHxO9rA9A5euc8Ak"
+    "artist": "Aqua",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02f5768db89dd8ac30fd0e414f",
+    "playing": false,
+    "title": "Barbie Girl",
+    "url": "https://open.spotify.com/track/5ZrDlcxIDZyjOzHdYW1ydr"
   },
   "updated": {
-    "activity": "2026-11-10",
-    "anime": "2026-11-10",
+    "activity": "2026-11-11",
+    "anime": "2026-11-11",
     "book": "2026-11-10",
-    "film": "2026-11-10",
-    "repos": "2026-11-10",
-    "song": "2026-11-10"
+    "film": "2026-11-11",
+    "repos": "2026-11-11",
+    "song": "2026-11-11"
   }
 }
