@@ -146,11 +146,11 @@
     }
   ],
   "song": {
-    "artist": "Eminem",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02b6ef2ebd34efb08cb76f6eec",
-    "playing": false,
-    "title": "Lose Yourself",
-    "url": "https://open.spotify.com/track/1v7L65Lzy0j0vdpRjJewt1"
+    "artist": "Nelly Furtado",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02a6f439c8957170652f9410e2",
+    "playing": true,
+    "title": "Promiscuous",
+    "url": "https://open.spotify.com/track/2gam98EZKrF9XuOkU13ApN"
   },
   "updated": {
     "activity": "2026-11-12",
