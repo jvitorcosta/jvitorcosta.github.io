@@ -293,6 +293,10 @@ a.row:hover .t { text-decoration: underline; }
 /* Each icon is a 20x20 pixel app tile (tools/pixel_icons.py), framed like the avatar. */
 .go { border-radius: 0; overflow: hidden; }
 .go img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+/* The tile plus a small Follow label, so visitors see the icon opens my profile there. */
+.follow { flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px 0; text-decoration: none; }
+.follow .fl { font-size: 12px; font-weight: 700; line-height: 1; color: var(--accent); }
+.follow:hover .fl { text-decoration: underline; }
 
 .badge {
   display: inline-block;

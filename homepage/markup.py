@@ -99,11 +99,13 @@ class Page:
         })
 
     def go(self, platform: str) -> str:
-        """Pixel brand tile at the end of a row, linking to Vitor's profile there."""
+        """Pixel brand tile at the end of a row, with a Follow label linking to Vitor's profile there."""
         name, colour = PLATFORMS[platform]
         img = f'<img src="{versioned(f"{ICONS}/{platform}.svg")}" alt="" width="40" height="40">'
         link = safe_url(self.c.links.get(platform, ""))
         if not link:
             return f'<span class="go" style="background:{colour}" aria-hidden="true">{img}</span>'
-        return (f'<a class="go" href="{esc(link)}" style="background:{colour}">{img}'
-                f'<span class="sr">{self.t("profile", app=name)}</span></a>')
+        return (f'<a class="follow" href="{esc(link)}">'
+                f'<span class="go" style="background:{colour}">{img}</span>'
+                f'<span class="fl">{self.t("follow")}</span>'
+                f'<span class="sr"> {self.t("profile", app=name)}</span></a>')

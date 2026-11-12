@@ -638,3 +638,12 @@ def test_sections_sit_in_two_columns_and_phones_show_work_last(tmp_path):
     assert ".col { display: contents; }" in phone and "#work { order: 1; }" in phone
     assert "position: sticky" not in css
     assert html.index('<div class="cols">') > html.index('<header class="top">')
+
+
+def test_app_icons_say_follow_in_both_languages(tmp_path):
+    html = render(tmp_path)
+    links = re.findall(r'<a class="follow" href="([^"]+)">(.*?)</a>', html, re.S)
+    assert {url for url, _ in links} >= {"https://letterboxd.com/zubu/"}
+    for _, inner in links:
+        assert 'class="go"' in inner
+        assert '<span lang="en">Follow</span><span lang="pt">Seguir</span>' in inner
