@@ -68,3 +68,25 @@ def test_write_is_deterministic_lf(tmp_path):
     write_knowledge(p, full())
     assert p.read_bytes() == first and b"\r" not in first
     assert json.loads(first)["version"] == 1
+
+
+def activity_text(sport):
+    t = Activity(sport, "x", "", 5.0, 31, "", "2026-11-09", "")
+    live = LiveData(None, None, None, t, None)
+    return facts_by_id(build_knowledge([], [], live, UPDATED, TODAY))["live.activity"]["text"]
+
+
+def test_activity_sport_is_split_into_words_with_the_right_article():
+    assert activity_text("WeightTraining") == "Vitor's latest Strava activity was a weight training of 5 km."
+    assert activity_text("AlpineSki").startswith("Vitor's latest Strava activity was an alpine ski ")
+    assert activity_text("Run").startswith("Vitor's latest Strava activity was a run ")
+
+
+def test_bad_or_repeated_ids_are_dropped_with_a_warning(capsys):
+    about = [AboutFact("about.ok", "About Vitor", "First."),
+             AboutFact("Bad Id!", "About Vitor", "Broken id."),
+             AboutFact("about.ok", "About Vitor", "Repeated id.")]
+    data = build_knowledge(about, [], LiveData(None, None, None, None, None), {}, TODAY)
+    assert [(f["id"], f["text"]) for f in data["facts"]] == [("about.ok", "First.")]
+    err = capsys.readouterr().err
+    assert "Bad Id!" in err and "about.ok" in err
