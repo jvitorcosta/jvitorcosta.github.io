@@ -221,7 +221,7 @@ def test_blocked_inline_cover_falls_back_to_the_saved_one():
     assert json.loads(_cover_after("", inline, fail=True))[1] is True  # nothing to fall back to: hide
 
 
-COPIED_PAGES = sorted([*ROOT.glob("projects/*.html"), ROOT / "privacy.html"])
+COPIED_PAGES = sorted([*ROOT.glob("projects/*.html"), ROOT / "privacy.html", ROOT / "site-privacy.html"])
 
 
 @pytest.mark.parametrize("page", COPIED_PAGES, ids=lambda p: p.name)

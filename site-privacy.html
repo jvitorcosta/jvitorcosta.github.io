@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" class="pal-nu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy of this site and Ask Vitor | Vitor Pinheiro</title>
+<meta name="description" content="What this website and the Ask Vitor assistant do and do not save about you.">
+<link rel="canonical" href="https://jvitorcosta.github.io/site-privacy.html">
+<meta property="og:title" content="Privacy of this site and Ask Vitor | Vitor Pinheiro">
+<meta property="og:description" content="What this website and the Ask Vitor assistant do and do not save about you.">
+<meta property="og:url" content="https://jvitorcosta.github.io/site-privacy.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://jvitorcosta.github.io/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try{var p=localStorage.getItem("palette");if(/^(night|nu)$/.test(p)){var h=document.documentElement;h.className="pal-"+p;h.setAttribute("data-pal",p)}}catch(e){}try{var h=document.documentElement,l=(navigator.language||"").toLowerCase().indexOf("pt")?"en":"pt";try{var s=localStorage.getItem("lang");if(s=="en"||s=="pt")l=s}catch(e){}h.lang=l}catch(e){}</script>
+<link rel="stylesheet" href="assets/site.css?v=b723b5c1">
+
+</head>
+<body>
+<header class="top">
+<a href="index.html">&larr; Vitor</a>
+<span class="palettes" role="group" aria-label="Colours" data-aria-en="Colours" data-aria-pt="Cores">
+<button type="button" data-palette="night" aria-label="Red Lantern" data-aria-en="Red Lantern" data-aria-pt="Lanterna Vermelha"></button>
+<button type="button" data-palette="nu" aria-label="Nu Purple" data-aria-en="Nu Purple" data-aria-pt="Roxo Nu"></button>
+</span>
+<button type="button" data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>
+</header>
+<main>
+<div class="box">
+<article>
+<div lang="en">
+<h1>Privacy of this site and Ask Vitor</h1>
+<p class="meta">Last updated 2026-11-12</p>
+<h2>The website</h2>
+<p>No cookies, no analytics, no tracking. The page is plain files from GitHub Pages; fonts, icons and images are served from the site itself.</p>
+<p>When the page loads, it makes one outside request: to my own Spotify server on Vercel, to show what I am listening to. If that server does not send the cover inline, the browser may also fetch the cover from Spotify's image host.</p>
+<h2>Ask Vitor</h2>
+<p>The dialogue loads nothing until you open TALK / ASK ME and send a question.</p>
+<ul>
+<li><strong>Where it goes:</strong> your question goes to the ask-vitor API, hosted on Vercel. The API sends it, together with the public knowledge file published on this site (<a href="knowledge.json">knowledge.json</a>), to Anthropic's Claude API, which writes the answer.</li>
+<li><strong>What is saved:</strong> for each question, the question, the answer, which sources were used, whether it fell back to the standard reply, how long it took, and the date. Emails and phone numbers are removed before saving. It is kept in a log store (Upstash Redis) and deleted after 90 days.</li>
+<li><strong>What is never saved:</strong> your IP address, browser details (user agent), cookies, session ids. The IP address is used only in memory, to count questions per visitor per hour (a rate limit), and then dropped.</li>
+</ul>
+<p>Please do not type anything private into the question box.</p>
+<p class="meta">Questions or removal requests: <a href="mailto:joaovpro17@gmail.com">joaovpro17@gmail.com</a></p>
+</div>
+<div lang="pt">
+<h1>Privacidade deste site e do Ask Vitor</h1>
+<p class="meta">Atualizado em 2026-11-12</p>
+<h2>O site</h2>
+<p>Sem cookies, sem analytics, sem rastreamento. A página é feita de arquivos simples no GitHub Pages; fontes, ícones e imagens vêm do próprio site.</p>
+<p>Quando a página carrega, ela faz uma requisição externa: ao meu servidor do Spotify na Vercel, para mostrar o que estou ouvindo. Se esse servidor não enviar a capa embutida, o navegador também pode buscar a capa no servidor de imagens do Spotify.</p>
+<h2>Ask Vitor</h2>
+<p>O diálogo não carrega nada até você abrir FALAR / PERGUNTE e enviar uma pergunta.</p>
+<ul>
+<li><strong>Para onde vai:</strong> sua pergunta vai para a API do ask-vitor, hospedada na Vercel. A API a envia, junto com o arquivo público de conhecimento publicado neste site (<a href="knowledge.json">knowledge.json</a>), para a API Claude da Anthropic, que escreve a resposta.</li>
+<li><strong>O que é salvo:</strong> para cada pergunta, a pergunta, a resposta, quais fontes foram usadas, se caiu na resposta padrão, quanto tempo levou e a data. E-mails e telefones são removidos antes de salvar. Fica num registro (Upstash Redis) e é apagado após 90 dias.</li>
+<li><strong>O que nunca é salvo:</strong> seu endereço IP, dados do navegador (user agent), cookies, ids de sessão. O IP é usado só na memória, para contar perguntas por visitante por hora (limite de uso), e depois descartado.</li>
+</ul>
+<p>Por favor, não escreva nada privado na caixa de pergunta.</p>
+<p class="meta">Dúvidas ou pedidos de remoção: <a href="mailto:joaovpro17@gmail.com">joaovpro17@gmail.com</a></p>
+</div>
+</article>
+</div>
+</main>
+<script src="assets/site.js?v=a035a50e" defer></script>
+</body>
+</html>

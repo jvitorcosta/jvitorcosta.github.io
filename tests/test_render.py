@@ -789,3 +789,19 @@ def test_ask_strings_are_escaped(tmp_path):
     c = content(strings={**STRINGS, "en": en}, links={**LINKS, "ask_api": ASK_API})
     ask = section(render(tmp_path, c), "ask")
     assert "<b>" not in ask and "&lt;b&gt;" in ask
+
+
+def test_footer_links_site_privacy_page(tmp_path):
+    foot = render(tmp_path).split('<footer class="foot">')[1]
+    assert '<a href="site-privacy.html">' in foot
+    assert "How this works" in foot and "Como funciona" in foot
+
+
+def test_site_privacy_page_exists():
+    page = (ROOT / "site-privacy.html").read_text(encoding="utf-8")
+    assert page.count('<div lang="en">') >= 1 and page.count('<div lang="pt">') >= 1
+    for fact in ("90 days", "90 dias", "Anthropic", "Vercel", "IP", "cookies"):
+        assert fact in page
+    links = tomllib.loads((ROOT / "data" / "links.toml").read_text(encoding="utf-8"))
+    assert links["email"] in page
+    assert "https://jvitorcosta.github.io/site-privacy.html" in (ROOT / "sitemap.xml").read_text(encoding="utf-8")

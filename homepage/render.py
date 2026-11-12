@@ -244,7 +244,8 @@ def _top(p: Page | None = None) -> str:
 
 
 def _footer(p: Page, live: LiveData) -> str:
-    return f'<footer class="foot">{p.t("footer")}<br>{p.t("made_by")}</footer>'
+    return (f'<footer class="foot">{p.t("footer")}<br>{p.t("made_by")}<br>'
+            f'<a href="site-privacy.html">{p.t("privacy_link")}</a></footer>')
 
 
 def _json_ld(links: dict[str, str]) -> str:
