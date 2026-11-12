@@ -27,7 +27,7 @@ PALETTES = (("night", "Red Lantern", "Lanterna Vermelha", "#d4a72c"),
 CASE_SLUG = re.compile(r"[a-z0-9][a-z0-9-]*")
 RESUME_CASE = "resume-as-code"
 # Applies a remembered palette and language before the page paints, so neither flashes; site.js
-# does the rest (buttons, system default) once it loads.
+# does the rest (buttons) once it loads.
 EARLY_PALETTE = ('try{var p=localStorage.getItem("palette");'
                  f'if(/^({"|".join(k for k, *_ in PALETTES)})$/.test(p)){{'
                  'var h=document.documentElement;h.className="pal-"+p;'
@@ -234,7 +234,7 @@ def render_404(content: Content) -> str:
     """GitHub Pages serves 404.html for any missing path, so every URL in it is root-relative."""
     p = Page(content)
     return f"""<!doctype html>
-<html lang="en" class="pal-night">
+<html lang="en" class="pal-nu">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -270,6 +270,6 @@ def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: 
             f'<div class="col side">\n{chr(10).join(s for s in side if s)}\n</div><!-- /side -->\n'
             f'<div class="col">\n{chr(10).join(s for s in rest if s)}\n</div>\n</div>')
     # The footer sits outside <main> so it is the page's contentinfo landmark.
-    return (f'<!doctype html>\n<html lang="en" class="pal-night">\n{_head(p)}\n'
+    return (f'<!doctype html>\n<html lang="en" class="pal-nu">\n{_head(p)}\n'
             f'<body>\n<main class="in">\n{body}\n</main>\n{_footer(p, live)}\n'
             f'</body>\n</html>\n')

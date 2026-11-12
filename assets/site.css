@@ -41,10 +41,6 @@
 .pal-night { --bg:#8f1d1d; --box:#f5e6c8; --ink:#3a1410; --line:#8a5a12; --shadow:#4a0b0b; --soft:#ead2a8; --accent:#a3161a; --hp:#e0a91b; --ink-on-bg:#fff3d6; --strava:#b03600; --strava-decoration:underline; color-scheme:light; }
 .pal-nu { --bg:#820ad1; --box:#f7f0e1; --ink:#2a0845; --line:#2a0845; --shadow:#4a0478; --soft:#e9dcc2; --accent:#820ad1; --hp:#ffb703; --ink-on-bg:#ffffff; --strava:#c43d00; --strava-decoration:underline; color-scheme:light; }
 
-/* No JS yet (or none at all): a light-mode phone gets Nu Purple. site.js sets data-pal, which ends this. */
-@media (prefers-color-scheme: light) {
-  html:not([data-pal]) { --bg:#820ad1; --box:#f7f0e1; --ink:#2a0845; --line:#2a0845; --shadow:#4a0478; --soft:#e9dcc2; --accent:#820ad1; --hp:#ffb703; --ink-on-bg:#ffffff; --strava:#c43d00; --strava-decoration:underline; color-scheme:light; }
-}
 
 /* ---------- base ---------- */
 *, *::before, *::after { box-sizing: border-box; }

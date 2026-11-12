@@ -135,7 +135,7 @@ screen readers pronounce them right, from the `<key>_zh` strings.
 The page works without JavaScript. With it:
 
 - **Palette dots** switch between `night` and `nu` and remember the choice in `localStorage`.
-  Without a saved choice, a system in light mode gets `nu`.
+  Without a saved choice, everyone gets `nu`, whatever the system colour scheme.
 - **Language button** switches `<html lang>` and remembers it.
 - **Spotify row:** the build's song is hours old, so it is always shown as LISTENED. On load,
   `site.js` asks the Spotify endpoint once (4-second timeout, no cookies) and puts its answer in
