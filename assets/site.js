@@ -24,14 +24,10 @@
     }
   }
 
-  function prefersLight() {
-    return !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches);
-  }
-
   function initialPalette() {
     var stored = load("palette");
     if (PALETTES.indexOf(stored) >= 0) return stored;
-    return prefersLight() ? "nu" : "night";
+    return "nu"; // Nu Purple is the main theme, whatever the system colour scheme
   }
 
   function initialLang() {

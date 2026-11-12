@@ -72,11 +72,10 @@ def test_nu_purple_is_820AD1():
     assert palette("nu")["bg"] == "#820ad1"
 
 
-def test_light_scheme_default_is_nu_purple():
-    """Without JS, a light-mode phone gets Nu Purple: the media block repeats its values."""
-    m = re.search(r"@media \(prefers-color-scheme: light\)\s*\{\s*[^{]+\{([^}]*)\}", css())
-    assert m, "missing prefers-color-scheme: light block"
-    assert variables(m.group(1)) == palette("nu")
+def test_nu_purple_is_the_default_whatever_the_system_scheme():
+    """Nu Purple is the main theme: no light/dark switch in the CSS or the script."""
+    assert "prefers-color-scheme" not in css() and "prefers-color-scheme" not in js()
+    assert 'return "nu";' in js()
     assert "pocket" not in css() and "pocket" not in js()
 
 

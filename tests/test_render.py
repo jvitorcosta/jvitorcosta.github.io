@@ -81,7 +81,7 @@ def test_sections_in_order(tmp_path):
     idx = [html.index(f'id="{s}"') for s in ("trainer", "party", "work", "right-now", "pc-box")]
     assert idx == sorted(idx)
     assert html.startswith("<!doctype html>")
-    assert '<html lang="en" class="pal-night">' in html
+    assert '<html lang="en" class="pal-nu">' in html
 
 
 def test_every_text_in_both_languages(tmp_path):
