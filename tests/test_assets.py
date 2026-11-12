@@ -251,7 +251,7 @@ def test_two_columns_only_on_wide_screens():
     wide = re.search(r"@media \(min-width: 900px\) \{(.*?)\n\}", text, re.S).group(1)
     assert re.search(r"\.cols \{[^}]*display: flex", wide)
     assert "max-width: 1000px" in wide
-    # Work sits in the left column, so it is too tall to pin; phones put Work back last.
+    # Work sits in the left column, so it is too tall to pin; phones put Lately first and Work last.
     assert "position: sticky" not in text
     phone = re.search(r"@media \(max-width: 899px\) \{(.*?)\n\}", text, re.S).group(1)
-    assert "#work { order: 1; }" in phone
+    assert "#right-now { order: 1; }" in phone and "#work { order: 4; }" in phone

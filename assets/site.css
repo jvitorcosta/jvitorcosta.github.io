@@ -105,11 +105,15 @@ main > header.top { padding: 0; }
   .cols { display: flex; gap: 16px; align-items: flex-start; }
   .col { flex: 1; min-width: 0; }
 }
-/* Phones: one column with Work back at the end, after Lately and the PC box. */
+/* Phones: one column. Lately comes right after the trainer card, so a visitor from Instagram sees
+   what I'm up to on the first screen; then Favorites, the PC box, and Work at the end. */
 @media (max-width: 899px) {
   .cols { display: flex; flex-direction: column; }
   .col { display: contents; }
-  #work { order: 1; }
+  #right-now { order: 1; }
+  #party { order: 2; }
+  #pc-box { order: 3; }
+  #work { order: 4; }
 }
 
 /* ---------- top bar: palette dots, language, back link ---------- */
