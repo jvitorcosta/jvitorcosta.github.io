@@ -297,11 +297,6 @@ a.row:hover .t { text-decoration: underline; }
 /* Each icon is a 20x20 pixel app tile (tools/pixel_icons.py), framed like the avatar. */
 .go { border-radius: 0; overflow: hidden; }
 .go img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
-/* The tile plus a small Follow label, so visitors see the icon opens my profile there. Ink, not
-   the accent: five accent words in a column would outweigh the titles they sit next to. */
-.follow { flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px 0; text-decoration: none; }
-.follow .fl { font-size: 12px; font-weight: 600; line-height: 1; color: var(--ink); }
-.follow:hover .fl { text-decoration: underline; }
 
 .badge {
   display: inline-block;
