@@ -8,7 +8,7 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from homepage.model import Activity, from_dict
+from homepage.model import AboutFact, Activity, from_dict
 
 MAX_PARTY = 6
 LANGS = ("en", "pt")
@@ -41,6 +41,7 @@ class Content:
     jobs: list[Job] = field(default_factory=list)
     activity: Activity | None = None
     pc_box: dict[str, dict[str, str]] = field(default_factory=dict)
+    about: list[AboutFact] = field(default_factory=list)
 
 
 def _toml(path: Path) -> dict:
@@ -73,6 +74,20 @@ def _activity(path: Path) -> Activity | None:
         reason = str(exc) or type(exc).__name__
         _warn(f"activity row skipped, data/activity.toml unreadable: {reason}")
         return None
+
+
+def _about(path: Path) -> list[AboutFact]:
+    """The hand-written facts for the Ask Vitor assistant; a bad row is skipped with a warning."""
+    facts = []
+    for i, row in enumerate(_toml(path).get("fact", [])):
+        try:
+            fact = AboutFact(row["id"], row["source"], row["text"])
+            if not all(isinstance(v, str) and v.strip() for v in (fact.id, fact.source, fact.text)):
+                raise ValueError("id, source and text must be non-empty text")
+            facts.append(fact)
+        except Exception as exc:
+            _warn(f"about fact #{i + 1} skipped: {str(exc) or type(exc).__name__}")
+    return facts
 
 
 def _pc_box(path: Path) -> dict[str, dict[str, str]]:
@@ -120,4 +135,5 @@ def load_content(root: Path) -> Content:
         jobs=jobs,
         activity=_activity(data / "activity.toml"),
         pc_box=_pc_box(data / "pc_box.toml"),
+        about=_about(data / "about.toml"),
     )
