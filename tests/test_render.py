@@ -76,7 +76,7 @@ def section(html, start, end=None):
 
 
 def test_sections_in_order(tmp_path):
-    # Code order is the wide-screen order, left column first; phones move Work back to the end.
+    # Code order is the wide-screen order, left column first; phones move Lately up and Work to the end.
     html = render(tmp_path)
     idx = [html.index(f'id="{s}"') for s in ("trainer", "party", "work", "right-now", "pc-box")]
     assert idx == sorted(idx)
@@ -635,6 +635,6 @@ def test_sections_sit_in_two_columns_and_phones_show_work_last(tmp_path):
     css = (ROOT / "assets" / "site.css").read_text(encoding="utf-8")
     phone = css[css.index("@media (max-width: 899px)"):]
     phone = phone[:phone.index("\n}")]
-    assert ".col { display: contents; }" in phone and "#work { order: 1; }" in phone
+    assert ".col { display: contents; }" in phone and "#right-now { order: 1; }" in phone
     assert "position: sticky" not in css
     assert html.index('<div class="cols">') > html.index('<header class="top">')

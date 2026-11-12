@@ -29,12 +29,13 @@ So the page leads with me and my projects, and the live rows make it feel curren
 
 ## Layout
 
-- **Phones (under 900px):** one column, in this order: trainer card, Favorites, Lately, Projects,
-  Experience. Who I am and what I build come before what I did lately.
+- **Phones (under 900px):** one column, in this order: trainer card, Lately, Favorites, Projects,
+  Experience. Most phone visitors come from Instagram, and Lately was below the first screen;
+  now the live rows show as soon as the page opens, with who I am right above them.
 - **Wide screens (900px and up):** two columns, at most 1000px wide. Left: trainer card,
   Favorites, Experience. Right: Lately, Projects. Nothing is pinned while scrolling.
-- The code writes sections in the wide-screen order, and CSS `order` moves Experience last on
-  phones. So on phones, screen readers and the keyboard reach Experience before Lately. That is
+- The code writes sections in the wide-screen order, and CSS `order` rearranges it on
+  phones. So on phones, screen readers and the keyboard follow the wide-screen order instead. That is
   accepted because the sections don't depend on each other.
 - Projects shows 5 rows so the right column ends about level with the left on a laptop.
 - Favorites is a 2×2 grid of 4 tiles. A fifth project goes to Projects, not to a lonely tile.
