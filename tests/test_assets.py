@@ -269,3 +269,58 @@ def test_primary_button_is_filled_with_the_accent():
     assert rule, ".links .primary rule missing"
     assert "background: var(--accent)" in rule.group(1) and "color: var(--ink-on-bg)" in rule.group(1)
     assert "#trainer .links .primary" not in css()
+
+
+ASK_JS_PATH = ROOT / "assets" / "ask.js"
+
+
+def ask_js() -> str:
+    return ASK_JS_PATH.read_text(encoding="utf-8")
+
+
+def test_ask_script_exists_and_never_inserts_html():
+    # API text, source labels and dates go in with textContent / createElement only.
+    source = ask_js()
+    for sink in ("innerHTML", "outerHTML", "insertAdjacentHTML", "document.write"):
+        assert sink not in source
+
+
+def test_ask_script_holds_no_url():
+    # The endpoint comes from #ask[data-endpoint]; links in the fixed replies come from the markup.
+    source = ask_js()
+    assert not re.search(r"https?:|mailto:|www\.", source)
+    assert "data-endpoint" in source
+
+
+def _ask_frames(stream: str) -> list:
+    # Runs the real SSE parser from ask.js (splitFrames + parseFrame) on a fixed stream.
+    source = ask_js()
+    funcs = "".join(re.search(rf"(?ms)^  function {name}\(.*?^  \}}\n", source).group(0)
+                    for name in ("parseFrame", "splitFrames"))
+    script = (funcs + f"var out = splitFrames({json.dumps(stream)});"
+              "process.stdout.write(JSON.stringify([out.frames.map(parseFrame), out.rest]));")
+    return json.loads(subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout)
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="needs node")
+def test_ask_stream_frames_follow_the_api_contract():
+    stream = ('data: {"token": "Vitor "}\n\ndata: {"token": "works"}\n\n'
+              'event: done\ndata: {"kind": "answer", "sources": []}\n\nevent: err')
+    frames, rest = _ask_frames(stream)
+    assert frames == [
+        {"event": "message", "data": {"token": "Vitor "}},
+        {"event": "message", "data": {"token": "works"}},
+        {"event": "done", "data": {"kind": "answer", "sources": []}},
+    ]
+    assert rest == "event: err"  # an unfinished frame waits for the next chunk
+
+
+def test_ask_dialogue_styles():
+    text = css()
+    assert re.search(r"(?m)^\.ask \{[^}]*border: 4px solid var\(--line\)", text)
+    assert re.search(r'#ask-title \{[^}]*"Press Start 2P"', text)
+    assert re.search(r"(?m)^\.ask-cursor \{[^}]*animation:", text)
+    motion = re.search(r"@media \(prefers-reduced-motion: reduce\) \{(.*?)\n\}", text, re.S).group(1)
+    assert ".ask-cursor" in motion
+    # The ASK ME button looks like the language button.
+    assert re.search(r"\[data-lang-toggle\], \.ask-open \{", text)
