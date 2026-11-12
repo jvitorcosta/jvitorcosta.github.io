@@ -150,6 +150,8 @@ def _ask(p: Page) -> str:
     # Fixed replies; the script picks one by the API's `kind` or status, never by matching text.
     resume = safe_url(p.c.links.get("resume", ""))
     email = safe_url(p.c.links.get("email", ""))
+    # site.js swaps aria-label to data-aria-<lang> when the language changes.
+    close = _aria(*(esc(p.c.strings[lang]["ask_close"]) for lang in ("en", "pt")))
     msgs = (f'<p data-ask-msg="fallback">{p.t("ask_fallback_hint")}'
             + (f' <a href="{esc(email)}">Email ›</a>' if email else "") + "</p>"
             f'<p data-ask-msg="rate_limited">{p.t("ask_rate_limited")}</p>'
@@ -158,6 +160,7 @@ def _ask(p: Page) -> str:
     return (f'<section class="box ask" id="ask" hidden data-endpoint="{esc(api)}/ask/stream"{attrs} '
             'aria-labelledby="ask-title">'
             '<h2 class="h px" id="ask-title"><span>VITOR:</span></h2>'
+            f'<button type="button" class="ask-close" data-ask-close {close}>✕</button>'
             f'<div class="ask-answer" aria-live="polite"><p>{p.t("ask_greeting")}</p></div>'
             '<div class="ask-sources"></div>'
             f'<div class="ask-chips">{chips}</div>'
@@ -323,7 +326,7 @@ def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: 
             f'<div class="col side">\n{chr(10).join(s for s in side if s)}\n</div><!-- /side -->\n'
             f'<div class="col">\n{chr(10).join(s for s in rest if s)}\n</div>\n</div>')
     # The footer sits outside <main> so it is the page's contentinfo landmark.
-    script = '<script src="assets/ask.js" defer></script>\n' if _ask_api(p) else ""
+    script = f'<script src="{versioned("assets/ask.js")}" defer></script>\n' if _ask_api(p) else ""
     return (f'<!doctype html>\n<html lang="en" class="pal-nu">\n{_head(p)}\n'
             f'<body>\n<main class="in">\n{body}\n</main>\n{_footer(p, live)}\n{script}'
             f'</body>\n</html>\n')

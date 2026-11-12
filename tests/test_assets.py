@@ -292,6 +292,13 @@ def test_ask_script_holds_no_url():
     assert "data-endpoint" in source
 
 
+def test_ask_close_button_closes_like_escape():
+    source = ask_js()
+    assert re.search(r'querySelector\("\[data-ask-close\]"\)', source)
+    assert re.search(r'addEventListener\("click", close\)', source)
+    assert re.search(r'e\.key === "Escape"\) close\(\)', source)
+
+
 def _ask_frames(stream: str) -> list:
     # Runs the real SSE parser from ask.js (splitFrames + parseFrame) on a fixed stream.
     source = ask_js()
@@ -324,3 +331,5 @@ def test_ask_dialogue_styles():
     assert ".ask-cursor" in motion
     # The ASK ME button looks like the language button.
     assert re.search(r"\[data-lang-toggle\], \.ask-open \{", text)
+    close = _rule(r"\.ask \.ask-close")
+    assert "min-width: 44px" in close and "min-height: 44px" in close

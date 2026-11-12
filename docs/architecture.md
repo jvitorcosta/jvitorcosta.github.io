@@ -150,7 +150,7 @@ Every `localStorage` access is inside `try`, since private windows can throw.
 
 ## Cache busting
 
-`markup.versioned(path)` adds `?v=<8-character hash of the file>` to `site.css`, `site.js`, the
+`markup.versioned(path)` adds `?v=<8-character hash of the file>` to `site.css`, `site.js`, `ask.js`, the
 icons and `og-image.png`, so a browser fetches a new copy as soon as the file changes. The hash
 ignores CRLF vs LF, so a Windows build and the Linux runner agree. The case pages come from
 another repo but compute the same hash, and a test fails when they point at an old one.

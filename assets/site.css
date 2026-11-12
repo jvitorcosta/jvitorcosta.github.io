@@ -262,7 +262,7 @@ h1.name .zh, .h .zh {
 
 /* ---------- TALK: the Ask Vitor dialogue (assets/ask.js) ---------- */
 /* A game dialogue box under the trainer card; it spans the column, so a phone gets full width. */
-.ask { width: 100%; border: 4px solid var(--line); }
+.ask { position: relative; width: 100%; border: 4px solid var(--line); }
 #ask-title { margin: 0 0 8px; font-family: "Press Start 2P", ui-monospace, monospace; font-size: 12px; font-weight: 400; }
 .ask-answer p { margin: 0 0 8px; }
 .ask-cursor { display: inline-block; margin-left: 4px; font-size: 10px; animation: ask-blink 1s steps(1) infinite; }
@@ -279,6 +279,13 @@ h1.name .zh, .h .zh {
   border-radius: 4px;
   box-shadow: 3px 3px 0 var(--shadow);
   cursor: pointer;
+}
+/* Top-right corner of the box, a 44px target; border and focus ring come from .ask button. */
+.ask .ask-close {
+  position: absolute; top: 6px; right: 6px;
+  min-width: 44px; min-height: 44px;
+  padding: 0;
+  font-family: "Press Start 2P", ui-monospace, monospace; font-size: 12px; font-weight: 400;
 }
 .ask button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--shadow); }
 .ask-form { display: flex; gap: 8px; }

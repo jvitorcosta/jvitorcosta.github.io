@@ -89,6 +89,8 @@
     Array.prototype.forEach.call(document.querySelectorAll("[data-ask-open]"), function (b) {
       b.addEventListener("click", function () { open(b); });
     });
+    var closer = box.querySelector("[data-ask-close]");
+    if (closer) closer.addEventListener("click", close);
     box.addEventListener("keydown", function (e) {
       if (e.key === "Escape") close();
     });
