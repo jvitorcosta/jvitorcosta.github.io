@@ -83,7 +83,7 @@ case = "ask-vitor"                # optional: projects/<case>.html when that pag
 ## Links: `data/links.toml`
 
 `instagram`, `github`, `linkedin`, `email` are the trainer buttons. `resume` is the filled button in
-Experience; it points at `Vitor_Pinheiro_Resume.pdf` at the site root, a copy of `resume/` in the private
+Experience; it points at `Vitor_Pinheiro_Resume.pdf` at the site root, a copy of `resume/` in the
 curriculum-vitae repo: copy it again whenever the resume changes. `spotify`, `letterboxd`,
 `myanimelist`, `goodreads`, `strava` are the tiles at the end of each Lately row. An empty value
 hides that button or makes the tile a plain picture. Only `http(s)`, `mailto` and site paths are
