@@ -262,8 +262,10 @@ h1.name .zh, .h .zh {
 
 /* ---------- TALK: the Ask Vitor dialogue (assets/ask.js) ---------- */
 /* A game dialogue box under the trainer card; it spans the column, so a phone gets full width. */
-.ask { position: relative; width: 100%; border: 4px solid var(--line); }
-#ask-title { margin: 0 0 8px; font-family: "Press Start 2P", ui-monospace, monospace; font-size: 12px; font-weight: 400; }
+.ask { width: 100%; border: 4px solid var(--line); }
+/* VITOR: and the close button share a row, so the button never covers the text. */
+.ask-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin: 0 0 8px; }
+#ask-title { margin: 0; font-family: "Press Start 2P", ui-monospace, monospace; font-size: 12px; font-weight: 400; }
 .ask-answer p { margin: 0 0 8px; }
 .ask-cursor { display: inline-block; margin-left: 4px; font-size: 10px; animation: ask-blink 1s steps(1) infinite; }
 @keyframes ask-blink { 50% { opacity: 0; } }
@@ -280,12 +282,13 @@ h1.name .zh, .h .zh {
   box-shadow: 3px 3px 0 var(--shadow);
   cursor: pointer;
 }
-/* Top-right corner of the box, a 44px target; border and focus ring come from .ask button. */
+/* A 44px target; border, shadow and focus ring come from .ask button. Press Start 2P has no ✕,
+   so the glyph comes from a symbol font, bold to match the pixel lines. */
 .ask .ask-close {
-  position: absolute; top: 6px; right: 6px;
+  flex: none;
   min-width: 44px; min-height: 44px;
   padding: 0;
-  font-family: "Press Start 2P", ui-monospace, monospace; font-size: 12px; font-weight: 400;
+  font: 700 16px/1 "Segoe UI Symbol", "Apple Symbols", "DejaVu Sans", "Noto Sans Symbols 2", system-ui, sans-serif;
 }
 .ask button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--shadow); }
 .ask-form { display: flex; gap: 8px; }

@@ -19,21 +19,24 @@
   }
 
   /* ---------- SSE (same algorithm as ask-vitor web/lib/askStream.ts) ---------- */
-  // One frame: an optional "event: <name>" line and a "data: <json>" line.
+  // One frame: an optional "event:<name>" line and a "data:<json>" line (one space after the
+  // colon is optional, as in the SSE standard).
   function parseFrame(frame) {
     var event = "message";
     var data = {};
     frame.split("\n").forEach(function (line) {
-      if (line.indexOf("event: ") === 0) event = line.slice("event: ".length);
-      else if (line.indexOf("data: ") === 0) data = JSON.parse(line.slice("data: ".length));
+      if (line.indexOf("event:") === 0) event = line.slice("event:".length).replace(/^ /, "");
+      else if (line.indexOf("data:") === 0) data = JSON.parse(line.slice("data:".length));
     });
     return { event: event, data: data };
   }
 
   // Frames end with a blank line; a network chunk can stop mid-frame, so the tail waits.
+  // CRLF and CR become LF; a CR at the very end waits too, in case its LF is in the next chunk.
   function splitFrames(buffer) {
-    var frames = buffer.split("\n\n");
-    var rest = frames.pop();
+    var held = buffer.slice(-1) === "\r" ? "\r" : "";
+    var frames = buffer.slice(0, buffer.length - held.length).replace(/\r\n?/g, "\n").split("\n\n");
+    var rest = frames.pop() + held;
     return { frames: frames, rest: rest };
   }
 
@@ -172,10 +175,17 @@
       });
     }
 
+    // Before `node` is emptied or hidden, move focus that sits in it to the input, so keyboard
+    // users don't drop to <body> (where Escape no longer reaches the box).
+    function keepFocus(node) {
+      if (node.contains(document.activeElement)) input.focus();
+    }
+
     function ask(question) {
       question = question.trim();
       if (!question || controller) return; // one request at a time
       var saved = snapshot();
+      keepFocus(chips);
       answer.textContent = "";
       sources.textContent = "";
       chips.textContent = "";
@@ -193,11 +203,14 @@
       controller = new AbortController();
       var signal = controller.signal;
       stop.hidden = false;
+      answer.setAttribute("aria-busy", "true");
 
       function finish() {
         line.removeChild(cursor);
         if (!text.data) answer.removeChild(line);
+        answer.removeAttribute("aria-busy");
         controller = null;
+        keepFocus(stop);
         stop.hidden = true;
       }
 
@@ -242,7 +255,10 @@
                   done(frame.data);
                   return "ok";
                 }
-                if (frame.event === "error") return "down";
+                if (frame.event === "error") {
+                  reader.cancel().catch(function () { /* already closed */ });
+                  return "down";
+                }
                 if (typeof frame.data.token === "string") text.appendData(frame.data.token);
               }
               return read();

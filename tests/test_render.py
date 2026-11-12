@@ -745,8 +745,16 @@ def test_ask_close_button_only_with_ask_api(tmp_path):
     assert button, "close button missing"
     tag = button.group(0)
     assert 'aria-label="Close"' in tag and 'data-aria-en="Close"' in tag and 'data-aria-pt="Fechar"' in tag
-    # Sits next to the VITOR: title, before the answer.
-    assert ask.index('id="ask-title"') < ask.index("data-ask-close") < ask.index('class="ask-answer"')
+    # Shares a header row with the VITOR: title, before the answer.
+    head = re.search(r'<div class="ask-head">(.*?)</div>', ask).group(1)
+    assert 'id="ask-title"' in head and "data-ask-close" in head
+    assert ask.index('class="ask-head"') < ask.index('class="ask-answer"')
+
+
+def test_ask_send_button_has_a_name_in_both_languages(tmp_path):
+    ask = section(render(tmp_path, ask_content()), "ask")
+    tag = re.search(r'<button type="submit"[^>]*>A</button>', ask).group(0)
+    assert 'aria-label="Send"' in tag and 'data-aria-en="Send"' in tag and 'data-aria-pt="Enviar"' in tag
 
 
 def test_ask_section_starts_hidden_with_endpoint(tmp_path):
@@ -760,7 +768,7 @@ def test_ask_section_starts_hidden_with_endpoint(tmp_path):
 def test_ask_strings_in_both_languages(tmp_path):
     keys = ("ask_open", "ask_talk", "ask_greeting", "ask_notice", "ask_placeholder", "ask_stop",
             "ask_fallback_hint", "ask_rate_limited", "ask_down", "ask_suggest", "ask_followups", "privacy_link",
-            "ask_close")
+            "ask_close", "ask_send")
     for key in keys:
         assert STRINGS["en"][key].strip() and STRINGS["pt"][key].strip() and STRINGS["en"][key] != STRINGS["pt"][key]
     assert len(STRINGS["en"]["ask_suggest"].split("|")) == len(STRINGS["pt"]["ask_suggest"].split("|")) == 3

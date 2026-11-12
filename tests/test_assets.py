@@ -322,6 +322,32 @@ def test_ask_stream_frames_follow_the_api_contract():
     assert rest == "event: err"  # an unfinished frame waits for the next chunk
 
 
+@pytest.mark.skipif(shutil.which("node") is None, reason="needs node")
+def test_ask_stream_frames_accept_crlf_and_no_space():
+    stream = ('data:{"token": "a"}\r\n\r\nevent:done\r\ndata: {"kind": "fallback", "sources": []}\r\n\r\n'
+              'data: {"t')
+    frames, rest = _ask_frames(stream)
+    assert frames == [
+        {"event": "message", "data": {"token": "a"}},
+        {"event": "done", "data": {"kind": "fallback", "sources": []}},
+    ]
+    assert rest == 'data: {"t'
+    # A chunk ending between CR and LF keeps the CR, so the next chunk's LF doesn't end a frame early.
+    frames, rest = _ask_frames('data: {"token": "a"}\r\n\r')
+    assert frames == [] and rest == 'data: {"token": "a"}\n\r'
+
+
+def test_ask_keeps_focus_and_marks_the_answer_busy():
+    source = ask_js()
+    # Clearing the chips or hiding STOP must not drop keyboard focus to <body>.
+    assert "keepFocus(chips)" in source and "keepFocus(stop)" in source
+    assert re.search(r"function keepFocus\(node\)[^}]*document\.activeElement", source)
+    assert 'answer.setAttribute("aria-busy", "true")' in source
+    assert 'answer.removeAttribute("aria-busy")' in source
+    # Both ways out of the stream release the reader.
+    assert source.count("reader.cancel()") >= 2
+
+
 def test_ask_dialogue_styles():
     text = css()
     assert re.search(r"(?m)^\.ask \{[^}]*border: 4px solid var\(--line\)", text)
@@ -333,3 +359,6 @@ def test_ask_dialogue_styles():
     assert re.search(r"\[data-lang-toggle\], \.ask-open \{", text)
     close = _rule(r"\.ask \.ask-close")
     assert "min-width: 44px" in close and "min-height: 44px" in close
+    assert "position: absolute" not in close  # it sits in the header row, never over the text
+    assert "Segoe UI Symbol" in close  # a font with the glyph; Press Start 2P has none
+    assert re.search(r"(?m)^\.ask-head \{[^}]*display: flex", text)

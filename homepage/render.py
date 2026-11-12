@@ -151,7 +151,7 @@ def _ask(p: Page) -> str:
     resume = safe_url(p.c.links.get("resume", ""))
     email = safe_url(p.c.links.get("email", ""))
     # site.js swaps aria-label to data-aria-<lang> when the language changes.
-    close = _aria(*(esc(p.c.strings[lang]["ask_close"]) for lang in ("en", "pt")))
+    close, send = (_aria(*(esc(p.c.strings[lang][key]) for lang in ("en", "pt"))) for key in ("ask_close", "ask_send"))
     msgs = (f'<p data-ask-msg="fallback">{p.t("ask_fallback_hint")}'
             + (f' <a href="{esc(email)}">Email ›</a>' if email else "") + "</p>"
             f'<p data-ask-msg="rate_limited">{p.t("ask_rate_limited")}</p>'
@@ -159,14 +159,14 @@ def _ask(p: Page) -> str:
             + (f' <a href="{esc(resume)}">{p.t("resume")} ›</a>' if resume else "") + "</p>")
     return (f'<section class="box ask" id="ask" hidden data-endpoint="{esc(api)}/ask/stream"{attrs} '
             'aria-labelledby="ask-title">'
-            '<h2 class="h px" id="ask-title"><span>VITOR:</span></h2>'
-            f'<button type="button" class="ask-close" data-ask-close {close}>✕</button>'
+            '<div class="ask-head"><h2 class="h px" id="ask-title"><span>VITOR:</span></h2>'
+            f'<button type="button" class="ask-close" data-ask-close {close}>✕</button></div>'
             f'<div class="ask-answer" aria-live="polite"><p>{p.t("ask_greeting")}</p></div>'
             '<div class="ask-sources"></div>'
             f'<div class="ask-chips">{chips}</div>'
             f'<form class="ask-form"><input type="text" name="q" maxlength="500" autocomplete="off"{placeholders} '
             f'{_aria("Your question", "Sua pergunta")}>'
-            '<button type="submit">A</button>'
+            f'<button type="submit" {send}>A</button>'
             f'<button type="button" data-ask-stop hidden>{p.t("ask_stop")}</button></form>'
             f'<div class="ask-error" role="alert" hidden></div><div class="ask-msgs" hidden>{msgs}</div>'
             f'<p class="small ask-notice">{p.t("ask_notice")} '
