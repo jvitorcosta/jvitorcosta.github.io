@@ -821,6 +821,13 @@ def test_site_privacy_page_exists():
     assert page.count('<div lang="en">') >= 1 and page.count('<div lang="pt">') >= 1
     for fact in ("90 days", "90 dias", "Upstash", "Anthropic", "Vercel", "GitHub Pages", "never saved in the question log"):
         assert fact in page
+    for fact in ("kept only in memory, for at most an hour, to count questions per visitor",
+                 "por no máximo uma hora, para contar perguntas por visitante",
+                 "Anthropic processes the question under its own API data policy",
+                 "A Anthropic trata a pergunta conforme a própria política de dados da API",
+                 "(when it is turned on)", "(quando está ligado)"):
+        assert fact in page
+    assert "then dropped" not in page and "depois descartado" not in page
     links = tomllib.loads((ROOT / "data" / "links.toml").read_text(encoding="utf-8"))
     assert links["email"] in page
     assert "https://jvitorcosta.github.io/site-privacy.html" in (ROOT / "sitemap.xml").read_text(encoding="utf-8")
