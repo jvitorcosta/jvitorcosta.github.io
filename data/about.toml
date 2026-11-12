@@ -75,7 +75,7 @@ text = "Vitor was a Software Engineer (Machine Learning) at Nubank from Sep 2022
 [[fact]]
 id = "cv.role.elogroup"
 source = "CV · Experience"
-text = "Vitor was a Data Scientist Intern at EloGroup from Jun 2021 to Sep 2022, working remotely and allocated to the client Comgás. This was his first job in the field."
+text = "Vitor was a Data Scientist Intern at EloGroup from Jun 2021 to Sep 2022, working remotely and allocated to the client Comgás."
 
 [[fact]]
 id = "cv.qubika.fraud-model"
@@ -125,7 +125,7 @@ text = "At Nubank, Vitor co-developed an internal low-code dashboard framework i
 [[fact]]
 id = "cv.nubank.platform"
 source = "CV · Experience"
-text = "At Nubank, Vitor also co-developed a Scala data transformation framework with metric and segment catalogs, led Lending data governance initiatives, implemented data validation, observability and CI/CD with GitHub Actions, and provided 24/7 monitoring infrastructure support."
+text = "At Nubank, Vitor also co-developed a Scala data transformation framework with metric and segment catalogs, led Lending data governance initiatives, implemented data validation and observability, optimized CI/CD pipelines with GitHub Actions, and provided 24/7 monitoring infrastructure support."
 
 [[fact]]
 id = "cv.nubank.intern"
