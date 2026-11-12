@@ -76,9 +76,18 @@
     }
 
     /* open / close */
+    var openers = document.querySelectorAll("[data-ask-open]");
+
+    function expand(expanded) {
+      Array.prototype.forEach.call(openers, function (b) {
+        b.setAttribute("aria-expanded", String(expanded));
+      });
+    }
+
     function open(button) {
       opener = button;
       box.hidden = false;
+      expand(true);
       box.scrollIntoView({ block: "nearest" });
       input.focus({ preventScroll: true });
     }
@@ -86,10 +95,11 @@
     function close() {
       if (controller) controller.abort();
       box.hidden = true;
+      expand(false);
       if (opener) opener.focus();
     }
 
-    Array.prototype.forEach.call(document.querySelectorAll("[data-ask-open]"), function (b) {
+    Array.prototype.forEach.call(openers, function (b) {
       b.addEventListener("click", function () { open(b); });
     });
     var closer = box.querySelector("[data-ask-close]");
@@ -116,11 +126,13 @@
       });
     }
 
+    // Only live and repo facts change over time, so only they show a date; CV and About facts don't.
     function renderSources(list) {
       (Array.isArray(list) ? list : []).forEach(function (s) {
         if (!s || typeof s.label !== "string") return;
         var tag = el("span", "ask-tag", "[" + s.label);
-        if (typeof s.updated === "string" && s.updated) {
+        var dated = typeof s.id === "string" && /^(live|repo)\./.test(s.id);
+        if (dated && typeof s.updated === "string" && s.updated) {
           tag.appendChild(document.createTextNode(" · "));
           both(tag, { en: shortDate(s.updated, "en"), pt: shortDate(s.updated, "pt") });
         }
@@ -242,6 +254,14 @@
           var decoder = new TextDecoder();
           var buffer = "";
 
+          // After `done` the API still writes its question log, so the stream is read to its end
+          // (in the background) rather than cancelled; errors there don't matter any more.
+          function drain() {
+            return reader.read().then(function (chunk) {
+              if (!chunk.done) return drain();
+            });
+          }
+
           function read() {
             return reader.read().then(function (chunk) {
               if (chunk.done) return "down"; // closed before the answer finished
@@ -251,8 +271,8 @@
               for (var i = 0; i < split.frames.length; i++) {
                 var frame = parseFrame(split.frames[i]);
                 if (frame.event === "done") {
-                  reader.cancel().catch(function () { /* already closed */ });
                   done(frame.data);
+                  drain().catch(function () { /* the answer is already shown */ });
                   return "ok";
                 }
                 if (frame.event === "error") {

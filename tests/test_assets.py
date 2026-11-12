@@ -344,8 +344,66 @@ def test_ask_keeps_focus_and_marks_the_answer_busy():
     assert re.search(r"function keepFocus\(node\)[^}]*document\.activeElement", source)
     assert 'answer.setAttribute("aria-busy", "true")' in source
     assert 'answer.removeAttribute("aria-busy")' in source
-    # Both ways out of the stream release the reader.
-    assert source.count("reader.cancel()") >= 2
+    # Only an error releases the reader early; after `done` the API still writes its log, so the
+    # script keeps reading to the end instead of cancelling.
+    assert source.count("reader.cancel()") == 1
+    error = re.search(r'if \(frame\.event === "error"\) \{(.*?)\}', source, re.S).group(1)
+    assert "reader.cancel()" in error
+    done = re.search(r'if \(frame\.event === "done"\) \{(.*?)\n {16}\}', source, re.S).group(1)
+    assert "cancel" not in done and "drain()" in done
+    assert re.search(r"function drain\(\) \{[^}]*reader\.read\(\)", source)
+
+
+def _ask_sources(sources: list) -> list:
+    # Runs the real renderSources from ask.js on a tiny fake DOM; returns each tag's English text.
+    source = ask_js()
+    funcs = "".join(re.search(rf"(?ms)^ {{2,4}}function {name}\(.*?^ {{2,4}}\}}\n", source).group(0)
+                    for name in ("el", "both", "shortDate", "renderSources"))
+    dom = """
+    function Node(tag) { this.tag = tag; this.children = []; this.attrs = {}; this.textContent = ""; }
+    Node.prototype.appendChild = function (c) { this.children.push(c); return c; };
+    Node.prototype.setAttribute = function (k, v) { this.attrs[k] = v; };
+    var document = { createElement: function (t) { return new Node(t); },
+                     createTextNode: function (t) { var n = new Node("#text"); n.textContent = t; return n; } };
+    function english(n) {
+      if (n.attrs.lang === "pt") return "";
+      return n.textContent + n.children.map(english).join("");
+    }
+    var sources = new Node("div");
+    """
+    script = (dom + funcs + f"renderSources({json.dumps(sources)});"
+              "process.stdout.write(JSON.stringify(sources.children.map(english)));")
+    run = subprocess.run(["node", "-e", script], capture_output=True, text=True, encoding="utf-8", check=True)
+    return json.loads(run.stdout)
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="needs node")
+def test_ask_sources_date_only_live_and_repo_facts():
+    tags = _ask_sources([
+        {"id": "cv.nubank", "label": "CV · Experience", "updated": "2026-11-12"},
+        {"id": "about.morning", "label": "About Vitor", "updated": "2026-11-12"},
+        {"id": "live.song", "label": "Spotify", "updated": "2026-11-11"},
+        {"id": "repo.car-cyberdeck", "label": "GitHub", "updated": "2026-11-06"},
+    ])
+    assert tags[0] == "[CV · Experience]" and tags[1] == "[About Vitor]"
+    assert tags[2].startswith("[Spotify · ") and "11" in tags[2] and "2026" in tags[2]
+    assert tags[3].startswith("[GitHub · ") and "2026" in tags[3]
+
+
+def test_ask_openers_report_expanded_state():
+    source = ask_js()
+    assert 'setAttribute("aria-expanded", String(expanded))' in source
+    assert re.search(r"function open\(button\) \{[^}]*expand\(true\)", source)
+    assert re.search(r"function close\(\) \{[^}]*expand\(false\)", source)
+
+
+def test_ask_layout_details():
+    text = css()
+    phone = re.search(r"@media \(max-width: 420px\) \{(.*?)\n\}", text, re.S).group(1)
+    # TALK makes five trainer links; the odd one spans the row instead of sitting alone.
+    assert "#trainer .links [data-ask-open] { grid-column: 1 / -1; }" in phone
+    # Newlines in a streamed answer show as line breaks.
+    assert re.search(r"(?m)^\.ask-answer \{[^}]*white-space: pre-line", text)
 
 
 def test_ask_dialogue_styles():

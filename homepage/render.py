@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
+from urllib.parse import urlparse
 
 from homepage.content import Content, PartyMember
 from homepage.markup import ARROW, Page, clip, esc, safe_url, versioned, warn
@@ -128,9 +129,23 @@ def _pc_box(p: Page, repos: list[Repo], site_root: Path) -> str:
             f'<a href="{GITHUB_REPOS}">{p.t("all_on_github")}</a></h2>{"".join(rows)}</section>')
 
 
+LOCAL_HOSTS = {"localhost", "127.0.0.1"}
+
+
 def _ask_api(p: Page) -> str:
-    """Base URL of the Ask Vitor API; "" (the feature is off) unless links.toml sets a safe one."""
-    return safe_url(p.c.links.get("ask_api", "")).rstrip("/")
+    """Base URL of the Ask Vitor API; "" (the feature is off) unless links.toml sets an https:// one
+    (or http:// on localhost / 127.0.0.1, for local development)."""
+    api = p.c.links.get("ask_api", "").strip()
+    parsed = urlparse(api)
+    secure = parsed.scheme == "https" and bool(parsed.hostname)
+    local = parsed.scheme == "http" and parsed.hostname in LOCAL_HOSTS
+    return api.rstrip("/") if secure or local else ""
+
+
+def _ask_opener(p: Page, key: str, extra: str = "") -> str:
+    """An ASK ME / TALK button; ask.js flips aria-expanded when the dialogue opens and closes."""
+    return (f'<button type="button"{extra} data-ask-open aria-controls="ask" aria-expanded="false">'
+            f'{ARROW}{p.t(key)}</button>')
 
 
 def _ask(p: Page) -> str:
@@ -153,7 +168,7 @@ def _ask(p: Page) -> str:
     # site.js swaps aria-label to data-aria-<lang> when the language changes.
     close, send = (_aria(*(esc(p.c.strings[lang][key]) for lang in ("en", "pt"))) for key in ("ask_close", "ask_send"))
     msgs = (f'<p data-ask-msg="fallback">{p.t("ask_fallback_hint")}'
-            + (f' <a href="{esc(email)}">Email ›</a>' if email else "") + "</p>"
+            + (f' <a href="{esc(email)}">{p.t("ask_email")} ›</a>' if email else "") + "</p>"
             f'<p data-ask-msg="rate_limited">{p.t("ask_rate_limited")}</p>'
             f'<p data-ask-msg="down">{p.t("ask_down")}'
             + (f' <a href="{esc(resume)}">{p.t("resume")} ›</a>' if resume else "") + "</p>")
@@ -177,7 +192,7 @@ def _trainer(p: Page) -> str:
     links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">{label}</a>'
                     for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
     if _ask_api(p):
-        links = f'<button type="button" data-ask-open>{p.t("ask_talk")}</button>{links}'
+        links = _ask_opener(p, "ask_talk") + links
     nav = f'<nav class="links">{links}</nav>' if links else ""
     status = (f'<p class="status"><i aria-hidden="true"></i>{p.t("status")}</p>'
               if p.c.strings["en"].get("status") else "")
@@ -234,8 +249,7 @@ def _top(p: Page | None = None) -> str:
         f'style="background:{colour}"></button>'
         for key, en, pt, colour in PALETTES
     )
-    ask = (f'<button type="button" class="ask-open" data-ask-open>{p.t("ask_open")}</button>'
-           if p and _ask_api(p) else "")
+    ask = _ask_opener(p, "ask_open", ' class="ask-open"') if p and _ask_api(p) else ""
     # site.js swaps aria-label to data-aria-<lang> when the language changes.
     return (f'<header class="top"><div class="sw" role="group" {_aria("Colours", "Cores")}>'
             f'{dots}</div>{ask}'
@@ -245,7 +259,7 @@ def _top(p: Page | None = None) -> str:
 
 def _footer(p: Page, live: LiveData) -> str:
     return (f'<footer class="foot">{p.t("footer")}<br>{p.t("made_by")}<br>'
-            f'<a href="site-privacy.html">{p.t("privacy_link")}</a></footer>')
+            f'<a href="site-privacy.html">{p.t("footer_privacy")}</a></footer>')
 
 
 def _json_ld(links: dict[str, str]) -> str:

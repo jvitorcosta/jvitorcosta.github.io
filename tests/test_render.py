@@ -715,11 +715,16 @@ def test_ask_api_renders_button_section_and_script(tmp_path):
     html = render(tmp_path, ask_content())
     header = html[html.index('<header class="top">'):html.index("</header>")]
     assert header.index("data-ask-open") < header.index("data-lang-toggle")
-    assert '<button type="button" class="ask-open" data-ask-open>' in header
-    assert "▶ ASK ME" in header and "▶ PERGUNTE" in header
+    opener = ('data-ask-open aria-controls="ask" aria-expanded="false">'
+              '<span aria-hidden="true">▶</span> ')
+    assert f'<button type="button" class="ask-open" {opener}' in header
+    assert ">ASK ME<" in header and ">PERGUNTE<" in header
     nav = re.search(r'<nav class="links">(.*?)</nav>', section(html, "trainer")).group(1)
-    assert nav.startswith('<button type="button" data-ask-open>')
-    assert "▶ TALK" in nav and "▶ FALAR" in nav
+    assert nav.startswith(f'<button type="button" {opener}')
+    assert ">TALK<" in nav and ">FALAR<" in nav
+    # The ▶ is decoration in the markup, never part of the spoken label.
+    for key in ("ask_open", "ask_talk"):
+        assert "▶" not in STRINGS["en"][key] and "▶" not in STRINGS["pt"][key]
     assert html.index('id="trainer"') < html.index('id="ask"') < html.index('id="party"')
     ask = section(html, "ask")
     for hook in ('id="ask-title"', 'class="ask-answer"', 'aria-live="polite"', 'class="ask-sources"',
@@ -754,7 +759,8 @@ def test_ask_close_button_only_with_ask_api(tmp_path):
 def test_ask_send_button_has_a_name_in_both_languages(tmp_path):
     ask = section(render(tmp_path, ask_content()), "ask")
     tag = re.search(r'<button type="submit"[^>]*>A</button>', ask).group(0)
-    assert 'aria-label="Send"' in tag and 'data-aria-en="Send"' in tag and 'data-aria-pt="Enviar"' in tag
+    # The name starts with the visible "A" (WCAG 2.5.3, label in name).
+    assert 'aria-label="A: Send"' in tag and 'data-aria-en="A: Send"' in tag and 'data-aria-pt="A: Enviar"' in tag
 
 
 def test_ask_section_starts_hidden_with_endpoint(tmp_path):
@@ -768,7 +774,7 @@ def test_ask_section_starts_hidden_with_endpoint(tmp_path):
 def test_ask_strings_in_both_languages(tmp_path):
     keys = ("ask_open", "ask_talk", "ask_greeting", "ask_notice", "ask_placeholder", "ask_stop",
             "ask_fallback_hint", "ask_rate_limited", "ask_down", "ask_suggest", "ask_followups", "privacy_link",
-            "ask_close", "ask_send")
+            "ask_close", "ask_send", "ask_email", "footer_privacy")
     for key in keys:
         assert STRINGS["en"][key].strip() and STRINGS["pt"][key].strip() and STRINGS["en"][key] != STRINGS["pt"][key]
     assert len(STRINGS["en"]["ask_suggest"].split("|")) == len(STRINGS["pt"]["ask_suggest"].split("|")) == 3
@@ -782,6 +788,18 @@ def test_ask_strings_in_both_languages(tmp_path):
     assert 'data-followups-en="' in ask and 'data-followups-pt="' in ask
     assert 'data-ask-msg="fallback"' in ask and "mailto:joaovpro17@gmail.com" in ask
     assert "Vitor_Pinheiro_Resume.pdf" in ask
+    fallback = re.search(r'<p data-ask-msg="fallback">.*?</p>', ask).group(0)
+    assert '<span lang="en">Email</span><span lang="pt">E-mail</span> ›</a>' in fallback
+
+
+def test_ask_api_must_be_https_or_local(tmp_path):
+    for api in ("http://ask.example.com", "ask.example.com", "javascript:alert(1)", "ftp://x.dev",
+                "https://", "http://localhost.evil.com"):
+        html = render(tmp_path, ask_content(ask_api=api))
+        assert 'id="ask"' not in html and "data-ask-open" not in html, api
+    for api in ("https://ask.example.com", "http://localhost:8000", "http://127.0.0.1:8000"):
+        html = render(tmp_path, ask_content(ask_api=api))
+        assert f'data-endpoint="{api}/ask/stream"' in html, api
 
 
 def test_ask_strings_are_escaped(tmp_path):
@@ -794,7 +812,8 @@ def test_ask_strings_are_escaped(tmp_path):
 def test_footer_links_site_privacy_page(tmp_path):
     foot = render(tmp_path).split('<footer class="foot">')[1]
     assert '<a href="site-privacy.html">' in foot
-    assert "How this works" in foot and "Como funciona" in foot
+    assert ">Privacy<" in foot and ">Privacidade<" in foot
+    assert "How this works" not in foot  # that label belongs to the dialogue's notice
 
 
 def test_site_privacy_page_exists():

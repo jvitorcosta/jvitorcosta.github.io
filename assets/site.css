@@ -242,10 +242,12 @@ h1.name .zh, .h .zh {
   text-decoration: none;
   cursor: pointer;
 }
-/* On a phone the four trainer links make a 2x2 grid instead of leaving one alone on a row. */
+/* On a phone the four trainer links make a 2x2 grid instead of leaving one alone on a row;
+   TALK, the fifth when Ask Vitor is on, takes a full row. */
 @media (max-width: 420px) {
   #trainer .links { display: grid; grid-template-columns: 1fr 1fr; }
   #trainer .links a, #trainer .links button { justify-content: center; }
+  #trainer .links [data-ask-open] { grid-column: 1 / -1; }
 }
 /* The resume (in Experience) is the one filled button; the pill sits under the trainer card's motto. */
 .links .primary { background: var(--accent); color: var(--ink-on-bg); }
@@ -266,6 +268,7 @@ h1.name .zh, .h .zh {
 /* VITOR: and the close button share a row, so the button never covers the text. */
 .ask-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin: 0 0 8px; }
 #ask-title { margin: 0; font-family: "Press Start 2P", ui-monospace, monospace; font-size: 12px; font-weight: 400; }
+.ask-answer { white-space: pre-line; }
 .ask-answer p { margin: 0 0 8px; }
 .ask-cursor { display: inline-block; margin-left: 4px; font-size: 10px; animation: ask-blink 1s steps(1) infinite; }
 @keyframes ask-blink { 50% { opacity: 0; } }
