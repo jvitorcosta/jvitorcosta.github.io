@@ -40,18 +40,25 @@
   },
   "repos": [
     {
-      "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
+      "description": "",
       "homepage": "",
-      "name": "ask-vitor",
-      "pushed": "2026-11-12T18:04:58Z",
-      "url": "https://github.com/jvitorcosta/ask-vitor"
+      "name": "curriculum-vitae",
+      "pushed": "2026-11-12T20:47:08Z",
+      "url": "https://github.com/jvitorcosta/curriculum-vitae"
     },
     {
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-12T16:50:03Z",
+      "pushed": "2026-11-12T19:41:47Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
+      "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
+      "homepage": "",
+      "name": "ask-vitor",
+      "pushed": "2026-11-12T18:04:58Z",
+      "url": "https://github.com/jvitorcosta/ask-vitor"
     },
     {
       "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
@@ -146,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Fifth Harmony",
-    "cover": "https://i.scdn.co/image/ab67616d00001e0282db43e5091301205076d6ab",
+    "artist": "Ariana Grande",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02deec12a28d1e336c5052e9aa",
     "playing": true,
-    "title": "That's My Girl",
-    "url": "https://open.spotify.com/track/2ACOWPLUe4A4KuQ5ioD2od"
+    "title": "Love Me Harder",
+    "url": "https://open.spotify.com/track/5J4ZkQpzMUFojo1CtAZYpn"
   },
   "updated": {
     "activity": "2026-11-12",
