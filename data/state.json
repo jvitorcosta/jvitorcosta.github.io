@@ -40,10 +40,17 @@
   },
   "repos": [
     {
+      "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
+      "homepage": "",
+      "name": "ask-vitor",
+      "pushed": "2026-11-12T18:04:58Z",
+      "url": "https://github.com/jvitorcosta/ask-vitor"
+    },
+    {
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-12T05:55:38Z",
+      "pushed": "2026-11-12T16:50:03Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
@@ -80,13 +87,6 @@
       "name": "python-uv-claude-template",
       "pushed": "2026-11-05T22:17:43Z",
       "url": "https://github.com/jvitorcosta/python-uv-claude-template"
-    },
-    {
-      "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
-      "homepage": "",
-      "name": "ask-vitor",
-      "pushed": "2026-11-05T22:17:19Z",
-      "url": "https://github.com/jvitorcosta/ask-vitor"
     },
     {
       "description": "Loan default case study: clean 50k loans, explore, and tune a Random Forest with a chosen threshold",
@@ -146,11 +146,11 @@
     }
   ],
   "song": {
-    "artist": "Tina Charles",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02c6171a753bd6b09e10c34578",
-    "playing": true,
-    "title": "I Love to Love",
-    "url": "https://open.spotify.com/track/0tlsZOKkDspm8LDpb0HVQ8"
+    "artist": "Eminem",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02b6ef2ebd34efb08cb76f6eec",
+    "playing": false,
+    "title": "Lose Yourself",
+    "url": "https://open.spotify.com/track/1v7L65Lzy0j0vdpRjJewt1"
   },
   "updated": {
     "activity": "2026-11-12",
