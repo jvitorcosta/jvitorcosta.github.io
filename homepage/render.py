@@ -35,8 +35,9 @@ EARLY_PALETTE = ('try{var p=localStorage.getItem("palette");'
                  # Same rule as site.js initialLang: stored choice, else the browser language.
                  'var h=document.documentElement,l=(navigator.language||"").toLowerCase().indexOf("pt")?"en":"pt";'
                  'try{var s=localStorage.getItem("lang");if(s=="en"||s=="pt")l=s}catch(e){}h.lang=l;')
-TRAINER_LINKS = (("instagram", "Instagram"), ("github", "GitHub"),
-                 ("linkedin", "LinkedIn"), ("email", "Email"))
+# Recruiter order: the resume button (drawn separately, as the primary button) and then the ways to reach me.
+TRAINER_LINKS = (("email", "Email"), ("linkedin", "LinkedIn"),
+                 ("github", "GitHub"), ("instagram", "Instagram"))
 
 
 def _member_url(m: PartyMember, repos: dict[str, Repo], site_root: Path) -> str:
@@ -129,15 +130,19 @@ def _pc_box(p: Page, repos: list[Repo], site_root: Path) -> str:
 
 
 def _trainer(p: Page) -> str:
-    links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">{label}</a>'
-                    for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
+    resume = safe_url(p.c.links.get("resume", ""))
+    links = (f'<a class="primary" href="{esc(resume)}">{p.t("resume")}</a>' if resume else "") + "".join(
+        f'<a href="{esc(safe_url(p.c.links[key]))}">{label}</a>'
+        for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
     nav = f'<nav class="links">{links}</nav>' if links else ""
+    status = (f'<p class="status"><i aria-hidden="true"></i>{p.t("status")}</p>'
+              if p.c.strings["en"].get("status") else "")
     return (f'<section class="box" id="trainer"><div class="trainer">'
             '<img class="ava" src="assets/avatar.png" alt="" width="72" height="72"><div>'
             f'<h1 class="px name">{p.t("greeting")} '
             f'<span class="zh" lang="zh-Hans">{esc(p.c.strings["en"]["chinese_name"])}</span></h1>'
             f'<p class="small">{p.t("intro")}</p>'
-            f'<p class="motto" lang="es">“{esc(p.c.strings["en"]["motto"])}”</p></div></div>{nav}</section>')
+            f'<p class="motto" lang="es">“{esc(p.c.strings["en"]["motto"])}”</p>{status}</div></div>{nav}</section>')
 
 
 def _month(p: Page, text: str) -> dict[str, str]:

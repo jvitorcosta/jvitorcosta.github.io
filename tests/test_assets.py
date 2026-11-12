@@ -254,3 +254,20 @@ def test_two_columns_only_on_wide_screens():
     assert "position: sticky" not in text
     phone = re.search(r"@media \(max-width: 899px\) \{(.*?)\n\}", text, re.S).group(1)
     assert "#right-now { order: 1; }" in phone and "#work { order: 4; }" in phone
+
+
+@pytest.mark.parametrize("name", PALETTES)
+def test_resume_button_and_status_pill_are_readable(name):
+    p = palette(name)
+    assert contrast(p["accent"], p["ink-on-bg"]) >= 4.5  # Resume (PDF): light text on the accent
+    assert contrast(p["soft"], p["ink"]) >= 4.5           # status pill text
+    assert contrast(p["box"], p["line"]) >= 3.0           # pill border on the card
+
+
+def test_resume_button_takes_its_own_row():
+    # Otherwise five buttons leave Instagram alone on a row (desktop) or break the 2x2 grid (phone).
+    rule = re.search(r"#trainer \.links \.primary\s*\{([^}]*)\}", css())
+    assert rule, "#trainer .links .primary rule missing"
+    body = rule.group(1)
+    assert "flex-basis: 100%" in body and "grid-column: 1 / -1" in body
+    assert "background: var(--accent)" in body and "color: var(--ink-on-bg)" in body
