@@ -246,11 +246,8 @@ h1.name .zh, .h .zh {
   #trainer .links { display: grid; grid-template-columns: 1fr 1fr; }
   #trainer .links a { justify-content: center; }
 }
-/* Recruiter strip: the resume is the one filled button, on its own row; the status pill sits under the motto. */
-#trainer .links .primary {
-  flex-basis: 100%; grid-column: 1 / -1; justify-content: center;
-  background: var(--accent); color: var(--ink-on-bg);
-}
+/* The resume (in Experience) is the one filled button; the pill sits under the trainer card's motto. */
+.links .primary { background: var(--accent); color: var(--ink-on-bg); }
 .status {
   display: inline-flex; align-items: center; gap: 6px;
   margin: 10px 0 0; padding: 4px 10px;

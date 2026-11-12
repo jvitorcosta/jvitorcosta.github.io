@@ -641,20 +641,26 @@ def test_sections_sit_in_two_columns_and_phones_show_work_last(tmp_path):
     assert html.index('<div class="cols">') > html.index('<header class="top">')
 
 
-def test_trainer_card_leads_with_the_resume_button(tmp_path):
-    # Recruiters skim for seconds: the resume comes first, then the ways to reach me.
+def test_trainer_card_keeps_the_four_contact_buttons(tmp_path):
+    # The resume lives in Experience, next to the jobs it describes.
     nav = re.search(r'<nav class="links">(.*?)</nav>', section(render(tmp_path), "trainer")).group(1)
-    hrefs = re.findall(r'href="([^"]+)"', nav)
-    assert hrefs == ["Vitor_Pinheiro_Resume.pdf", "mailto:joaovpro17@gmail.com",
-                     "https://www.linkedin.com/in/jvpro/", "https://github.com/jvitorcosta"]
-    assert nav.startswith('<a class="primary" href="Vitor_Pinheiro_Resume.pdf">'
-                          '<span lang="en">Resume (PDF)</span><span lang="pt">Currículo (PDF)</span></a>')
+    assert re.findall(r'href="([^"]+)"', nav) == [
+        "https://github.com/jvitorcosta", "https://www.linkedin.com/in/jvpro/", "mailto:joaovpro17@gmail.com"]
+    assert "Resume" not in nav and 'class="primary"' not in nav
 
 
-def test_trainer_card_without_a_resume_link_keeps_the_plain_buttons(tmp_path):
-    links = dict(LINKS, resume="")
-    nav = section(render(tmp_path, content(links=links)), "trainer")
-    assert 'class="primary"' not in nav and "Resume (PDF)" not in nav
+def test_experience_leads_its_buttons_with_the_resume(tmp_path):
+    work = section(render(tmp_path), "work")
+    row = re.search(r'<div class="links">(.*?)</div>', work).group(1)
+    assert row == ('<a class="primary" href="Vitor_Pinheiro_Resume.pdf">'
+                   '<span lang="en">Resume (PDF)</span><span lang="pt">Currículo (PDF)</span></a>'
+                   '<a href="https://www.linkedin.com/in/jvpro/">LinkedIn ›</a>')
+    assert work.index("</ol>") < work.index('class="primary"')
+
+
+def test_experience_without_a_resume_link_keeps_linkedin_only(tmp_path):
+    work = section(render(tmp_path, content(links=dict(LINKS, resume=""))), "work")
+    assert 'class="primary"' not in work and "LinkedIn ›" in work
 
 
 def test_trainer_card_shows_the_status_pill_after_the_motto(tmp_path):

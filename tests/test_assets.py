@@ -264,10 +264,8 @@ def test_resume_button_and_status_pill_are_readable(name):
     assert contrast(p["box"], p["line"]) >= 3.0           # pill border on the card
 
 
-def test_resume_button_takes_its_own_row():
-    # Otherwise five buttons leave Instagram alone on a row (desktop) or break the 2x2 grid (phone).
-    rule = re.search(r"#trainer \.links \.primary\s*\{([^}]*)\}", css())
-    assert rule, "#trainer .links .primary rule missing"
-    body = rule.group(1)
-    assert "flex-basis: 100%" in body and "grid-column: 1 / -1" in body
-    assert "background: var(--accent)" in body and "color: var(--ink-on-bg)" in body
+def test_primary_button_is_filled_with_the_accent():
+    rule = re.search(r"(?m)^\.links \.primary\s*\{([^}]*)\}", css())
+    assert rule, ".links .primary rule missing"
+    assert "background: var(--accent)" in rule.group(1) and "color: var(--ink-on-bg)" in rule.group(1)
+    assert "#trainer .links .primary" not in css()

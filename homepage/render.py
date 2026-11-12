@@ -35,9 +35,8 @@ EARLY_PALETTE = ('try{var p=localStorage.getItem("palette");'
                  # Same rule as site.js initialLang: stored choice, else the browser language.
                  'var h=document.documentElement,l=(navigator.language||"").toLowerCase().indexOf("pt")?"en":"pt";'
                  'try{var s=localStorage.getItem("lang");if(s=="en"||s=="pt")l=s}catch(e){}h.lang=l;')
-# Recruiter order: the resume button (drawn separately, as the primary button) and then the ways to reach me.
-TRAINER_LINKS = (("email", "Email"), ("linkedin", "LinkedIn"),
-                 ("github", "GitHub"), ("instagram", "Instagram"))
+TRAINER_LINKS = (("instagram", "Instagram"), ("github", "GitHub"),
+                 ("linkedin", "LinkedIn"), ("email", "Email"))
 
 
 def _member_url(m: PartyMember, repos: dict[str, Repo], site_root: Path) -> str:
@@ -130,10 +129,8 @@ def _pc_box(p: Page, repos: list[Repo], site_root: Path) -> str:
 
 
 def _trainer(p: Page) -> str:
-    resume = safe_url(p.c.links.get("resume", ""))
-    links = (f'<a class="primary" href="{esc(resume)}">{p.t("resume")}</a>' if resume else "") + "".join(
-        f'<a href="{esc(safe_url(p.c.links[key]))}">{label}</a>'
-        for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
+    links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">{label}</a>'
+                    for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
     nav = f'<nav class="links">{links}</nav>' if links else ""
     status = (f'<p class="status"><i aria-hidden="true"></i>{p.t("status")}</p>'
               if p.c.strings["en"].get("status") else "")
@@ -161,8 +158,12 @@ def _work(p: Page, site_root: Path) -> str:
         dates = p.both({lang: f"{start[lang]} – {end[lang]}" for lang in ("en", "pt")})
         roles.append(f"<li><b>{esc(j.title)}</b>{esc(j.company)} · {dates}</li>")
     jobs = f'<ol class="jobs">{"".join(roles)}</ol>' if roles else ""
+    # The resume PDF sits with the jobs it describes, as the one filled button.
+    pdf = safe_url(p.c.links.get("resume", ""))
     linkedin = safe_url(p.c.links.get("linkedin", ""))
-    link = f'<div class="links"><a href="{esc(linkedin)}">LinkedIn ›</a></div>' if linkedin else ""
+    buttons = ((f'<a class="primary" href="{esc(pdf)}">{p.t("resume")}</a>' if pdf else "")
+               + (f'<a href="{esc(linkedin)}">LinkedIn ›</a>' if linkedin else ""))
+    link = f'<div class="links">{buttons}</div>' if buttons else ""
     resume = _case_page(RESUME_CASE, site_root)
     if resume:
         link += f'<p class="small aside"><a href="{resume}">{p.t("resume_case")} ›</a></p>'
