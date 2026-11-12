@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-09",
-    "detail": "8:24 /km",
-    "distance_km": 1.7,
+    "date": "2026-11-11",
+    "detail": "8:27 /km",
+    "distance_km": 2.4,
     "emoji": "🏃",
-    "moving_min": 14,
+    "moving_min": 20,
     "sport": "Run",
-    "title": "Evening Run",
-    "url": "https://www.strava.com/activities/20927564155"
+    "title": "Treadmill Run - Z2",
+    "url": "https://www.strava.com/activities/20955459258"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -40,18 +40,25 @@
   },
   "repos": [
     {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-12T05:28:06Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
+      "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
+      "homepage": "",
+      "name": "fraud-alert-explainer",
+      "pushed": "2026-11-12T02:15:45Z",
+      "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
+    },
+    {
       "description": "SolvedOR: solve linear and integer programs written like a textbook, in the browser. Live at solvedor.streamlit.app",
       "homepage": "https://solvedor.streamlit.app",
       "name": "or-solver-streamlit",
       "pushed": "2026-11-10T09:56:07Z",
       "url": "https://github.com/jvitorcosta/or-solver-streamlit"
-    },
-    {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-09T20:37:25Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
@@ -73,13 +80,6 @@
       "name": "python-uv-claude-template",
       "pushed": "2026-11-05T22:17:43Z",
       "url": "https://github.com/jvitorcosta/python-uv-claude-template"
-    },
-    {
-      "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
-      "homepage": "",
-      "name": "fraud-alert-explainer",
-      "pushed": "2026-11-05T22:17:25Z",
-      "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
     },
     {
       "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
@@ -146,11 +146,11 @@
     }
   ],
   "song": {
-    "artist": "Mareux",
-    "cover": "https://i.scdn.co/image/ab67616d00001e023d54a30e59638f60f56dd4e6",
+    "artist": "Vulgo FK",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02d7e6ac3704f854f9912b345e",
     "playing": false,
-    "title": "The Perfect Girl",
-    "url": "https://open.spotify.com/track/5RBOcBpJXaNnHCGViJmYhh"
+    "title": "TÁ TARDE",
+    "url": "https://open.spotify.com/track/0dyJ7rDk995cRo1ktfVmkP"
   },
   "updated": {
     "activity": "2026-11-12",
