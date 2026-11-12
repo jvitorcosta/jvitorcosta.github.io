@@ -696,3 +696,69 @@ def test_experience_line_is_about_problems_not_one_industry(tmp_path):
     assert ('<span lang="en">5 years solving real problems with software and AI.</span>'
             '<span lang="pt">5 anos resolvendo problemas reais com software e IA.</span>') in work
     assert "banks" not in work and "bancos" not in work
+
+
+ASK_API = "https://ask.example.workers.dev"
+
+
+def ask_content(**links):
+    return content(links={**LINKS, "ask_api": ASK_API, **links})
+
+
+def test_no_ask_api_means_no_ask_markup(tmp_path):
+    for links in ({}, {"ask_api": ""}):
+        html = render(tmp_path, content(links={**LINKS, **links}))
+        assert "data-ask-open" not in html and 'id="ask"' not in html and "ask.js" not in html
+
+
+def test_ask_api_renders_button_section_and_script(tmp_path):
+    html = render(tmp_path, ask_content())
+    header = html[html.index('<header class="top">'):html.index("</header>")]
+    assert header.index("data-ask-open") < header.index("data-lang-toggle")
+    assert '<button type="button" class="ask-open" data-ask-open>' in header
+    assert "▶ ASK ME" in header and "▶ PERGUNTE" in header
+    nav = re.search(r'<nav class="links">(.*?)</nav>', section(html, "trainer")).group(1)
+    assert nav.startswith('<button type="button" data-ask-open>')
+    assert "▶ TALK" in nav and "▶ FALAR" in nav
+    assert html.index('id="trainer"') < html.index('id="ask"') < html.index('id="party"')
+    ask = section(html, "ask")
+    for hook in ('id="ask-title"', 'class="ask-answer"', 'aria-live="polite"', 'class="ask-sources"',
+                 'class="ask-chips"', '<form class="ask-form"', 'maxlength="500"',
+                 'class="ask-error"', 'role="alert"', 'href="site-privacy.html"'):
+        assert hook in ask
+    assert ask.count("data-ask-q") == 3
+    assert re.search(r"<button[^>]*(?:hidden[^>]*data-ask-stop|data-ask-stop[^>]*hidden)", ask)
+    assert html.index("</main>") < html.index('<script src="assets/ask.js" defer></script>') < html.index("</body>")
+
+
+def test_ask_section_starts_hidden_with_endpoint(tmp_path):
+    html = render(tmp_path, ask_content(ask_api=ASK_API + "/"))
+    tag = re.search(r'<section [^>]*id="ask"[^>]*>', html).group(0)
+    assert " hidden" in tag and 'class="box ask"' in tag and 'aria-labelledby="ask-title"' in tag
+    assert f'data-endpoint="{ASK_API}/ask/stream"' in tag
+    assert re.search(r'<[^>]*class="ask-error"[^>]*hidden', section(html, "ask"))
+
+
+def test_ask_strings_in_both_languages(tmp_path):
+    keys = ("ask_open", "ask_talk", "ask_greeting", "ask_notice", "ask_placeholder", "ask_stop",
+            "ask_fallback_hint", "ask_rate_limited", "ask_down", "ask_suggest", "ask_followups", "privacy_link")
+    for key in keys:
+        assert STRINGS["en"][key].strip() and STRINGS["pt"][key].strip() and STRINGS["en"][key] != STRINGS["pt"][key]
+    assert len(STRINGS["en"]["ask_suggest"].split("|")) == len(STRINGS["pt"]["ask_suggest"].split("|")) == 3
+    assert len(STRINGS["en"]["ask_followups"].split("|")) == len(STRINGS["pt"]["ask_followups"].split("|")) == 6
+    html = render(tmp_path, ask_content())
+    assert "Hi! I&#x27;m a bot that knows Vitor&#x27;s CV" in html
+    assert "Oi! Sou um bot que conhece o currículo" in html
+    assert "I need a short break. Try again in a minute." in html
+    assert "Não consigo responder agora. Meu currículo está aqui." in html
+    ask = section(html, "ask")
+    assert 'data-followups-en="' in ask and 'data-followups-pt="' in ask
+    assert 'data-ask-msg="fallback"' in ask and "mailto:joaovpro17@gmail.com" in ask
+    assert "Vitor_Pinheiro_Resume.pdf" in ask
+
+
+def test_ask_strings_are_escaped(tmp_path):
+    en = {**STRINGS["en"], "ask_suggest": 'a<b>|"c"|d'}
+    c = content(strings={**STRINGS, "en": en}, links={**LINKS, "ask_api": ASK_API})
+    ask = section(render(tmp_path, c), "ask")
+    assert "<b>" not in ask and "&lt;b&gt;" in ask

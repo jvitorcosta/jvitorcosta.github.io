@@ -128,9 +128,53 @@ def _pc_box(p: Page, repos: list[Repo], site_root: Path) -> str:
             f'<a href="{GITHUB_REPOS}">{p.t("all_on_github")}</a></h2>{"".join(rows)}</section>')
 
 
+def _ask_api(p: Page) -> str:
+    """Base URL of the Ask Vitor API; "" (the feature is off) unless links.toml sets a safe one."""
+    return safe_url(p.c.links.get("ask_api", "")).rstrip("/")
+
+
+def _ask(p: Page) -> str:
+    """The hidden dialogue box; assets/ask.js shows it and talks to the API.
+
+    The follow-up questions are not markup: both languages go in data-followups-en/-pt
+    ("|"-separated) for the script to render as chips after each answer."""
+    api = _ask_api(p)
+    if not api:
+        return ""
+    suggest = {lang: s["ask_suggest"].split("|") for lang, s in p.c.strings.items()}
+    chips = "".join(f'<button type="button" data-ask-q>{p.both({lang: qs[i] for lang, qs in suggest.items()})}</button>'
+                    for i in range(len(suggest["en"])))
+    attrs = "".join(f' data-followups-{lang}="{esc(s["ask_followups"])}"' for lang, s in p.c.strings.items())
+    placeholders = "".join(f' data-placeholder-{lang}="{esc(s["ask_placeholder"])}"'
+                           for lang, s in p.c.strings.items())
+    # Fixed replies; the script picks one by the API's `kind` or status, never by matching text.
+    resume = safe_url(p.c.links.get("resume", ""))
+    email = safe_url(p.c.links.get("email", ""))
+    msgs = (f'<p data-ask-msg="fallback">{p.t("ask_fallback_hint")}'
+            + (f' <a href="{esc(email)}">Email ›</a>' if email else "") + "</p>"
+            f'<p data-ask-msg="rate_limited">{p.t("ask_rate_limited")}</p>'
+            f'<p data-ask-msg="down">{p.t("ask_down")}'
+            + (f' <a href="{esc(resume)}">{p.t("resume")} ›</a>' if resume else "") + "</p>")
+    return (f'<section class="box ask" id="ask" hidden data-endpoint="{esc(api)}/ask/stream"{attrs} '
+            'aria-labelledby="ask-title">'
+            '<h2 class="h px" id="ask-title"><span>VITOR:</span></h2>'
+            f'<div class="ask-answer" aria-live="polite"><p>{p.t("ask_greeting")}</p></div>'
+            '<div class="ask-sources"></div>'
+            f'<div class="ask-chips">{chips}</div>'
+            f'<form class="ask-form"><input type="text" name="q" maxlength="500" autocomplete="off"{placeholders} '
+            f'{_aria("Your question", "Sua pergunta")}>'
+            '<button type="submit">A</button>'
+            f'<button type="button" data-ask-stop hidden>{p.t("ask_stop")}</button></form>'
+            f'<div class="ask-error" role="alert" hidden></div><div class="ask-msgs" hidden>{msgs}</div>'
+            f'<p class="small ask-notice">{p.t("ask_notice")} '
+            f'<a href="site-privacy.html">{p.t("privacy_link")} ›</a></p></section>')
+
+
 def _trainer(p: Page) -> str:
     links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">{label}</a>'
                     for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
+    if _ask_api(p):
+        links = f'<button type="button" data-ask-open>{p.t("ask_talk")}</button>{links}'
     nav = f'<nav class="links">{links}</nav>' if links else ""
     status = (f'<p class="status"><i aria-hidden="true"></i>{p.t("status")}</p>'
               if p.c.strings["en"].get("status") else "")
@@ -180,15 +224,18 @@ def _title(en: str, pt: str) -> str:
     return f'title="{en}" data-title-en="{en}" data-title-pt="{pt}"'
 
 
-def _top() -> str:
+def _top(p: Page | None = None) -> str:
+    """The header; with a Page whose links set ask_api it also gets the ASK ME button."""
     dots = "".join(
         f'<button type="button" data-palette="{key}" {_aria(en, pt)} {_title(en, pt)} '
         f'style="background:{colour}"></button>'
         for key, en, pt, colour in PALETTES
     )
+    ask = (f'<button type="button" class="ask-open" data-ask-open>{p.t("ask_open")}</button>'
+           if p and _ask_api(p) else "")
     # site.js swaps aria-label to data-aria-<lang> when the language changes.
     return (f'<header class="top"><div class="sw" role="group" {_aria("Colours", "Cores")}>'
-            f'{dots}</div>'
+            f'{dots}</div>{ask}'
             '<button type="button" data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>'
             "</header>")
 
@@ -270,12 +317,13 @@ def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: 
     # order, which screen readers and the keyboard follow too: who I am and my projects, then
     # the rest.
     # Wide screens: who I am, what I build and where I work on the left. Phones show Work last (CSS).
-    side = [_trainer(p), _party(p, repos, site_root), _work(p, site_root)]
+    side = [_trainer(p), _ask(p), _party(p, repos, site_root), _work(p, site_root)]
     rest = [right_now(p, live), _pc_box(p, repos, site_root)]
-    body = (f'{_top()}\n<div class="cols">\n'
+    body = (f'{_top(p)}\n<div class="cols">\n'
             f'<div class="col side">\n{chr(10).join(s for s in side if s)}\n</div><!-- /side -->\n'
             f'<div class="col">\n{chr(10).join(s for s in rest if s)}\n</div>\n</div>')
     # The footer sits outside <main> so it is the page's contentinfo landmark.
+    script = '<script src="assets/ask.js" defer></script>\n' if _ask_api(p) else ""
     return (f'<!doctype html>\n<html lang="en" class="pal-nu">\n{_head(p)}\n'
-            f'<body>\n<main class="in">\n{body}\n</main>\n{_footer(p, live)}\n'
+            f'<body>\n<main class="in">\n{body}\n</main>\n{_footer(p, live)}\n{script}'
             f'</body>\n</html>\n')
