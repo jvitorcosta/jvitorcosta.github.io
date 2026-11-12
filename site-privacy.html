@@ -39,9 +39,10 @@
 <p>The dialogue loads nothing until you open TALK / ASK ME and send a question.</p>
 <ul>
 <li><strong>Where it goes:</strong> your question goes to the ask-vitor API, hosted on Vercel. The API sends it, together with the public knowledge file published on this site (<a href="knowledge.json">knowledge.json</a>), to Anthropic's Claude API, which writes the answer.</li>
-<li><strong>What is saved:</strong> for each question, the question, the answer, which sources were used, whether it fell back to the standard reply, how long it took, and the date. Emails and phone numbers are removed before saving. It is kept in a log store (Upstash Redis) and deleted after 90 days.</li>
-<li><strong>What is never saved:</strong> your IP address, browser details (user agent), cookies, session ids. The IP address is used only in memory, to count questions per visitor per hour (a rate limit), and then dropped.</li>
+<li><strong>What is saved:</strong> for each question, the question, the answer, which sources were used, the type of reply (an answer, the standard &lsquo;no information&rsquo; reply, or the off-topic reply), how long it took, and the date. Emails and phone numbers are removed before saving. It is kept in a log store (Upstash Redis) and deleted after 90 days.</li>
+<li><strong>What is never saved in the question log:</strong> your IP address, browser details (user agent), cookies, session ids. The IP address is used only in memory, to count questions per visitor per hour (a rate limit), and then dropped.</li>
 </ul>
+<p>Like any website, the hosting providers (GitHub Pages for this site, Vercel for the API) receive your IP address when your browser connects; their own logs are outside this app.</p>
 <p>Please do not type anything private into the question box.</p>
 <p class="meta">Questions or removal requests: <a href="mailto:joaovpro17@gmail.com">joaovpro17@gmail.com</a></p>
 </div>
@@ -55,9 +56,10 @@
 <p>O diálogo não carrega nada até você abrir FALAR / PERGUNTE e enviar uma pergunta.</p>
 <ul>
 <li><strong>Para onde vai:</strong> sua pergunta vai para a API do ask-vitor, hospedada na Vercel. A API a envia, junto com o arquivo público de conhecimento publicado neste site (<a href="knowledge.json">knowledge.json</a>), para a API Claude da Anthropic, que escreve a resposta.</li>
-<li><strong>O que é salvo:</strong> para cada pergunta, a pergunta, a resposta, quais fontes foram usadas, se caiu na resposta padrão, quanto tempo levou e a data. E-mails e telefones são removidos antes de salvar. Fica num registro (Upstash Redis) e é apagado após 90 dias.</li>
-<li><strong>O que nunca é salvo:</strong> seu endereço IP, dados do navegador (user agent), cookies, ids de sessão. O IP é usado só na memória, para contar perguntas por visitante por hora (limite de uso), e depois descartado.</li>
+<li><strong>O que é salvo:</strong> para cada pergunta, a pergunta, a resposta, quais fontes foram usadas, o tipo de resposta (uma resposta, a resposta padrão de &lsquo;sem informação&rsquo; ou a resposta de fora do assunto), quanto tempo levou e a data. E-mails e telefones são removidos antes de salvar. Fica num registro (Upstash Redis) e é apagado após 90 dias.</li>
+<li><strong>O que nunca é salvo no registro de perguntas:</strong> seu endereço IP, dados do navegador (user agent), cookies, ids de sessão. O IP é usado só na memória, para contar perguntas por visitante por hora (limite de uso), e depois descartado.</li>
 </ul>
+<p>Como em qualquer site, os provedores de hospedagem (GitHub Pages para este site, Vercel para a API) recebem seu endereço IP quando o navegador se conecta; os registros deles ficam fora deste app.</p>
 <p>Por favor, não escreva nada privado na caixa de pergunta.</p>
 <p class="meta">Dúvidas ou pedidos de remoção: <a href="mailto:joaovpro17@gmail.com">joaovpro17@gmail.com</a></p>
 </div>
