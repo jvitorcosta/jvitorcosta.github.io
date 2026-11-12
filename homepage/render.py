@@ -132,12 +132,14 @@ def _trainer(p: Page) -> str:
     links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">{label}</a>'
                     for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
     nav = f'<nav class="links">{links}</nav>' if links else ""
+    status = (f'<p class="status"><i aria-hidden="true"></i>{p.t("status")}</p>'
+              if p.c.strings["en"].get("status") else "")
     return (f'<section class="box" id="trainer"><div class="trainer">'
             '<img class="ava" src="assets/avatar.png" alt="" width="72" height="72"><div>'
             f'<h1 class="px name">{p.t("greeting")} '
             f'<span class="zh" lang="zh-Hans">{esc(p.c.strings["en"]["chinese_name"])}</span></h1>'
             f'<p class="small">{p.t("intro")}</p>'
-            f'<p class="motto" lang="es">“{esc(p.c.strings["en"]["motto"])}”</p></div></div>{nav}</section>')
+            f'<p class="motto" lang="es">“{esc(p.c.strings["en"]["motto"])}”</p>{status}</div></div>{nav}</section>')
 
 
 def _month(p: Page, text: str) -> dict[str, str]:
@@ -156,8 +158,12 @@ def _work(p: Page, site_root: Path) -> str:
         dates = p.both({lang: f"{start[lang]} – {end[lang]}" for lang in ("en", "pt")})
         roles.append(f"<li><b>{esc(j.title)}</b>{esc(j.company)} · {dates}</li>")
     jobs = f'<ol class="jobs">{"".join(roles)}</ol>' if roles else ""
+    # The resume PDF sits with the jobs it describes, as the one filled button.
+    pdf = safe_url(p.c.links.get("resume", ""))
     linkedin = safe_url(p.c.links.get("linkedin", ""))
-    link = f'<div class="links"><a href="{esc(linkedin)}">LinkedIn ›</a></div>' if linkedin else ""
+    buttons = ((f'<a class="primary" href="{esc(pdf)}">{p.t("resume")}</a>' if pdf else "")
+               + (f'<a href="{esc(linkedin)}">LinkedIn ›</a>' if linkedin else ""))
+    link = f'<div class="links">{buttons}</div>' if buttons else ""
     resume = _case_page(RESUME_CASE, site_root)
     if resume:
         link += f'<p class="small aside"><a href="{resume}">{p.t("resume_case")} ›</a></p>'

@@ -254,3 +254,18 @@ def test_two_columns_only_on_wide_screens():
     assert "position: sticky" not in text
     phone = re.search(r"@media \(max-width: 899px\) \{(.*?)\n\}", text, re.S).group(1)
     assert "#right-now { order: 1; }" in phone and "#work { order: 4; }" in phone
+
+
+@pytest.mark.parametrize("name", PALETTES)
+def test_resume_button_and_status_pill_are_readable(name):
+    p = palette(name)
+    assert contrast(p["accent"], p["ink-on-bg"]) >= 4.5  # Resume (PDF): light text on the accent
+    assert contrast(p["soft"], p["ink"]) >= 4.5           # status pill text
+    assert contrast(p["box"], p["line"]) >= 3.0           # pill border on the card
+
+
+def test_primary_button_is_filled_with_the_accent():
+    rule = re.search(r"(?m)^\.links \.primary\s*\{([^}]*)\}", css())
+    assert rule, ".links .primary rule missing"
+    assert "background: var(--accent)" in rule.group(1) and "color: var(--ink-on-bg)" in rule.group(1)
+    assert "#trainer .links .primary" not in css()

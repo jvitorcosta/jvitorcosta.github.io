@@ -95,8 +95,10 @@ code was written. The code keeps the old names:
 
 How each section decides what to show:
 
-- **Trainer card:** name and Chinese name, intro, motto, and the Instagram, GitHub, LinkedIn and
-  Email buttons from `data/links.toml` (an empty link is left out).
+- **Trainer card:** name and Chinese name, intro, motto, a short pill (`status` in
+  `data/strings.toml`, "Weird idea? Let's build it."; remove it from both languages to hide it), then the Instagram, GitHub, LinkedIn and Email
+  buttons from `data/links.toml` (an empty link is left out). Experience ends with a filled
+  Resume (PDF) button (`resume` link) next to LinkedIn.
 - **Favorites:** the tiles in `data/party.toml`, in file order. A tile links to its `url` if set,
   else to `projects/<repo>.html` when that case page exists, else to the GitHub repo. A tile
   whose repo is not in the GitHub list and has no `url` is skipped with a warning.

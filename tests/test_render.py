@@ -17,6 +17,7 @@ LINKS = {
     "linkedin": "https://www.linkedin.com/in/jvpro/", "email": "mailto:joaovpro17@gmail.com",
     "spotify": "", "letterboxd": "https://letterboxd.com/zubu/", "goodreads": GOODREADS,
     "strava": "", "myanimelist": "https://myanimelist.net/animelist/yulong17",
+    "resume": "Vitor_Pinheiro_Resume.pdf",
 }
 SONG = Song("Taxi Lunar", "Geraldo Azevedo", "assets/live/c.jpg",
             "https://open.spotify.com/track/1", True)
@@ -638,3 +639,60 @@ def test_sections_sit_in_two_columns_and_phones_show_work_last(tmp_path):
     assert ".col { display: contents; }" in phone and "#right-now { order: 1; }" in phone
     assert "position: sticky" not in css
     assert html.index('<div class="cols">') > html.index('<header class="top">')
+
+
+def test_trainer_card_keeps_the_four_contact_buttons(tmp_path):
+    # The resume lives in Experience, next to the jobs it describes.
+    nav = re.search(r'<nav class="links">(.*?)</nav>', section(render(tmp_path), "trainer")).group(1)
+    assert re.findall(r'href="([^"]+)"', nav) == [
+        "https://github.com/jvitorcosta", "https://www.linkedin.com/in/jvpro/", "mailto:joaovpro17@gmail.com"]
+    assert "Resume" not in nav and 'class="primary"' not in nav
+
+
+def test_experience_leads_its_buttons_with_the_resume(tmp_path):
+    work = section(render(tmp_path), "work")
+    row = re.search(r'<div class="links">(.*?)</div>', work).group(1)
+    assert row == ('<a class="primary" href="Vitor_Pinheiro_Resume.pdf">'
+                   '<span lang="en">Resume (PDF)</span><span lang="pt">Currículo (PDF)</span></a>'
+                   '<a href="https://www.linkedin.com/in/jvpro/">LinkedIn ›</a>')
+    assert work.index("</ol>") < work.index('class="primary"')
+
+
+def test_experience_without_a_resume_link_keeps_linkedin_only(tmp_path):
+    work = section(render(tmp_path, content(links=dict(LINKS, resume=""))), "work")
+    assert 'class="primary"' not in work and "LinkedIn ›" in work
+
+
+def test_trainer_card_shows_the_status_pill_after_the_motto(tmp_path):
+    strings = {"en": dict(STRINGS["en"], status="Riding to work"), "pt": dict(STRINGS["pt"], status="Indo pedalando")}
+    card = section(render(tmp_path, content(strings=strings)), "trainer")
+    pill = ('<p class="status"><i aria-hidden="true"></i>'
+            '<span lang="en">Riding to work</span><span lang="pt">Indo pedalando</span></p>')
+    assert card.count(pill) == 1
+    assert card.index('class="motto"') < card.index(pill) < card.index('<nav class="links">')
+
+
+def test_no_status_hides_the_pill(tmp_path):
+    strings = {lang: {k: v for k, v in s.items() if k != "status"} for lang, s in STRINGS.items()}
+    assert 'class="status"' not in render(tmp_path, content(strings=strings))
+
+
+def test_pill_invites_odd_ideas_in_a_few_words():
+    # It sits in a small pill, so it must stay short in both languages.
+    assert STRINGS["en"]["status"] == "Weird idea? Let's build it."
+    assert STRINGS["pt"]["status"] == "Ideia maluca? Bora construir."
+    assert all(len(STRINGS[lang]["status"]) <= 30 for lang in ("en", "pt"))
+
+
+def test_resume_pdf_is_published_with_the_site():
+    pdf = ROOT / "Vitor_Pinheiro_Resume.pdf"
+    assert pdf.is_file() and pdf.read_bytes()[:5] == b"%PDF-"
+    links = tomllib.loads((ROOT / "data" / "links.toml").read_text(encoding="utf-8"))
+    assert links["resume"] == "Vitor_Pinheiro_Resume.pdf"
+
+
+def test_experience_line_is_about_problems_not_one_industry(tmp_path):
+    work = section(render(tmp_path), "work")
+    assert ('<span lang="en">5 years solving real problems with software and AI.</span>'
+            '<span lang="pt">5 anos resolvendo problemas reais com software e IA.</span>') in work
+    assert "banks" not in work and "bancos" not in work
