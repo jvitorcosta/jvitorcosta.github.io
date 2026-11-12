@@ -14,10 +14,11 @@ homepage/  (Python 3.12, standard library only)
   render.py    the page: head, trainer card, Favorites, Projects, Experience, footer
   right_now.py the Lately box: song, film, anime, book, activity
   markup.py    shared HTML helpers: escaping, safe links, both-language text, dates
-  build.py     runs all of the above in order and writes index.html and 404.html
+  knowledge.py the public facts for Ask Vitor (knowledge.json)
+  build.py     runs all of the above in order and writes index.html, 404.html and knowledge.json
         │
         ▼
-index.html, 404.html, assets/live/   built files, never committed
+index.html, 404.html, knowledge.json, assets/live/   built files, never committed
         │
         ▼
 assets/site.css, assets/site.js      styles and the small browser script, shared with the case pages

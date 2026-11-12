@@ -257,3 +257,13 @@ def test_failing_anime_source_keeps_the_last_one(site):
 
 def test_default_sources_include_my_anime_list():
     assert "anime" in default_sources()
+
+
+def test_build_writes_knowledge_json(site):
+    build(site, sources(), get=fake_get, today="2026-11-12")
+    path = site / "knowledge.json"
+    first = path.read_bytes()
+    data = json.loads(first)
+    assert data["version"] == 1 and data["facts"]
+    build(site, sources(), get=fake_get, today="2026-11-12")
+    assert path.read_bytes() == first
