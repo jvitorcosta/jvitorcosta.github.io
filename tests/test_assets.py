@@ -221,7 +221,7 @@ def test_blocked_inline_cover_falls_back_to_the_saved_one():
     assert json.loads(_cover_after("", inline, fail=True))[1] is True  # nothing to fall back to: hide
 
 
-COPIED_PAGES = sorted([*ROOT.glob("projects/*.html"), ROOT / "privacy.html"])
+COPIED_PAGES = sorted([*ROOT.glob("projects/*.html"), ROOT / "privacy.html", ROOT / "site-privacy.html"])
 
 
 @pytest.mark.parametrize("page", COPIED_PAGES, ids=lambda p: p.name)
@@ -269,3 +269,154 @@ def test_primary_button_is_filled_with_the_accent():
     assert rule, ".links .primary rule missing"
     assert "background: var(--accent)" in rule.group(1) and "color: var(--ink-on-bg)" in rule.group(1)
     assert "#trainer .links .primary" not in css()
+
+
+ASK_JS_PATH = ROOT / "assets" / "ask.js"
+
+
+def ask_js() -> str:
+    return ASK_JS_PATH.read_text(encoding="utf-8")
+
+
+def test_ask_script_exists_and_never_inserts_html():
+    # API text, source labels and dates go in with textContent / createElement only.
+    source = ask_js()
+    for sink in ("innerHTML", "outerHTML", "insertAdjacentHTML", "document.write"):
+        assert sink not in source
+
+
+def test_ask_script_holds_no_url():
+    # The endpoint comes from #ask[data-endpoint]; links in the fixed replies come from the markup.
+    source = ask_js()
+    assert not re.search(r"https?:|mailto:|www\.", source)
+    assert "data-endpoint" in source
+
+
+def test_ask_close_button_closes_like_escape():
+    source = ask_js()
+    assert re.search(r'querySelector\("\[data-ask-close\]"\)', source)
+    assert re.search(r'addEventListener\("click", close\)', source)
+    assert re.search(r'e\.key === "Escape"\) close\(\)', source)
+
+
+def _ask_frames(stream: str) -> list:
+    # Runs the real SSE parser from ask.js (splitFrames + parseFrame) on a fixed stream.
+    source = ask_js()
+    funcs = "".join(re.search(rf"(?ms)^  function {name}\(.*?^  \}}\n", source).group(0)
+                    for name in ("parseFrame", "splitFrames"))
+    script = (funcs + f"var out = splitFrames({json.dumps(stream)});"
+              "process.stdout.write(JSON.stringify([out.frames.map(parseFrame), out.rest]));")
+    return json.loads(subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout)
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="needs node")
+def test_ask_stream_frames_follow_the_api_contract():
+    stream = ('data: {"token": "Vitor "}\n\ndata: {"token": "works"}\n\n'
+              'event: done\ndata: {"kind": "answer", "sources": []}\n\nevent: err')
+    frames, rest = _ask_frames(stream)
+    assert frames == [
+        {"event": "message", "data": {"token": "Vitor "}},
+        {"event": "message", "data": {"token": "works"}},
+        {"event": "done", "data": {"kind": "answer", "sources": []}},
+    ]
+    assert rest == "event: err"  # an unfinished frame waits for the next chunk
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="needs node")
+def test_ask_stream_frames_accept_crlf_and_no_space():
+    stream = ('data:{"token": "a"}\r\n\r\nevent:done\r\ndata: {"kind": "fallback", "sources": []}\r\n\r\n'
+              'data: {"t')
+    frames, rest = _ask_frames(stream)
+    assert frames == [
+        {"event": "message", "data": {"token": "a"}},
+        {"event": "done", "data": {"kind": "fallback", "sources": []}},
+    ]
+    assert rest == 'data: {"t'
+    # A chunk ending between CR and LF keeps the CR, so the next chunk's LF doesn't end a frame early.
+    frames, rest = _ask_frames('data: {"token": "a"}\r\n\r')
+    assert frames == [] and rest == 'data: {"token": "a"}\n\r'
+
+
+def test_ask_keeps_focus_and_marks_the_answer_busy():
+    source = ask_js()
+    # Clearing the chips or hiding STOP must not drop keyboard focus to <body>.
+    assert "keepFocus(chips)" in source and "keepFocus(stop)" in source
+    assert re.search(r"function keepFocus\(node\)[^}]*document\.activeElement", source)
+    assert 'answer.setAttribute("aria-busy", "true")' in source
+    assert 'answer.removeAttribute("aria-busy")' in source
+    # Only an error releases the reader early; after `done` the API still writes its log, so the
+    # script keeps reading to the end instead of cancelling.
+    assert source.count("reader.cancel()") == 1
+    error = re.search(r'if \(frame\.event === "error"\) \{(.*?)\}', source, re.S).group(1)
+    assert "reader.cancel()" in error
+    done = re.search(r'if \(frame\.event === "done"\) \{(.*?)\n {16}\}', source, re.S).group(1)
+    assert "cancel" not in done and "drain()" in done
+    assert re.search(r"function drain\(\) \{[^}]*reader\.read\(\)", source)
+
+
+def _ask_sources(sources: list) -> list:
+    # Runs the real renderSources from ask.js on a tiny fake DOM; returns each tag's English text.
+    source = ask_js()
+    funcs = "".join(re.search(rf"(?ms)^ {{2,4}}function {name}\(.*?^ {{2,4}}\}}\n", source).group(0)
+                    for name in ("el", "both", "shortDate", "renderSources"))
+    dom = """
+    function Node(tag) { this.tag = tag; this.children = []; this.attrs = {}; this.textContent = ""; }
+    Node.prototype.appendChild = function (c) { this.children.push(c); return c; };
+    Node.prototype.setAttribute = function (k, v) { this.attrs[k] = v; };
+    var document = { createElement: function (t) { return new Node(t); },
+                     createTextNode: function (t) { var n = new Node("#text"); n.textContent = t; return n; } };
+    function english(n) {
+      if (n.attrs.lang === "pt") return "";
+      return n.textContent + n.children.map(english).join("");
+    }
+    var sources = new Node("div");
+    """
+    script = (dom + funcs + f"renderSources({json.dumps(sources)});"
+              "process.stdout.write(JSON.stringify(sources.children.map(english)));")
+    run = subprocess.run(["node", "-e", script], capture_output=True, text=True, encoding="utf-8", check=True)
+    return json.loads(run.stdout)
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="needs node")
+def test_ask_sources_date_only_live_and_repo_facts():
+    tags = _ask_sources([
+        {"id": "cv.nubank", "label": "CV · Experience", "updated": "2026-11-12"},
+        {"id": "about.morning", "label": "About Vitor", "updated": "2026-11-12"},
+        {"id": "live.song", "label": "Spotify", "updated": "2026-11-11"},
+        {"id": "repo.car-cyberdeck", "label": "GitHub", "updated": "2026-11-06"},
+    ])
+    assert tags[0] == "[CV · Experience]" and tags[1] == "[About Vitor]"
+    assert tags[2].startswith("[Spotify · ") and "11" in tags[2] and "2026" in tags[2]
+    assert tags[3].startswith("[GitHub · ") and "2026" in tags[3]
+
+
+def test_ask_openers_report_expanded_state():
+    source = ask_js()
+    assert 'setAttribute("aria-expanded", String(expanded))' in source
+    assert re.search(r"function open\(button\) \{[^}]*expand\(true\)", source)
+    assert re.search(r"function close\(\) \{[^}]*expand\(false\)", source)
+
+
+def test_ask_layout_details():
+    text = css()
+    phone = re.search(r"@media \(max-width: 420px\) \{(.*?)\n\}", text, re.S).group(1)
+    # TALK makes five trainer links; the odd one spans the row instead of sitting alone.
+    assert "#trainer .links [data-ask-open] { grid-column: 1 / -1; }" in phone
+    # Newlines in a streamed answer show as line breaks.
+    assert re.search(r"(?m)^\.ask-answer \{[^}]*white-space: pre-line", text)
+
+
+def test_ask_dialogue_styles():
+    text = css()
+    assert re.search(r"(?m)^\.ask \{[^}]*border: 4px solid var\(--line\)", text)
+    assert re.search(r'#ask-title \{[^}]*"Press Start 2P"', text)
+    assert re.search(r"(?m)^\.ask-cursor \{[^}]*animation:", text)
+    motion = re.search(r"@media \(prefers-reduced-motion: reduce\) \{(.*?)\n\}", text, re.S).group(1)
+    assert ".ask-cursor" in motion
+    # The ASK ME button looks like the language button.
+    assert re.search(r"\[data-lang-toggle\], \.ask-open \{", text)
+    close = _rule(r"\.ask \.ask-close")
+    assert "min-width: 44px" in close and "min-height: 44px" in close
+    assert "position: absolute" not in close  # it sits in the header row, never over the text
+    assert "Segoe UI Symbol" in close  # a font with the glyph; Press Start 2P has none
+    assert re.search(r"(?m)^\.ask-head \{[^}]*display: flex", text)

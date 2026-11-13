@@ -63,7 +63,7 @@ img { max-width: 100%; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
 
-.px, .h, .k, .lv, .badge, [data-lang-toggle] {
+.px, .h, .k, .lv, .badge, [data-lang-toggle], .ask-open {
   font-family: "Press Start 2P", ui-monospace, monospace;
   font-weight: 400;
   letter-spacing: .5px;
@@ -140,7 +140,7 @@ main > header.top { padding: 0; }
 [data-palette][aria-pressed=true]::after { inset: 2px; }
 [data-palette]:focus-visible { outline: 3px solid var(--ink-on-bg); outline-offset: 0; }
 
-[data-lang-toggle] {
+[data-lang-toggle], .ask-open {
   min-width: 44px; min-height: 44px;
   padding: 0 10px;
   font-size: 10px;
@@ -150,7 +150,8 @@ main > header.top { padding: 0; }
   border-radius: 4px;
   cursor: pointer;
 }
-[data-lang-toggle]:focus-visible { outline-color: var(--ink-on-bg); }
+[data-lang-toggle]:focus-visible, .ask-open:focus-visible { outline-color: var(--ink-on-bg); }
+.ask-open { margin-left: auto; }
 
 header.top > a {
   display: inline-flex; align-items: center;
@@ -228,7 +229,7 @@ h1.name .zh, .h .zh {
 
 /* Chunky buttons */
 .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.links a, .btn {
+.links a, .links button, .btn {
   display: inline-flex; align-items: center;
   min-height: 44px;
   padding: 0 14px;
@@ -241,10 +242,12 @@ h1.name .zh, .h .zh {
   text-decoration: none;
   cursor: pointer;
 }
-/* On a phone the four trainer links make a 2x2 grid instead of leaving one alone on a row. */
+/* On a phone the four trainer links make a 2x2 grid instead of leaving one alone on a row;
+   TALK, the fifth when Ask Vitor is on, takes a full row. */
 @media (max-width: 420px) {
   #trainer .links { display: grid; grid-template-columns: 1fr 1fr; }
-  #trainer .links a { justify-content: center; }
+  #trainer .links a, #trainer .links button { justify-content: center; }
+  #trainer .links [data-ask-open] { grid-column: 1 / -1; }
 }
 /* The resume (in Experience) is the one filled button; the pill sits under the trainer card's motto. */
 .links .primary { background: var(--accent); color: var(--ink-on-bg); }
@@ -256,8 +259,56 @@ h1.name .zh, .h .zh {
   border: 2px solid var(--line); border-radius: 999px;
 }
 .status i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: #1f9d55; }
-.links a:hover, .btn:hover { text-decoration: underline; }
-.links a:active, .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--shadow); }
+.links a:hover, .links button:hover, .btn:hover { text-decoration: underline; }
+.links a:active, .links button:active, .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--shadow); }
+
+/* ---------- TALK: the Ask Vitor dialogue (assets/ask.js) ---------- */
+/* A game dialogue box under the trainer card; it spans the column, so a phone gets full width. */
+.ask { width: 100%; border: 4px solid var(--line); }
+/* VITOR: and the close button share a row, so the button never covers the text. */
+.ask-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin: 0 0 8px; }
+#ask-title { margin: 0; font-family: "Press Start 2P", ui-monospace, monospace; font-size: 12px; font-weight: 400; }
+.ask-answer { white-space: pre-line; }
+.ask-answer p { margin: 0 0 8px; }
+.ask-cursor { display: inline-block; margin-left: 4px; font-size: 10px; animation: ask-blink 1s steps(1) infinite; }
+@keyframes ask-blink { 50% { opacity: 0; } }
+.ask-sources { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 13px; font-weight: 600; }
+.ask-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.ask button {
+  min-height: 44px;
+  padding: 0 12px;
+  font: 600 14px/1.2 Inter, system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--box);
+  border: 3px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 var(--shadow);
+  cursor: pointer;
+}
+/* A 44px target; border, shadow and focus ring come from .ask button. Press Start 2P has no ✕,
+   so the glyph comes from a symbol font, bold to match the pixel lines. */
+.ask .ask-close {
+  flex: none;
+  min-width: 44px; min-height: 44px;
+  padding: 0;
+  font: 700 16px/1 "Segoe UI Symbol", "Apple Symbols", "DejaVu Sans", "Noto Sans Symbols 2", system-ui, sans-serif;
+}
+.ask button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--shadow); }
+.ask-form { display: flex; gap: 8px; }
+.ask-form input {
+  flex: 1; min-width: 0; min-height: 44px;
+  padding: 0 10px;
+  font: 16px Inter, system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--box);
+  border: 3px solid var(--line);
+  border-radius: 4px;
+}
+.ask-form input::placeholder { color: var(--ink); opacity: .7; }
+.ask-form [type=submit] { font-family: "Press Start 2P", ui-monospace, monospace; font-weight: 400; }
+.ask-error p { margin: 10px 0 0; font-weight: 600; }
+.ask a { font-weight: 600; text-underline-offset: 3px; }
+.ask-notice { margin: 10px 0 0; font-size: 13px; }
 
 /* ---------- Right now ---------- */
 .menu { list-style: none; margin: 4px 0 0; padding: 0; }
@@ -437,4 +488,5 @@ button.btn { font-family: Inter, system-ui, sans-serif; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .links a:active, .btn:active { transform: none; }
+  .ask-cursor { animation: none; }
 }

@@ -10,3 +10,5 @@ letterboxd = "https://letterboxd.com/zubu/"
 myanimelist = "https://myanimelist.net/animelist/yulong17"
 goodreads = "https://www.goodreads.com/user/show/185113793-vitor-pinheiro"
 strava = "https://www.strava.com/athletes/150977885"
+# ask-vitor API base URL; empty hides Ask Vitor.
+ask_api = ""

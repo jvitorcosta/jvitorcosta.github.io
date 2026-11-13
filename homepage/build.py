@@ -12,6 +12,7 @@ from pathlib import Path
 from homepage import http
 from homepage.content import load_content
 from homepage.images import cache_image, prune
+from homepage.knowledge import build_knowledge, write_knowledge
 from homepage.model import Activity, Anime, Book, Film, LiveData, Repo, Song, from_dict
 from homepage.render import render_404, render_home
 from homepage.sources.github import fetch_repos
@@ -112,6 +113,8 @@ def build(
     index = root / "index.html"
     index.write_bytes(html.replace("\r\n", "\n").encode("utf-8"))
     (root / "404.html").write_bytes(render_404(content).replace("\r\n", "\n").encode("utf-8"))
+    updated = state.get("updated") if isinstance(state.get("updated"), dict) else {}
+    write_knowledge(root / "knowledge.json", build_knowledge(content.about, repos, live, updated, today))
     save_state(state_path, state)
     report_stale(state, today)
     return index

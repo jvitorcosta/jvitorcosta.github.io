@@ -696,3 +696,138 @@ def test_experience_line_is_about_problems_not_one_industry(tmp_path):
     assert ('<span lang="en">5 years solving real problems with software and AI.</span>'
             '<span lang="pt">5 anos resolvendo problemas reais com software e IA.</span>') in work
     assert "banks" not in work and "bancos" not in work
+
+
+ASK_API = "https://ask.example.workers.dev"
+
+
+def ask_content(**links):
+    return content(links={**LINKS, "ask_api": ASK_API, **links})
+
+
+def test_no_ask_api_means_no_ask_markup(tmp_path):
+    for links in ({}, {"ask_api": ""}):
+        html = render(tmp_path, content(links={**LINKS, **links}))
+        assert "data-ask-open" not in html and 'id="ask"' not in html and "ask.js" not in html
+
+
+def test_ask_api_renders_button_section_and_script(tmp_path):
+    html = render(tmp_path, ask_content())
+    header = html[html.index('<header class="top">'):html.index("</header>")]
+    assert header.index("data-ask-open") < header.index("data-lang-toggle")
+    opener = ('data-ask-open aria-controls="ask" aria-expanded="false">'
+              '<span aria-hidden="true">▶</span> ')
+    assert f'<button type="button" class="ask-open" {opener}' in header
+    assert ">ASK ME<" in header and ">PERGUNTE<" in header
+    nav = re.search(r'<nav class="links">(.*?)</nav>', section(html, "trainer")).group(1)
+    assert nav.startswith(f'<button type="button" {opener}')
+    assert ">TALK<" in nav and ">FALAR<" in nav
+    # The ▶ is decoration in the markup, never part of the spoken label.
+    for key in ("ask_open", "ask_talk"):
+        assert "▶" not in STRINGS["en"][key] and "▶" not in STRINGS["pt"][key]
+    assert html.index('id="trainer"') < html.index('id="ask"') < html.index('id="party"')
+    ask = section(html, "ask")
+    for hook in ('id="ask-title"', 'class="ask-answer"', 'aria-live="polite"', 'class="ask-sources"',
+                 'class="ask-chips"', '<form class="ask-form"', 'maxlength="500"',
+                 'class="ask-error"', 'role="alert"', 'href="site-privacy.html"'):
+        assert hook in ask
+    assert ask.count("data-ask-q") == 3
+    assert re.search(r"<button[^>]*(?:hidden[^>]*data-ask-stop|data-ask-stop[^>]*hidden)", ask)
+    from homepage.markup import versioned
+    script = f'<script src="{versioned("assets/ask.js")}" defer></script>'
+    assert html.index("</main>") < html.index(script) < html.index("</body>")
+
+
+def test_ask_script_is_cache_busted(tmp_path):
+    html = render(tmp_path, ask_content())
+    assert re.search(r'<script src="assets/ask\.js\?v=[0-9a-f]{8}" defer></script>', html)
+
+
+def test_ask_close_button_only_with_ask_api(tmp_path):
+    assert "data-ask-close" not in render(tmp_path, content(links=LINKS))
+    ask = section(render(tmp_path, ask_content()), "ask")
+    button = re.search(r'<button type="button" class="ask-close" data-ask-close [^>]*>✕</button>', ask)
+    assert button, "close button missing"
+    tag = button.group(0)
+    assert 'aria-label="Close"' in tag and 'data-aria-en="Close"' in tag and 'data-aria-pt="Fechar"' in tag
+    # Shares a header row with the VITOR: title, before the answer.
+    head = re.search(r'<div class="ask-head">(.*?)</div>', ask).group(1)
+    assert 'id="ask-title"' in head and "data-ask-close" in head
+    assert ask.index('class="ask-head"') < ask.index('class="ask-answer"')
+
+
+def test_ask_send_button_has_a_name_in_both_languages(tmp_path):
+    ask = section(render(tmp_path, ask_content()), "ask")
+    tag = re.search(r'<button type="submit"[^>]*>A</button>', ask).group(0)
+    # The name starts with the visible "A" (WCAG 2.5.3, label in name).
+    assert 'aria-label="A: Send"' in tag and 'data-aria-en="A: Send"' in tag and 'data-aria-pt="A: Enviar"' in tag
+
+
+def test_ask_section_starts_hidden_with_endpoint(tmp_path):
+    html = render(tmp_path, ask_content(ask_api=ASK_API + "/"))
+    tag = re.search(r'<section [^>]*id="ask"[^>]*>', html).group(0)
+    assert " hidden" in tag and 'class="box ask"' in tag and 'aria-labelledby="ask-title"' in tag
+    assert f'data-endpoint="{ASK_API}/ask/stream"' in tag
+    assert re.search(r'<[^>]*class="ask-error"[^>]*hidden', section(html, "ask"))
+
+
+def test_ask_strings_in_both_languages(tmp_path):
+    keys = ("ask_open", "ask_talk", "ask_greeting", "ask_notice", "ask_placeholder", "ask_stop",
+            "ask_fallback_hint", "ask_rate_limited", "ask_down", "ask_suggest", "ask_followups", "privacy_link",
+            "ask_close", "ask_send", "ask_email", "footer_privacy")
+    for key in keys:
+        assert STRINGS["en"][key].strip() and STRINGS["pt"][key].strip() and STRINGS["en"][key] != STRINGS["pt"][key]
+    assert len(STRINGS["en"]["ask_suggest"].split("|")) == len(STRINGS["pt"]["ask_suggest"].split("|")) == 3
+    assert len(STRINGS["en"]["ask_followups"].split("|")) == len(STRINGS["pt"]["ask_followups"].split("|")) == 6
+    html = render(tmp_path, ask_content())
+    assert "Hi! I&#x27;m a bot that knows Vitor&#x27;s CV" in html
+    assert "Oi! Sou um bot que conhece o currículo" in html
+    assert "I need a short break. Try again in a minute." in html
+    assert "Não consigo responder agora. Meu currículo está aqui." in html
+    ask = section(html, "ask")
+    assert 'data-followups-en="' in ask and 'data-followups-pt="' in ask
+    assert 'data-ask-msg="fallback"' in ask and "mailto:joaovpro17@gmail.com" in ask
+    assert "Vitor_Pinheiro_Resume.pdf" in ask
+    fallback = re.search(r'<p data-ask-msg="fallback">.*?</p>', ask).group(0)
+    assert '<span lang="en">Email</span><span lang="pt">E-mail</span> ›</a>' in fallback
+
+
+def test_ask_api_must_be_https_or_local(tmp_path):
+    for api in ("http://ask.example.com", "ask.example.com", "javascript:alert(1)", "ftp://x.dev",
+                "https://", "http://localhost.evil.com"):
+        html = render(tmp_path, ask_content(ask_api=api))
+        assert 'id="ask"' not in html and "data-ask-open" not in html, api
+    for api in ("https://ask.example.com", "http://localhost:8000", "http://127.0.0.1:8000"):
+        html = render(tmp_path, ask_content(ask_api=api))
+        assert f'data-endpoint="{api}/ask/stream"' in html, api
+
+
+def test_ask_strings_are_escaped(tmp_path):
+    en = {**STRINGS["en"], "ask_suggest": 'a<b>|"c"|d'}
+    c = content(strings={**STRINGS, "en": en}, links={**LINKS, "ask_api": ASK_API})
+    ask = section(render(tmp_path, c), "ask")
+    assert "<b>" not in ask and "&lt;b&gt;" in ask
+
+
+def test_footer_links_site_privacy_page(tmp_path):
+    foot = render(tmp_path).split('<footer class="foot">')[1]
+    assert '<a href="site-privacy.html">' in foot
+    assert ">Privacy<" in foot and ">Privacidade<" in foot
+    assert "How this works" not in foot  # that label belongs to the dialogue's notice
+
+
+def test_site_privacy_page_exists():
+    page = (ROOT / "site-privacy.html").read_text(encoding="utf-8")
+    assert page.count('<div lang="en">') >= 1 and page.count('<div lang="pt">') >= 1
+    for fact in ("90 days", "90 dias", "Upstash", "Anthropic", "Vercel", "GitHub Pages", "never saved in the question log"):
+        assert fact in page
+    for fact in ("kept only in memory, for at most an hour, to count questions per visitor",
+                 "por no máximo uma hora, para contar perguntas por visitante",
+                 "Anthropic processes the question under its own API data policy",
+                 "A Anthropic trata a pergunta conforme a própria política de dados da API",
+                 "(when it is turned on)", "(quando está ligado)"):
+        assert fact in page
+    assert "then dropped" not in page and "depois descartado" not in page
+    links = tomllib.loads((ROOT / "data" / "links.toml").read_text(encoding="utf-8"))
+    assert links["email"] in page
+    assert "https://jvitorcosta.github.io/site-privacy.html" in (ROOT / "sitemap.xml").read_text(encoding="utf-8")

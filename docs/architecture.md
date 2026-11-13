@@ -14,10 +14,11 @@ homepage/  (Python 3.12, standard library only)
   render.py    the page: head, trainer card, Favorites, Projects, Experience, footer
   right_now.py the Lately box: song, film, anime, book, activity
   markup.py    shared HTML helpers: escaping, safe links, both-language text, dates
-  build.py     runs all of the above in order and writes index.html and 404.html
+  knowledge.py the public facts for Ask Vitor (knowledge.json)
+  build.py     runs all of the above in order and writes index.html, 404.html and knowledge.json
         │
         ▼
-index.html, 404.html, assets/live/   built files, never committed
+index.html, 404.html, knowledge.json, assets/live/   built files, never committed
         │
         ▼
 assets/site.css, assets/site.js      styles and the small browser script, shared with the case pages
@@ -149,7 +150,7 @@ Every `localStorage` access is inside `try`, since private windows can throw.
 
 ## Cache busting
 
-`markup.versioned(path)` adds `?v=<8-character hash of the file>` to `site.css`, `site.js`, the
+`markup.versioned(path)` adds `?v=<8-character hash of the file>` to `site.css`, `site.js`, `ask.js`, the
 icons and `og-image.png`, so a browser fetches a new copy as soon as the file changes. The hash
 ignores CRLF vs LF, so a Windows build and the Linux runner agree. The case pages come from
 another repo but compute the same hash, and a test fails when they point at an old one.
