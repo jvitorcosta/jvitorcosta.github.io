@@ -10,6 +10,7 @@ from homepage.markup import warn
 from homepage.model import AboutFact, LiveData, Repo
 
 FACT_ID = re.compile(r"[a-z0-9._-]+")
+DAY = re.compile(r"\d{4}-\d{2}-\d{2}")
 
 # Never-share categories: nothing matching these may reach knowledge.json. The build test scans
 # every fact against them; a hit means a source or about.toml row leaks something private.
@@ -60,8 +61,9 @@ def build_knowledge(
 ) -> dict:
     facts = [_fact(a.id, a.source, today, a.text) for a in about]
 
-    def when(name: str) -> str:
-        return updated.get(name) or today
+    def when(name: str, own: str = "") -> str:
+        """The day the build last fetched a source; else the item's own day, else today."""
+        return updated.get(name) or (own if DAY.fullmatch(own) else today)
 
     for r in repos:
         text = f"Vitor's GitHub project {r.name}"
@@ -92,7 +94,7 @@ def build_knowledge(
         t = live.activity
         text = f"Vitor's latest Strava activity was {_sport(t.sport)}"
         text += f" of {t.distance_km:g} km." if t.distance_km else "."
-        facts.append(_fact("live.activity", "Strava", when("activity"), text))
+        facts.append(_fact("live.activity", "Strava", when("activity", t.date[:10]), text))
     return {"version": 1, "generated": today, "facts": _valid(facts)}
 
 

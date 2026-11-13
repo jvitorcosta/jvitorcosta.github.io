@@ -90,3 +90,16 @@ def test_bad_or_repeated_ids_are_dropped_with_a_warning(capsys):
     assert [(f["id"], f["text"]) for f in data["facts"]] == [("about.ok", "First.")]
     err = capsys.readouterr().err
     assert "Bad Id!" in err and "about.ok" in err
+
+
+def test_activity_without_a_fetch_date_uses_its_own_date_not_today():
+    # The hand-written fallback row was never fetched, so state has no day for it.
+    live = LiveData(None, None, None, ACTIVITY, None)
+    data = build_knowledge([], [], live, {}, TODAY)
+    assert facts_by_id(data)["live.activity"]["updated"] == "2026-11-09"
+
+
+def test_activity_with_unreadable_date_falls_back_to_today():
+    t = Activity("Run", "x", "", 5.0, 31, "", "n/a", "")
+    data = build_knowledge([], [], LiveData(None, None, None, t, None), {}, TODAY)
+    assert facts_by_id(data)["live.activity"]["updated"] == TODAY
