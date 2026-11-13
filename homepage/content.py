@@ -79,7 +79,12 @@ def _activity(path: Path) -> Activity | None:
 def _about(path: Path) -> list[AboutFact]:
     """The hand-written facts for the Ask Vitor assistant; a bad row is skipped with a warning."""
     facts = []
-    for i, row in enumerate(_toml(path).get("fact", [])):
+    rows = _toml(path).get("fact", [])
+    if not isinstance(rows, list):
+        _warn("data/about.toml skipped: [fact] is a single table; write each fact under [[fact]] "
+              "(double brackets, repeated once per fact)")
+        return facts
+    for i, row in enumerate(rows):
         try:
             fact = AboutFact(row["id"], row["source"], row["text"])
             if not all(isinstance(v, str) and v.strip() for v in (fact.id, fact.source, fact.text)):

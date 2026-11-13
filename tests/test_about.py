@@ -53,3 +53,22 @@ def test_load_content_reads_about(tmp_path):
 def test_missing_about_file_is_empty(tmp_path):
     (tmp_path / "data").mkdir()
     assert load_content(tmp_path).about == []
+
+
+def _about_warnings(tmp_path, toml, capsys):
+    (tmp_path / "data").mkdir()
+    (tmp_path / "data" / "about.toml").write_text(toml, encoding="utf-8")
+    facts = load_content(tmp_path).about
+    return facts, capsys.readouterr().err
+
+
+def test_skipped_row_produces_a_warning(tmp_path, capsys):
+    facts, err = _about_warnings(tmp_path, '[[fact]]\nid = "a.bad"\nsource = "S"\n', capsys)
+    assert facts == []
+    assert "about fact #1 skipped" in err
+
+
+def test_single_fact_table_warns_how_to_fix_it(tmp_path, capsys):
+    facts, err = _about_warnings(tmp_path, '[fact]\nid = "a.one"\nsource = "S"\ntext = "One."\n', capsys)
+    assert facts == []
+    assert "[[fact]]" in err and "double brackets" in err
