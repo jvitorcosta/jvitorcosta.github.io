@@ -43,7 +43,8 @@ def sources(**over):
 
 @pytest.fixture
 def site(tmp_path):
-    shutil.copytree(ROOT / "data", tmp_path / "data")
+    # Skip a local, git-ignored state.json so it cannot leak into the build under test.
+    shutil.copytree(ROOT / "data", tmp_path / "data", ignore=shutil.ignore_patterns("state.json"))
     shutil.copytree(ROOT / "assets", tmp_path / "assets")
     return tmp_path
 

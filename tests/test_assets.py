@@ -427,3 +427,24 @@ def test_ask_openers_are_revealed_by_the_script():
     source = ask_js()
     assert re.search(r"function reveal\(\) \{[^}]*\.hidden = false", source, re.S)
     assert re.search(r"^\s*reveal\(\);", source, re.M)
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="needs node")
+def test_ask_keep_focus_moves_focus_to_the_input_only_from_inside_the_node():
+    # Runs the real keepFocus from ask.js with a fake document and fake nodes.
+    func = re.search(r"(?ms)^ {2,6}function keepFocus\(.*?^ {2,6}\}\n", ask_js()).group(0)
+    script = """
+    var focused = null;
+    var input = { focus: function () { focused = "input"; } };
+    var inside = {}, outside = {};
+    var document = { activeElement: inside };
+    function box(owns) { return { contains: function (n) { return n === owns; } }; }
+    """ + func + """
+    keepFocus(box(inside));
+    var moved = focused;
+    focused = null;
+    keepFocus(box(outside));
+    process.stdout.write(JSON.stringify([moved, focused]));
+    """
+    run = subprocess.run(["node", "-e", script], capture_output=True, text=True, encoding="utf-8", check=True)
+    assert json.loads(run.stdout) == ["input", None]

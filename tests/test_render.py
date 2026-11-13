@@ -839,3 +839,13 @@ def test_activity_with_zero_or_missing_distance_omits_it(tmp_path, distance):
     html = render(tmp_path, lv=live(activity=act))
     assert "Leg day · 50 min" in html
     assert "0.0 km" not in html and "Leg day · 0" not in html
+
+
+def test_site_privacy_page_headings_are_scoped_to_each_language():
+    page = (ROOT / "site-privacy.html").read_text(encoding="utf-8")
+    en = re.search(r'<div lang="en">(.*?)</div>', page, re.S).group(1)
+    pt = re.search(r'<div lang="pt">(.*?)</div>', page, re.S).group(1)
+    assert "<h1>Privacy of this site and Ask Vitor</h1>" in en
+    assert "<h1>Privacidade deste site e do Ask Vitor</h1>" in pt
+    assert re.findall(r"<h2>(.*?)</h2>", pt) == ["O site", "Ask Vitor"]
+    assert "Privacidade" not in en and "Privacy of this site" not in pt
