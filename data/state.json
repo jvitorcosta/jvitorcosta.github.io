@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-11",
-    "detail": "8:27 /km",
-    "distance_km": 2.4,
-    "emoji": "🏃",
-    "moving_min": 20,
-    "sport": "Run",
-    "title": "Treadmill Run - Z2",
-    "url": "https://www.strava.com/activities/20955459258"
+    "date": "2026-11-12",
+    "detail": "4.1 km/h",
+    "distance_km": 7.5,
+    "emoji": "🏅",
+    "moving_min": 111,
+    "sport": "Volleyball",
+    "title": "Evening Volleyball",
+    "url": "https://www.strava.com/activities/20967557779"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -40,6 +40,13 @@
   },
   "repos": [
     {
+      "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
+      "homepage": "",
+      "name": "ask-vitor",
+      "pushed": "2026-11-13T04:54:55Z",
+      "url": "https://github.com/jvitorcosta/ask-vitor"
+    },
+    {
       "description": "",
       "homepage": "",
       "name": "curriculum-vitae",
@@ -52,13 +59,6 @@
       "name": "car-cyberdeck",
       "pushed": "2026-11-12T19:41:47Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
-    },
-    {
-      "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
-      "homepage": "",
-      "name": "ask-vitor",
-      "pushed": "2026-11-12T18:04:58Z",
-      "url": "https://github.com/jvitorcosta/ask-vitor"
     },
     {
       "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Beyoncé",
-    "cover": "https://i.scdn.co/image/ab67616d00001e022fd16e69054586f25be54f49",
+    "artist": "Michael Sembello",
+    "cover": "https://i.scdn.co/image/ab67616d00001e020946d11271fa6083bc8ea769",
     "playing": false,
-    "title": "If I Were a Boy",
-    "url": "https://open.spotify.com/track/0K7wIocSvzcRISpssBUzfZ"
+    "title": "Maniac - From \"Flashdance\"",
+    "url": "https://open.spotify.com/track/6kk07URPWTiRzULynSOVrs"
   },
   "updated": {
     "activity": "2026-11-13",
