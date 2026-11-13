@@ -831,3 +831,11 @@ def test_site_privacy_page_exists():
     links = tomllib.loads((ROOT / "data" / "links.toml").read_text(encoding="utf-8"))
     assert links["email"] in page
     assert "https://jvitorcosta.github.io/site-privacy.html" in (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize("distance", [0, 0.0, None])
+def test_activity_with_zero_or_missing_distance_omits_it(tmp_path, distance):
+    act = Activity("WeightTraining", "🏋️", "Leg day", distance, 50, "", "2026-11-03", "")
+    html = render(tmp_path, lv=live(activity=act))
+    assert "Leg day · 50 min" in html
+    assert "0.0 km" not in html and "Leg day · 0" not in html

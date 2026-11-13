@@ -103,3 +103,11 @@ def test_activity_with_unreadable_date_falls_back_to_today():
     t = Activity("Run", "x", "", 5.0, 31, "", "n/a", "")
     data = build_knowledge([], [], LiveData(None, None, None, t, None), {}, TODAY)
     assert facts_by_id(data)["live.activity"]["updated"] == TODAY
+
+
+def test_activity_with_zero_or_missing_distance_omits_it():
+    for distance in (0, 0.0, None):
+        t = Activity("WeightTraining", "x", "", distance, 50, "", "2026-11-09", "")
+        live = LiveData(None, None, None, t, None)
+        text = facts_by_id(build_knowledge([], [], live, UPDATED, TODAY))["live.activity"]["text"]
+        assert text == "Vitor's latest Strava activity was a weight training."
