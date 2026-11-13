@@ -153,18 +153,18 @@
     }
   ],
   "song": {
-    "artist": "Ariana Grande",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02deec12a28d1e336c5052e9aa",
-    "playing": true,
-    "title": "Love Me Harder",
-    "url": "https://open.spotify.com/track/5J4ZkQpzMUFojo1CtAZYpn"
+    "artist": "Beyoncé",
+    "cover": "https://i.scdn.co/image/ab67616d00001e022fd16e69054586f25be54f49",
+    "playing": false,
+    "title": "If I Were a Boy",
+    "url": "https://open.spotify.com/track/0K7wIocSvzcRISpssBUzfZ"
   },
   "updated": {
-    "activity": "2026-11-12",
-    "anime": "2026-11-12",
-    "book": "2026-11-12",
-    "film": "2026-11-12",
-    "repos": "2026-11-12",
-    "song": "2026-11-12"
+    "activity": "2026-11-13",
+    "anime": "2026-11-13",
+    "book": "2026-11-13",
+    "film": "2026-11-13",
+    "repos": "2026-11-13",
+    "song": "2026-11-13"
   }
 }
