@@ -194,7 +194,9 @@ def _top() -> str:
 
 
 def _footer(p: Page, live: LiveData) -> str:
-    return f'<footer class="foot">{p.t("footer")}<br>{p.t("made_by")}</footer>'
+    return (f'<footer class="foot">{p.t("footer")}<br>{p.t("made_by")}<br>'
+            # "#top" scrolls to the top of the page by the HTML spec; no element needs that id.
+            f'<a href="#top">{p.t("back_to_top")}</a></footer>')
 
 
 def _json_ld(links: dict[str, str]) -> str:

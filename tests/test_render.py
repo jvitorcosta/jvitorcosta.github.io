@@ -696,3 +696,14 @@ def test_experience_line_is_about_problems_not_one_industry(tmp_path):
     assert ('<span lang="en">5 years solving real problems with software and AI.</span>'
             '<span lang="pt">5 anos resolvendo problemas reais com software e IA.</span>') in work
     assert "banks" not in work and "bancos" not in work
+
+
+def test_footer_has_back_to_top_link(tmp_path):
+    html = render(tmp_path)
+    foot = html[html.index('<footer class="foot">'):html.index("</footer>")]
+    link = re.search(r'<a href="#top"[^>]*>(.*?)</a>', foot)
+    assert link, "footer has no back-to-top link"
+    for lang in ("en", "pt"):
+        assert f'<span lang="{lang}">{esc(STRINGS[lang]["back_to_top"])}</span>' in link.group(1)
+    # With no element called "top", browsers scroll "#top" to the very top of the page.
+    assert 'id="top"' not in html and 'name="top"' not in html
