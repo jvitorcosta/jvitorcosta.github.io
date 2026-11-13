@@ -420,3 +420,10 @@ def test_ask_dialogue_styles():
     assert "position: absolute" not in close  # it sits in the header row, never over the text
     assert "Segoe UI Symbol" in close  # a font with the glyph; Press Start 2P has none
     assert re.search(r"(?m)^\.ask-head \{[^}]*display: flex", text)
+
+
+def test_ask_openers_are_revealed_by_the_script():
+    # Rendered hidden, so a visitor without JavaScript never sees a button that does nothing.
+    source = ask_js()
+    assert re.search(r"function reveal\(\) \{[^}]*\.hidden = false", source, re.S)
+    assert re.search(r"^\s*reveal\(\);", source, re.M)

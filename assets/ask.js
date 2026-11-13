@@ -78,6 +78,12 @@
     /* open / close */
     var openers = document.querySelectorAll("[data-ask-open]");
 
+    // The buttons are rendered hidden: without this script they would do nothing.
+    function reveal() {
+      Array.prototype.forEach.call(openers, function (b) { b.hidden = false; });
+    }
+    reveal();
+
     function expand(expanded) {
       Array.prototype.forEach.call(openers, function (b) {
         b.setAttribute("aria-expanded", String(expanded));

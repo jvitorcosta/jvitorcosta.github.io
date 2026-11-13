@@ -715,7 +715,7 @@ def test_ask_api_renders_button_section_and_script(tmp_path):
     html = render(tmp_path, ask_content())
     header = html[html.index('<header class="top">'):html.index("</header>")]
     assert header.index("data-ask-open") < header.index("data-lang-toggle")
-    opener = ('data-ask-open aria-controls="ask" aria-expanded="false">'
+    opener = ('data-ask-open hidden aria-controls="ask" aria-expanded="false">'
               '<span aria-hidden="true">▶</span> ')
     assert f'<button type="button" class="ask-open" {opener}' in header
     assert ">ASK ME<" in header and ">PERGUNTE<" in header

@@ -143,8 +143,8 @@ def _ask_api(p: Page) -> str:
 
 
 def _ask_opener(p: Page, key: str, extra: str = "") -> str:
-    """An ASK ME / TALK button; ask.js flips aria-expanded when the dialogue opens and closes."""
-    return (f'<button type="button"{extra} data-ask-open aria-controls="ask" aria-expanded="false">'
+    """An ASK ME / TALK button; ask.js reveals it (hidden without JavaScript) and flips aria-expanded when the dialogue opens and closes."""
+    return (f'<button type="button"{extra} data-ask-open hidden aria-controls="ask" aria-expanded="false">'
             f'{ARROW}{p.t(key)}</button>')
 
 
