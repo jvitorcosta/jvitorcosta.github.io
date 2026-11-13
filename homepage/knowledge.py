@@ -11,6 +11,22 @@ from homepage.model import AboutFact, LiveData, Repo
 
 FACT_ID = re.compile(r"[a-z0-9._-]+")
 
+# Never-share categories: nothing matching these may reach knowledge.json. The build test scans
+# every fact against them; a hit means a source or about.toml row leaks something private.
+NEVER_SHARE_PATTERNS = tuple(re.compile(p, re.IGNORECASE) for p in (
+    r"\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b",  # CPF
+    r"\b\d{1,2}\.?\d{3}\.?\d{3}-?[\dx]\b",  # RG
+    r"\b(?:cpf|rg|passport|passaporte)\b",
+    r"\d{8,}",  # long id-like numbers
+    r"(?:\+?\d{2}\s?)?\(?\d{2}\)?\s?9?\d{4}[-\s]\d{4}\b",  # phone number
+    r"\b(?:rua|avenida|av\.|travessa|street|st\.|road|rd\.)\s+\w[\w ]*\d",  # street address
+    r"\b(?:endereço|address|bairro)\b",
+    r"\b(?:salary|salário|salario)\b",  # salary
+    r"(?:R\$|USD|US\$)\s?\d[\d.,]*\s?(?:k|mil)?\s*(?:/|per |por |a )\s*(?:month|mês|mes|year|ano|hour|hora)\b",
+    r"\bheart rate\b|\bfrequência cardíaca\b|\d\s?bpm\b",
+    r"\b\d+(?:[.,]\d+)?\s?kg\b|\bbody weight\b|\bpeso corporal\b",  # body weight
+))
+
 
 def _fact(id: str, source: str, updated: str, text: str) -> dict:
     return {"id": id, "source": source, "updated": updated, "text": text}

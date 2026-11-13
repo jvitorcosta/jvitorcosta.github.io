@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from homepage.build import build, default_sources
+from homepage.knowledge import NEVER_SHARE_PATTERNS
 from homepage.model import Anime, Book, Film, Repo, Song
 from homepage.state import load_state, save_state
 
@@ -267,3 +268,20 @@ def test_build_writes_knowledge_json(site):
     assert data["version"] == 1 and data["facts"]
     build(site, sources(), get=fake_get, today="2026-11-12")
     assert path.read_bytes() == first
+
+
+def test_knowledge_json_holds_no_never_share_category(site):
+    build(site, sources(), get=fake_get, today="2026-11-12")
+    facts = json.loads((site / "knowledge.json").read_text(encoding="utf-8"))["facts"]
+    assert facts
+    for fact in facts:
+        for pattern in NEVER_SHARE_PATTERNS:
+            assert not pattern.search(fact["text"]), f"{fact['id']} matches {pattern.pattern}"
+
+
+@pytest.mark.parametrize("leak", [
+    "CPF 123.456.789-09", "call +55 92 99999-0000", "lives at Rua das Flores 123", "salary of R$ 20k/month",
+    "heart rate 150", "ran at 165 bpm", "weighs 80 kg", "passport number",
+])
+def test_never_share_patterns_catch_known_leaks(leak):
+    assert any(p.search(leak) for p in NEVER_SHARE_PATTERNS)
