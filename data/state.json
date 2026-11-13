@@ -40,10 +40,17 @@
   },
   "repos": [
     {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-13T07:31:30Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
       "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
       "homepage": "",
       "name": "ask-vitor",
-      "pushed": "2026-11-13T04:54:55Z",
+      "pushed": "2026-11-13T06:54:50Z",
       "url": "https://github.com/jvitorcosta/ask-vitor"
     },
     {
@@ -52,13 +59,6 @@
       "name": "curriculum-vitae",
       "pushed": "2026-11-12T20:47:08Z",
       "url": "https://github.com/jvitorcosta/curriculum-vitae"
-    },
-    {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-12T19:41:47Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
