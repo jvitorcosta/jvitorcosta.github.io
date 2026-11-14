@@ -40,6 +40,13 @@
   },
   "repos": [
     {
+      "description": "",
+      "homepage": "",
+      "name": "curriculum-vitae",
+      "pushed": "2026-11-13T22:15:16Z",
+      "url": "https://github.com/jvitorcosta/curriculum-vitae"
+    },
+    {
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
@@ -52,13 +59,6 @@
       "name": "ask-vitor",
       "pushed": "2026-11-13T06:54:50Z",
       "url": "https://github.com/jvitorcosta/ask-vitor"
-    },
-    {
-      "description": "",
-      "homepage": "",
-      "name": "curriculum-vitae",
-      "pushed": "2026-11-12T20:47:08Z",
-      "url": "https://github.com/jvitorcosta/curriculum-vitae"
     },
     {
       "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
@@ -160,11 +160,11 @@
     "url": "https://open.spotify.com/track/7vS3Y0IKjde7Xg85LWIEdP"
   },
   "updated": {
-    "activity": "2026-11-13",
-    "anime": "2026-11-13",
-    "book": "2026-11-13",
-    "film": "2026-11-13",
-    "repos": "2026-11-13",
-    "song": "2026-11-13"
+    "activity": "2026-11-14",
+    "anime": "2026-11-14",
+    "book": "2026-11-14",
+    "film": "2026-11-14",
+    "repos": "2026-11-14",
+    "song": "2026-11-14"
   }
 }
