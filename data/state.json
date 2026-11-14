@@ -30,15 +30,29 @@
   },
   "film": {
     "liked": true,
-    "poster": "https://a.ltrbxd.com/resized/film-poster/1/2/6/6/6/8/4/1266684-godzilla-minus-zero-0-230-0-345-crop.jpg?v=38989be61d",
+    "poster": "https://a.ltrbxd.com/resized/film-poster/4/3/5/8/2/43582-fast-furious-0-230-0-345-crop.jpg?v=e16e161e36",
     "rating": 5.0,
-    "review": "precisamos conversar sobre a habilidade desse bixaum de levar uma coça em todo filme que ele enfrenta o ghidorah -- e sempre acaba bem pra ele filmaço, cru e sem medo de explorar os dramas humanos um dos grandes problemas dos godzillas da universal é esse extremo tempo de tela e banalização da dimensão dos kaijus -- esses filmes japoneses mostram pouquíssimo e sabem dosar essa percepção de escala pra quem assiste",
-    "title": "Godzilla Minus Zero",
-    "url": "https://letterboxd.com/zubu/film/godzilla-minus-zero/",
-    "watched": "2026-11-09",
-    "year": "2026"
+    "review": "Honda civics com neon verde e teto solar 🤤",
+    "title": "Fast & Furious",
+    "url": "https://letterboxd.com/zubu/film/fast-furious/",
+    "watched": "2026-11-13",
+    "year": "2009"
   },
   "repos": [
+    {
+      "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
+      "homepage": "",
+      "name": "ask-vitor",
+      "pushed": "2026-11-14T08:20:37Z",
+      "url": "https://github.com/jvitorcosta/ask-vitor"
+    },
+    {
+      "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
+      "homepage": "",
+      "name": "fraud-alert-explainer",
+      "pushed": "2026-11-14T08:06:33Z",
+      "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
+    },
     {
       "description": "",
       "homepage": "",
@@ -52,20 +66,6 @@
       "name": "car-cyberdeck",
       "pushed": "2026-11-13T18:36:06Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
-    },
-    {
-      "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
-      "homepage": "",
-      "name": "ask-vitor",
-      "pushed": "2026-11-13T06:54:50Z",
-      "url": "https://github.com/jvitorcosta/ask-vitor"
-    },
-    {
-      "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
-      "homepage": "",
-      "name": "fraud-alert-explainer",
-      "pushed": "2026-11-12T02:15:45Z",
-      "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
     },
     {
       "description": "SolvedOR: solve linear and integer programs written like a textbook, in the browser. Live at solvedor.streamlit.app",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Ariana Grande",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02deec12a28d1e336c5052e9aa",
+    "artist": "OSA",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02ce844d991a389424c70b8045",
     "playing": false,
-    "title": "Problem",
-    "url": "https://open.spotify.com/track/7vS3Y0IKjde7Xg85LWIEdP"
+    "title": "Diamonds 'n' Pearls",
+    "url": "https://open.spotify.com/track/22HvnAXszGc2IlIEkdNd76"
   },
   "updated": {
     "activity": "2026-11-14",
