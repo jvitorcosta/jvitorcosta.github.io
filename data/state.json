@@ -1,13 +1,13 @@
 {
   "activity": {
     "date": "2026-11-14",
-    "detail": "",
-    "distance_km": null,
-    "emoji": "🏋️",
-    "moving_min": 66,
-    "sport": "WeightTraining",
-    "title": "Gym 2 Pull + Hinge",
-    "url": "https://www.strava.com/activities/20987122471"
+    "detail": "0.2 km/h",
+    "distance_km": 0.6,
+    "emoji": "🏅",
+    "moving_min": 167,
+    "sport": "Volleyball",
+    "title": "Afternoon Volleyball",
+    "url": "https://www.strava.com/activities/20989467866"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Anitta",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02b1bd3ec4ceb6f5ffbf3a7de7",
+    "artist": "Daft Punk",
+    "cover": "https://i.scdn.co/image/ab67616d00001e029b9b36b0e22870b9f542d937",
     "playing": false,
-    "title": "Meiga e abusada",
-    "url": "https://open.spotify.com/track/6jFCFrcstrdTP2XPkBfV1F"
+    "title": "Instant Crush (feat. Julian Casablancas)",
+    "url": "https://open.spotify.com/track/2cGxRwrMyEAp8dEbuZaVv6"
   },
   "updated": {
     "activity": "2026-11-14",
