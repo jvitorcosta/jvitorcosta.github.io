@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-12",
-    "detail": "4.1 km/h",
-    "distance_km": 7.5,
-    "emoji": "🏅",
-    "moving_min": 111,
-    "sport": "Volleyball",
-    "title": "Evening Volleyball",
-    "url": "https://www.strava.com/activities/20967557779"
+    "date": "2026-11-14",
+    "detail": "",
+    "distance_km": null,
+    "emoji": "🏋️",
+    "moving_min": 66,
+    "sport": "WeightTraining",
+    "title": "Gym 2 Pull + Hinge",
+    "url": "https://www.strava.com/activities/20987122471"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -40,6 +40,20 @@
   },
   "repos": [
     {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-14T17:23:59Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
+      "description": "Streamlit app that shows where a daily forecast goes wrong: by series, weekday, holiday and benchmark",
+      "homepage": "https://forecast-error-analysis.streamlit.app",
+      "name": "timeseries-analysis-streamlit",
+      "pushed": "2026-11-14T13:44:22Z",
+      "url": "https://github.com/jvitorcosta/timeseries-analysis-streamlit"
+    },
+    {
       "description": "Ask questions about me: a FastAPI service that answers with a local LLM (Ollama), grounded only in my CV",
       "homepage": "",
       "name": "ask-vitor",
@@ -61,13 +75,6 @@
       "url": "https://github.com/jvitorcosta/curriculum-vitae"
     },
     {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-13T18:36:06Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
-    },
-    {
       "description": "SolvedOR: solve linear and integer programs written like a textbook, in the browser. Live at solvedor.streamlit.app",
       "homepage": "https://solvedor.streamlit.app",
       "name": "or-solver-streamlit",
@@ -80,13 +87,6 @@
       "name": "open-radars-manaus",
       "pushed": "2026-11-08T19:00:34Z",
       "url": "https://github.com/jvitorcosta/open-radars-manaus"
-    },
-    {
-      "description": "Streamlit app that shows where a daily forecast goes wrong: by series, weekday, holiday and benchmark",
-      "homepage": "https://forecast-error-analysis.streamlit.app",
-      "name": "timeseries-analysis-streamlit",
-      "pushed": "2026-11-07T13:43:40Z",
-      "url": "https://github.com/jvitorcosta/timeseries-analysis-streamlit"
     },
     {
       "description": "Copier template for new Python projects: uv, Ruff, strict mypy, pytest, pre-commit, CI on three OSes and a full Claude Code setup",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "OSA",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02ce844d991a389424c70b8045",
+    "artist": "Anitta",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02b1bd3ec4ceb6f5ffbf3a7de7",
     "playing": false,
-    "title": "Diamonds 'n' Pearls",
-    "url": "https://open.spotify.com/track/22HvnAXszGc2IlIEkdNd76"
+    "title": "Meiga e abusada",
+    "url": "https://open.spotify.com/track/6jFCFrcstrdTP2XPkBfV1F"
   },
   "updated": {
     "activity": "2026-11-14",
