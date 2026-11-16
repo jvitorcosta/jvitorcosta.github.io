@@ -1,13 +1,13 @@
 {
   "activity": {
     "date": "2026-11-15",
-    "detail": "",
-    "distance_km": null,
-    "emoji": "🏋️",
-    "moving_min": 29,
-    "sport": "WeightTraining",
-    "title": "Night Weight Training",
-    "url": "https://www.strava.com/activities/21004532121"
+    "detail": "8:29 /km",
+    "distance_km": 7.5,
+    "emoji": "🏃",
+    "moving_min": 64,
+    "sport": "Run",
+    "title": "Night Run",
+    "url": "https://www.strava.com/activities/21004821944"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Metro Boomin",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02c4fee55d7b51479627c31f89",
+    "artist": "Ariana Grande",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02deec12a28d1e336c5052e9aa",
     "playing": false,
-    "title": "Creepin' (with The Weeknd & 21 Savage)",
-    "url": "https://open.spotify.com/track/2dHHgzDwk4BJdRwy9uXhTO"
+    "title": "Love Me Harder",
+    "url": "https://open.spotify.com/track/5J4ZkQpzMUFojo1CtAZYpn"
   },
   "updated": {
     "activity": "2026-11-16",
