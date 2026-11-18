@@ -43,8 +43,15 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-18T07:14:11Z",
+      "pushed": "2026-11-18T22:32:36Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
+      "description": "",
+      "homepage": "",
+      "name": "curriculum-vitae",
+      "pushed": "2026-11-18T22:19:06Z",
+      "url": "https://github.com/jvitorcosta/curriculum-vitae"
     },
     {
       "description": "SolvedOR: solve linear and integer programs written like a textbook, in the browser. Live at solvedor.streamlit.app",
@@ -73,13 +80,6 @@
       "name": "fraud-alert-explainer",
       "pushed": "2026-11-14T08:06:33Z",
       "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
-    },
-    {
-      "description": "",
-      "homepage": "",
-      "name": "curriculum-vitae",
-      "pushed": "2026-11-13T22:15:16Z",
-      "url": "https://github.com/jvitorcosta/curriculum-vitae"
     },
     {
       "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Ariana Grande",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02ea28881e9e363244a4a2347b",
-    "playing": true,
-    "title": "Honeymoon Avenue",
-    "url": "https://open.spotify.com/track/5SmXEPnevlRjBPWBG7oKIi"
+    "artist": "Vanessa Da Mata",
+    "cover": "https://i.scdn.co/image/ab67616d00001e028356ae7cd6e16cd302b242d2",
+    "playing": false,
+    "title": "Amado",
+    "url": "https://open.spotify.com/track/1h0f2T0DT3EVYnURyV8Rtu"
   },
   "updated": {
     "activity": "2026-11-18",
