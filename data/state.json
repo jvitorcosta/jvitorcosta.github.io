@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-16",
+    "date": "2026-11-17",
     "detail": "1.8 km/h",
-    "distance_km": 5.3,
+    "distance_km": 3.7,
     "emoji": "🏅",
-    "moving_min": 177,
+    "moving_min": 124,
     "sport": "Volleyball",
     "title": "Evening Volleyball",
-    "url": "https://www.strava.com/activities/21016458916"
+    "url": "https://www.strava.com/activities/21029301968"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -40,18 +40,18 @@
   },
   "repos": [
     {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-17T21:23:04Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
       "description": "SolvedOR: solve linear and integer programs written like a textbook, in the browser. Live at solvedor.streamlit.app",
       "homepage": "https://solvedor.streamlit.app",
       "name": "or-solver-streamlit",
       "pushed": "2026-11-17T09:56:19Z",
       "url": "https://github.com/jvitorcosta/or-solver-streamlit"
-    },
-    {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-15T22:10:58Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Streamlit app that shows where a daily forecast goes wrong: by series, weekday, holiday and benchmark",
@@ -153,18 +153,18 @@
     }
   ],
   "song": {
-    "artist": "Ariana Grande",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02b622d42c30697e1e1414343c",
-    "playing": true,
-    "title": "hate that i made you love me",
-    "url": "https://open.spotify.com/track/20jbSiX29FDX4oQxBXyUEi"
+    "artist": "Victor & Leo",
+    "cover": "https://i.scdn.co/image/ab67616d00001e0208ef9009b0273f096846003d",
+    "playing": false,
+    "title": "Tem Que Ser Você",
+    "url": "https://open.spotify.com/track/6aENzUj0YaGwln4AmsK3nb"
   },
   "updated": {
-    "activity": "2026-11-17",
-    "anime": "2026-11-17",
-    "book": "2026-11-17",
-    "film": "2026-11-17",
-    "repos": "2026-11-17",
-    "song": "2026-11-17"
+    "activity": "2026-11-18",
+    "anime": "2026-11-18",
+    "book": "2026-11-18",
+    "film": "2026-11-18",
+    "repos": "2026-11-18",
+    "song": "2026-11-18"
   }
 }
