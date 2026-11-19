@@ -43,7 +43,7 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-19T04:59:32Z",
+      "pushed": "2026-11-19T16:34:38Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Chris Brown",
-    "cover": "https://i.scdn.co/image/ab67616d00001e0239509cc5eadf803928f2f167",
+    "artist": "Oriente",
+    "cover": "https://i.scdn.co/image/ab67616d00001e022c648fda65343f08ed2a4ef3",
     "playing": false,
-    "title": "With You",
-    "url": "https://open.spotify.com/track/5Lgcn7u07bHuqbOtXkN62u"
+    "title": "Essa Eu Fiz pra Você",
+    "url": "https://open.spotify.com/track/6K8OBlbNTHzfrASFIJp1Lg"
   },
   "updated": {
     "activity": "2026-11-19",
