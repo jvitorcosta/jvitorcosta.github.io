@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-17",
-    "detail": "1.8 km/h",
-    "distance_km": 3.7,
-    "emoji": "🏅",
-    "moving_min": 124,
-    "sport": "Volleyball",
-    "title": "Evening Volleyball",
-    "url": "https://www.strava.com/activities/21029301968"
+    "date": "2026-11-18",
+    "detail": "",
+    "distance_km": null,
+    "emoji": "🏋️",
+    "moving_min": 66,
+    "sport": "WeightTraining",
+    "title": "Night Weight Training",
+    "url": "https://www.strava.com/activities/21042318007"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -43,8 +43,15 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-18T22:32:36Z",
+      "pushed": "2026-11-19T04:59:32Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
+      "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
+      "homepage": "",
+      "name": "fraud-alert-explainer",
+      "pushed": "2026-11-19T02:15:51Z",
+      "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
     },
     {
       "description": "",
@@ -73,13 +80,6 @@
       "name": "ask-vitor",
       "pushed": "2026-11-14T08:20:37Z",
       "url": "https://github.com/jvitorcosta/ask-vitor"
-    },
-    {
-      "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
-      "homepage": "",
-      "name": "fraud-alert-explainer",
-      "pushed": "2026-11-14T08:06:33Z",
-      "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
     },
     {
       "description": "Open, human-verified data on fixed traffic-enforcement cameras in Manaus, Brazil",
@@ -153,18 +153,18 @@
     }
   ],
   "song": {
-    "artist": "Vanessa Da Mata",
-    "cover": "https://i.scdn.co/image/ab67616d00001e028356ae7cd6e16cd302b242d2",
+    "artist": "Chris Brown",
+    "cover": "https://i.scdn.co/image/ab67616d00001e0239509cc5eadf803928f2f167",
     "playing": false,
-    "title": "Amado",
-    "url": "https://open.spotify.com/track/1h0f2T0DT3EVYnURyV8Rtu"
+    "title": "With You",
+    "url": "https://open.spotify.com/track/5Lgcn7u07bHuqbOtXkN62u"
   },
   "updated": {
-    "activity": "2026-11-18",
-    "anime": "2026-11-18",
-    "book": "2026-11-18",
-    "film": "2026-11-18",
-    "repos": "2026-11-18",
-    "song": "2026-11-18"
+    "activity": "2026-11-19",
+    "anime": "2026-11-19",
+    "book": "2026-11-19",
+    "film": "2026-11-19",
+    "repos": "2026-11-19",
+    "song": "2026-11-19"
   }
 }
