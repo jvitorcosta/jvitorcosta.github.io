@@ -43,7 +43,7 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-19T16:34:38Z",
+      "pushed": "2026-11-20T00:43:26Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
@@ -153,18 +153,18 @@
     }
   ],
   "song": {
-    "artist": "Oriente",
-    "cover": "https://i.scdn.co/image/ab67616d00001e022c648fda65343f08ed2a4ef3",
+    "artist": "Pitty",
+    "cover": "https://i.scdn.co/image/ab67616d00001e021b6e4b2882ad10f4ce8a42d1",
     "playing": false,
-    "title": "Essa Eu Fiz pra Você",
-    "url": "https://open.spotify.com/track/6K8OBlbNTHzfrASFIJp1Lg"
+    "title": "Na Sua Estante",
+    "url": "https://open.spotify.com/track/1cc0kyZrheNxOYPn3VoVEH"
   },
   "updated": {
-    "activity": "2026-11-19",
-    "anime": "2026-11-19",
-    "book": "2026-11-19",
-    "film": "2026-11-19",
-    "repos": "2026-11-19",
-    "song": "2026-11-19"
+    "activity": "2026-11-20",
+    "anime": "2026-11-20",
+    "book": "2026-11-20",
+    "film": "2026-11-20",
+    "repos": "2026-11-20",
+    "song": "2026-11-20"
   }
 }
