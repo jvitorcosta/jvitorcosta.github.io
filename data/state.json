@@ -43,7 +43,7 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-20T07:43:16Z",
+      "pushed": "2026-11-20T21:49:40Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Fagner",
-    "cover": "https://i.scdn.co/image/ab67616d00001e0220ebecb568ea6be048fd818d",
+    "artist": "Vulgo FK",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02d7e6ac3704f854f9912b345e",
     "playing": false,
-    "title": "Lembrança de um Beijo",
-    "url": "https://open.spotify.com/track/1wbEWbjH8fwhGgyq3LHQc3"
+    "title": "OI",
+    "url": "https://open.spotify.com/track/0rNhlglf9DbSeTpfEtezyt"
   },
   "updated": {
     "activity": "2026-11-20",
