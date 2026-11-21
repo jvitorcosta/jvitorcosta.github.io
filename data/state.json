@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-20",
-    "detail": "1.9 km/h",
-    "distance_km": 1.9,
+    "date": "2026-11-21",
+    "detail": "0.3 km/h",
+    "distance_km": 0.5,
     "emoji": "🏅",
-    "moving_min": 59,
+    "moving_min": 116,
     "sport": "Volleyball",
-    "title": "Evening Volleyball",
-    "url": "https://www.strava.com/activities/21064661352"
+    "title": "Afternoon Volleyball",
+    "url": "https://www.strava.com/activities/21075700138"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -40,18 +40,18 @@
   },
   "repos": [
     {
-      "description": "",
-      "homepage": "",
-      "name": "curriculum-vitae",
-      "pushed": "2026-11-21T15:29:49Z",
-      "url": "https://github.com/jvitorcosta/curriculum-vitae"
-    },
-    {
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-21T11:20:23Z",
+      "pushed": "2026-11-21T18:06:56Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
+      "description": "",
+      "homepage": "",
+      "name": "curriculum-vitae",
+      "pushed": "2026-11-21T16:46:48Z",
+      "url": "https://github.com/jvitorcosta/curriculum-vitae"
     },
     {
       "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Bruno Mars",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02232711f7d66a1e19e89e28c5",
+    "artist": "Rihanna",
+    "cover": "https://i.scdn.co/image/ab67616d00001e026be9bac15995f089579074de",
     "playing": true,
-    "title": "Finesse",
-    "url": "https://open.spotify.com/track/5XMkENs3GfeRza8MfVAhjK"
+    "title": "Love On The Brain",
+    "url": "https://open.spotify.com/track/5oO3drDxtziYU2H1X23ZIp"
   },
   "updated": {
     "activity": "2026-11-21",
