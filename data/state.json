@@ -40,10 +40,17 @@
   },
   "repos": [
     {
+      "description": "",
+      "homepage": "",
+      "name": "curriculum-vitae",
+      "pushed": "2026-11-21T15:29:49Z",
+      "url": "https://github.com/jvitorcosta/curriculum-vitae"
+    },
+    {
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-21T04:25:18Z",
+      "pushed": "2026-11-21T11:20:23Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
@@ -52,13 +59,6 @@
       "name": "fraud-alert-explainer",
       "pushed": "2026-11-19T02:15:51Z",
       "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
-    },
-    {
-      "description": "",
-      "homepage": "",
-      "name": "curriculum-vitae",
-      "pushed": "2026-11-18T22:19:06Z",
-      "url": "https://github.com/jvitorcosta/curriculum-vitae"
     },
     {
       "description": "SolvedOR: solve linear and integer programs written like a textbook, in the browser. Live at solvedor.streamlit.app",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "BUDAH",
-    "cover": "https://i.scdn.co/image/ab67616d00001e021740d107679e490f38fe1f48",
-    "playing": false,
-    "title": "Pouca Roupa",
-    "url": "https://open.spotify.com/track/07KqxZsYYsciaB5lvN3Imq"
+    "artist": "Bruno Mars",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02232711f7d66a1e19e89e28c5",
+    "playing": true,
+    "title": "Finesse",
+    "url": "https://open.spotify.com/track/5XMkENs3GfeRza8MfVAhjK"
   },
   "updated": {
     "activity": "2026-11-21",
