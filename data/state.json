@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Fagner",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02a80818759367a3bb3d19f33f",
-    "playing": true,
-    "title": "Borbulhas de Amor (Tenho um Coração) [Borbujas de Amor]",
-    "url": "https://open.spotify.com/track/3pUQEJXwmnooceL5DqluNA"
+    "artist": "Kavinsky",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02d6d8c2eaa1f9031b62f7a3f7",
+    "playing": false,
+    "title": "Nightcall",
+    "url": "https://open.spotify.com/track/0U0ldCRmgCqhVvD6ksG63j"
   },
   "updated": {
     "activity": "2026-11-22",
