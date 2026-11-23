@@ -1,3 +1,4 @@
+import json
 import re
 from pathlib import Path
 
@@ -163,6 +164,12 @@ def test_study_progress_file_is_loaded():
     assert content.study, "data/study-progress.json lists at least one topic"
     for t in content.study:
         assert set(t.title) == {"en", "pt"} and 0 <= t.percent <= 100
+        assert t.kind in {"study", "lab"}
+        assert t.subtopics, f"{t.id} needs subtopics"
+        for sub in t.subtopics:
+            assert sub.title and 0 <= sub.percent <= 100 and sub.items
+            assert all(0 <= i.percent <= 100 and i.text for i in sub.items)
+    assert sum(t.current for t in content.study) == 1
     assert len({t.id for t in content.study}) == len(content.study)
     assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", content.study_updated)
 
@@ -174,13 +181,34 @@ def test_missing_study_file_means_no_section(tmp_path):
     assert c.study == [] and c.study_updated == ""
 
 
+def _study_json(**topic):
+    base = {"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 5, "current": True, "kind": "study",
+            "subtopics": [{"title": "S", "percent": 5, "items": [{"text": "x", "percent": 5}]}]}
+    base.update(topic)
+    return json.dumps({"updated": "2026-11-23", "topics": [base]})
+
+
+def _sub(**kw):
+    return {"title": "S", "percent": 5, "items": [{"text": "x", "percent": 5}], **kw}
+
+
 @pytest.mark.parametrize("text", [
     "{not json",
     "[]",
-    '{"topics": [{"id": "a", "title": {"en": "A"}, "percent": 5}]}',  # no pt title
-    '{"topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 101}]}',
-    '{"topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": true}]}',
-    '{"topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 5, "url": "x"}]}',  # no extras
+    _study_json(title={"en": "A"}),
+    _study_json(percent=101),
+    _study_json(percent=True),
+    _study_json(url="x"),  # no extra keys
+    _study_json(kind="fun"),
+    _study_json(current=False),  # exactly one current
+    _study_json(subtopics=[]),
+    _study_json(subtopics=[_sub(items=[])]),
+    _study_json(subtopics=[_sub(percent=500)]),
+    _study_json(subtopics=[_sub(title="")]),
+    _study_json(subtopics=[_sub(url="y")]),
+    _study_json(subtopics=[_sub(items=[{"text": "x", "percent": 500}])]),
+    _study_json(subtopics=[_sub(items=[{"text": "x", "percent": 5, "url": "y"}])]),
+    _study_json(kind="lab"),  # a lab cannot be the current topic
 ])
 def test_bad_study_file_skips_the_section_with_warning(tmp_path, capsys, text):
     root = _copy_data(tmp_path)

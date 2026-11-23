@@ -3,12 +3,15 @@
     uv run --python 3.12 python tools/study_progress.py --vault <vault folder>
 
 The roadmap note holds one `## ` topic per bar candidate; its comment
-(`<!-- topic id=... role=... now=yes|no pt="..." -->`) marks the topic. Each `- ` line under it is one item:
+(`<!-- topic id=... role=... now=yes|no pt="..." -->`) marks the topic. Under it, each `### ` heading is a subtopic and each `- ` line under that is one item:
   - `- [ ]` / `- [x]`    0 or 100%
   - `- [[Note]]`         the note's `status` (todo 0, in-progress or reading 50, done 100)
   - `- [[Note#Heading]]` the share of ticked checkboxes under that heading of the note
-A topic's percent is the average of its items. Only `now=yes` topics are written, and only ids,
-titles and percents: no paths, no note names. The site renders the file and computes nothing.
+A subtopic's percent is the average of its items and a topic's the average of its subtopics. Only
+`now=yes` topics are written. `kind=study` (the default) is a concept topic; `kind=lab` is hands-on
+work, shown in its own group. Exactly one study topic is `current=yes`: the site's card shows that
+one, and its tree lists every written topic with its subtopics and items. Written: ids, titles, percents and item labels (a checkbox's text, or a note's name):
+no paths. The site renders the file and computes nothing.
 Nothing here commits or pushes: review the diff, then open a PR.
 
 Exit codes: 0 ok, 1 `--check` found the file out of date, 2 a bad roadmap or a missing vault.
@@ -31,8 +34,9 @@ STATUS_SHARE = {"todo": 0.0, "later": 0.0, "next": 0.0, "in-progress": 0.5, "rea
                 "active": 0.5, "done": 1.0}
 TOPIC = re.compile(r"^##\s+(?P<title>.*?)\s*<!--\s*topic\s+(?P<attrs>.*?)-->\s*$")
 HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*$")
-BOX = re.compile(r"^\s*[-*]\s+\[(?P<mark>[ xX])\]")
+BOX = re.compile(r"^\s*[-*]\s+\[(?P<mark>[ xX])\]\s*(?P<text>.*?)\s*$")
 LINK = re.compile(r"^\s*[-*]\s+\[\[(?P<target>[^\]|]+)(?:\|[^\]]*)?\]\]\s*$")
+KINDS = ("study", "lab")
 NUMBER = re.compile(r"^\d+\.\s*")
 
 
@@ -84,6 +88,12 @@ def _heading_share(lines: list[str], heading: str, note: str) -> float:
     return ticked / total
 
 
+def _item_label(target: str) -> str:
+    name, _, heading = target.partition("#")
+    name = name.strip()
+    return f"{name}: {heading.strip()}" if heading.strip() else name
+
+
 def _item_share(target: str, notes: dict[str, Path]) -> float:
     name, _, heading = target.partition("#")
     name = name.strip()
@@ -114,19 +124,32 @@ def build(vault: Path, note: str = DEFAULT_NOTE, today: str | None = None, only_
     _, lines = _body(notes[note].read_text(encoding="utf-8"))
     topics: list[dict] = []
     seen: set[str] = set()
-    current: dict | None = None
+    topic: dict | None = None
+    sub: dict | None = None
 
-    def close() -> None:
-        if current is not None:
-            if not current["shares"]:
-                raise RoadmapError(f"topic {current['id']} has no items")
-            current["percent"] = int(sum(current["shares"]) / len(current["shares"]) * 100 + 0.5)
-            topics.append(current)
+    def close_sub() -> None:
+        nonlocal sub
+        if sub is not None:
+            if not sub["items"]:
+                raise RoadmapError(f"subtopic {sub['title']!r} of {topic['id']} has no items")
+            sub["share"] = sum(share for _, share in sub["items"]) / len(sub["items"])
+            topic["subs"].append(sub)
+            sub = None
+
+    def close_topic() -> None:
+        nonlocal topic
+        close_sub()
+        if topic is not None:
+            if not topic["subs"]:
+                raise RoadmapError(f"topic {topic['id']} has no subtopics")
+            topic["share"] = sum(x["share"] for x in topic["subs"]) / len(topic["subs"])
+            topics.append(topic)
+            topic = None
 
     for line in lines:
         head = TOPIC.match(line)
         if head:
-            close()
+            close_topic()
             title = NUMBER.sub("", head.group("title"))
             attrs = _attrs(head.group("attrs"), title)
             tid = attrs.get("id", "")
@@ -135,24 +158,47 @@ def build(vault: Path, note: str = DEFAULT_NOTE, today: str | None = None, only_
             if tid in seen:
                 raise RoadmapError(f"duplicate topic id {tid}")
             seen.add(tid)
-            current = {"id": tid, "title": {"en": title, "pt": attrs["pt"]}, "now": attrs.get("now") == "yes",
-                       "shares": []}
+            kind = attrs.get("kind", "study")
+            if kind not in KINDS:
+                raise RoadmapError(f"topic {tid}: kind must be one of {', '.join(KINDS)}")
+            topic = {"id": tid, "title": {"en": title, "pt": attrs["pt"]}, "now": attrs.get("now") == "yes",
+                     "current": attrs.get("current") == "yes", "kind": kind, "subs": []}
+            if topic["current"] and kind != "study":
+                raise RoadmapError(f"topic {tid}: only a study topic can be current")
             continue
-        h2 = HEADING.match(line)
-        if h2 and h2.group(1) == "##":
-            close()
-            current = None  # a plain ## heading ends the topic
+        heading = HEADING.match(line)
+        if heading and len(heading.group(1)) == 2:
+            close_topic()  # a plain ## heading ends the topic
             continue
-        if current is None:
+        if topic is None:
+            continue
+        if heading and len(heading.group(1)) == 3:
+            close_sub()
+            sub = {"title": heading.group(2), "items": []}
             continue
         box, link = BOX.match(line), LINK.match(line)
+        if not (box or link):
+            continue
+        if sub is None:
+            raise RoadmapError(f"topic {topic['id']}: an item must sit under a ### subtopic")
         if box:
-            current["shares"].append(0.0 if box.group("mark") == " " else 1.0)
-        elif link:
-            current["shares"].append(_item_share(link.group("target"), notes))
-    close()
-    out = [{"id": t["id"], "title": t["title"], "percent": t["percent"]}
-           for t in topics if t["now"] or not only_now]
+            sub["items"].append((box.group("text"), 0.0 if box.group("mark") == " " else 1.0))
+        else:
+            target = link.group("target")
+            sub["items"].append((_item_label(target), _item_share(target, notes)))
+    close_topic()
+    shown = [t for t in topics if t["now"] or not only_now]
+    if only_now and sum(t["current"] for t in shown) != 1:
+        raise RoadmapError("exactly one now=yes topic must also be current=yes")
+    if any(t["current"] and not t["now"] for t in topics):
+        raise RoadmapError("the current topic must be now=yes")
+    pct = lambda share: int(share * 100 + 0.5)  # noqa: E731
+    out = [{"id": t["id"], "title": t["title"], "percent": pct(t["share"]), "current": t["current"],
+            "kind": t["kind"],
+            "subtopics": [{"title": x["title"], "percent": pct(x["share"]),
+                           "items": [{"text": text, "percent": pct(share)} for text, share in x["items"]]}
+                          for x in t["subs"]]}
+           for t in shown]
     return {"updated": today or date.today().isoformat(), "topics": out}
 
 

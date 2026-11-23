@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from homepage.content import Content, Job, PartyMember, StudyTopic
+from homepage.content import Content, Job, PartyMember, StudyItem, StudySubtopic, StudyTopic
 from homepage.model import Activity, Anime, Book, Film, LiveData, Repo, Song
 from homepage.render import clip, render_home, safe_url
 
@@ -76,26 +76,58 @@ def section(html, start, end=None):
     return html[i:html.index("</section>", i)]
 
 
-STUDY = [StudyTopic("agents", {"en": "Agentic systems & MCP", "pt": "Agentes e MCP"}, 40),
-         StudyTopic("evals", {"en": "Evaluation", "pt": "Avaliação"}, 0)]
+STUDY = [
+    StudyTopic("agents", {"en": "Agentic systems & MCP", "pt": "Agentes e MCP"}, 38, True, "study", [
+        StudySubtopic("Agent loops", 25, [StudyItem("E5 Agents", 50), StudyItem("ReAct", 0)]),
+        StudySubtopic("Tools and MCP", 50, [StudyItem("Build an MCP server", 100), StudyItem("MCP vs API", 0)])]),
+    StudyTopic("evals", {"en": "Evaluation", "pt": "Avaliação"}, 0, False, "study", [
+        StudySubtopic("Judges", 0, [StudyItem("S6 Evaluation", 0)])]),
+    StudyTopic("agent-labs", {"en": "Agent labs", "pt": "Laboratórios de agentes"}, 10, False, "lab", [
+        StudySubtopic("MCP server", 10, [StudyItem("One tool", 10)])]),
+]
 
 
-def test_study_section_has_a_bar_and_percent_per_topic_and_no_links(tmp_path):
-    html = render(tmp_path, content(study=STUDY, study_updated="2026-11-23"))
-    box = section(html, "study")
-    assert box.count('role="progressbar"') == 2
-    assert 'aria-valuenow="40"' in box and 'aria-valuenow="0"' in box
-    assert "40%" in box and "0%" in box
-    assert "Agentic systems &amp; MCP" in box and "Agentes e MCP" in box
-    assert "<a " not in box and "href" not in box
-    assert 'style="width:40%"' in box
+def study_box(tmp_path, topics=STUDY):
+    return section(render(tmp_path, content(study=topics, study_updated="2026-11-23")), "study")
+
+
+def test_study_card_shows_only_the_current_topic_until_opened(tmp_path):
+    box = study_box(tmp_path)
+    head = box[:box.index('<div class="groups"')]
+    assert "Agentic systems &amp; MCP" in head and "38%" in head
+    assert "Evaluation" not in head and "Agent labs" not in head
     assert "Nov 23" in box and "23 nov" in box
 
 
+def test_study_tree_groups_topics_and_labs_with_subtopics_and_concepts(tmp_path):
+    box = study_box(tmp_path)
+    tree = box[box.index('<div class="groups"'):]
+    topics_at, labs_at = tree.index("Topics"), tree.index("Labs and practice")
+    assert topics_at < tree.index("Evaluation") < labs_at < tree.index("Agent labs")
+    for text in ("Agent loops", "Tools and MCP", "Judges", "MCP server", "E5 Agents",
+                 "Build an MCP server", "S6 Evaluation", "One tool", "Avaliação"):
+        assert text in tree
+    assert tree.count('class="sub"') == 4
+    assert tree.count('class="item done"') == 1 and tree.count('class="item part"') == 2
+    assert tree.count('class="item todo"') == 3
+
+
+def test_study_has_no_links(tmp_path):
+    box = study_box(tmp_path)
+    assert "<a " not in box and "href" not in box
+
+
 def test_study_labels_name_their_bars(tmp_path):
-    box = section(render(tmp_path, content(study=STUDY)), "study")
+    box = study_box(tmp_path)
+    ids = re.findall(r'id="([^"]+)"', box)
+    assert len(ids) == len(set(ids))
     for m in re.finditer(r'aria-labelledby="([^"]+)"', box):
-        assert box.count(f'id="{m.group(1)}"') == 1
+        assert m.group(1) in ids
+
+
+def test_study_without_labs_has_no_labs_group(tmp_path):
+    box = study_box(tmp_path, STUDY[:2])
+    assert "Labs and practice" not in box and "Topics" in box
 
 
 def test_study_section_is_left_out_without_topics(tmp_path):

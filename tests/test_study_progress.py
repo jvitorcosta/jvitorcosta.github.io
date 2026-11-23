@@ -11,15 +11,22 @@ type: track
 
 Prose with a link [[Ignored Note]] outside any topic.
 
-## Agents <!-- topic id=agents role=ai now=yes pt="Agentes" -->
+## Agents <!-- topic id=agents role=ai now=yes current=yes pt="Agentes" -->
+### Loops
 - [[E5 Agents]]
 - [[34 ReAct]]
+### Tools
 - [[Harness#Lectures]]
 - [x] Build an MCP server
 - [ ] Bank 7 aloud
 
 ## Security <!-- topic id=security role=ai now=no pt="Segurança" -->
+### Basics
 - [ ] Red-team the agent
+
+## Agent labs <!-- topic id=agent-labs role=ai kind=lab now=yes pt="Laboratórios de agentes" -->
+### Build
+- [x] Ship the drill agent
 
 ## Site sync
 
@@ -45,24 +52,36 @@ def vault(tmp_path, roadmap=ROADMAP):
 
 def test_percent_comes_from_checkboxes_and_note_statuses(tmp_path):
     data = sp.build(vault(tmp_path), "Roadmap", today="2026-11-23")
-    # in-progress 0.5, todo 0, Lectures 2 of 4 = 0.5, checked 1, unchecked 0: 2.0 / 5 = 40%
-    assert data == {
-        "updated": "2026-11-23",
-        "topics": [{"id": "agents", "title": {"en": "Agents", "pt": "Agentes"}, "percent": 40}],
+    # Loops: in-progress 0.5 + todo 0 = 25%. Tools: Lectures 2 of 4 = 0.5, ticked 1, unticked 0 = 50%.
+    # The topic is the mean of its subtopics: 37.5, which rounds up to 38.
+    assert data["updated"] == "2026-11-23"
+    agents = data["topics"][0]
+    assert agents == {
+        "id": "agents", "title": {"en": "Agents", "pt": "Agentes"}, "percent": 38, "current": True,
+        "kind": "study",
+        "subtopics": [
+            {"title": "Loops", "percent": 25, "items": [
+                {"text": "E5 Agents", "percent": 50}, {"text": "34 ReAct", "percent": 0}]},
+            {"title": "Tools", "percent": 50, "items": [
+                {"text": "Harness: Lectures", "percent": 50},
+                {"text": "Build an MCP server", "percent": 100},
+                {"text": "Bank 7 aloud", "percent": 0}]},
+        ],
     }
 
 
-def test_only_now_topics_reach_the_site_and_each_has_a_percent(tmp_path):
-    ids = [t["id"] for t in sp.build(vault(tmp_path), "Roadmap")["topics"]]
-    assert ids == ["agents"]
+def test_only_now_topics_reach_the_site_and_labs_are_marked(tmp_path):
+    shown = sp.build(vault(tmp_path), "Roadmap")["topics"]
+    assert [(t["id"], t["kind"]) for t in shown] == [("agents", "study"), ("agent-labs", "lab")]
     everything = sp.build(vault(tmp_path), "Roadmap", only_now=False)["topics"]
-    assert [(t["id"], t["percent"]) for t in everything] == [("agents", 40), ("security", 0)]
+    assert [(t["id"], t["percent"], t["current"]) for t in everything] == [
+        ("agents", 38, True), ("security", 0, False), ("agent-labs", 100, False)]
 
 
 def test_output_never_leaks_paths_or_note_names(tmp_path):
     v = vault(tmp_path)
-    text = json.dumps(sp.build(v, "Roadmap"))
-    for secret in ("Vault", "Areas", "E5 Agents", "Harness", "obsidian", "\\", "/"):
+    text = json.dumps(sp.build(v, "Roadmap"), ensure_ascii=False)
+    for secret in ("Vault", "Areas", "Study", "obsidian", ".md", "[[", "\\", "/"):
         assert secret not in text
 
 
@@ -78,13 +97,29 @@ def test_heading_without_checkboxes_is_an_error(tmp_path):
         sp.build(vault(tmp_path, bad), "Roadmap")
 
 
-def test_duplicate_topic_ids_and_empty_topics_are_errors(tmp_path):
+def test_duplicate_topic_ids_are_an_error(tmp_path):
     dup = ROADMAP.replace("id=security", "id=agents")
     with pytest.raises(sp.RoadmapError, match="duplicate"):
         sp.build(vault(tmp_path, dup), "Roadmap")
+
+
+def test_every_topic_needs_subtopics_and_every_subtopic_items(tmp_path):
+    none = ROADMAP.replace("### Basics\n- [ ] Red-team the agent\n", "")
+    with pytest.raises(sp.RoadmapError, match="no subtopics"):
+        sp.build(vault(tmp_path, none), "Roadmap")
     empty = ROADMAP.replace("- [ ] Red-team the agent\n", "")
     with pytest.raises(sp.RoadmapError, match="no items"):
         sp.build(vault(tmp_path, empty), "Roadmap")
+    loose = ROADMAP.replace("### Basics\n", "- [ ] loose item\n### Basics\n")
+    with pytest.raises(sp.RoadmapError, match="subtopic"):
+        sp.build(vault(tmp_path, loose), "Roadmap")
+
+
+def test_unknown_kind_is_an_error_and_a_lab_cannot_be_current(tmp_path):
+    with pytest.raises(sp.RoadmapError, match="kind"):
+        sp.build(vault(tmp_path, ROADMAP.replace("kind=lab", "kind=fun")), "Roadmap")
+    with pytest.raises(sp.RoadmapError, match="current"):
+        sp.build(vault(tmp_path, ROADMAP.replace("kind=lab now=yes", "kind=lab now=yes current=yes")), "Roadmap")
 
 
 def test_missing_portuguese_title_is_an_error(tmp_path):
@@ -120,3 +155,16 @@ def test_cli_reports_roadmap_errors_without_writing(tmp_path, capsys):
     assert sp.main(["--vault", str(v), "--note", "Roadmap", "--out", str(out)]) == 2
     assert "Gone" in capsys.readouterr().err
     assert not out.exists()
+
+
+def test_exactly_one_current_topic_among_the_ones_on_the_site(tmp_path):
+    none = ROADMAP.replace(" current=yes", "")
+    with pytest.raises(sp.RoadmapError, match="current"):
+        sp.build(vault(tmp_path, none), "Roadmap")
+    two = ROADMAP.replace('id=security role=ai now=no', 'id=security role=ai now=yes current=yes')
+    with pytest.raises(sp.RoadmapError, match="current"):
+        sp.build(vault(tmp_path, two), "Roadmap")
+    # a topic that is not on the site may not be the current one
+    hidden = ROADMAP.replace('now=no', 'now=no current=yes')
+    with pytest.raises(sp.RoadmapError, match="current"):
+        sp.build(vault(tmp_path, hidden), "Roadmap")
