@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "The Weeknd",
-    "cover": "https://i.scdn.co/image/ab67616d00001e027fcead687e99583072cc217b",
-    "playing": false,
-    "title": "Can't Feel My Face",
-    "url": "https://open.spotify.com/track/22VdIZQfgXJea34mQxlt81"
+    "artist": "Leon Thomas",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02eeb464ea9a23de21dd7aa4c9",
+    "playing": true,
+    "title": "NOT FAIR",
+    "url": "https://open.spotify.com/track/277K8GOv27Pq3qS4IKSRoW"
   },
   "updated": {
     "activity": "2026-11-23",
