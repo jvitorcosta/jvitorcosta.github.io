@@ -128,6 +128,22 @@ def _pc_box(p: Page, repos: list[Repo], site_root: Path) -> str:
             f'<a href="{GITHUB_REPOS}">{p.t("all_on_github")}</a></h2>{"".join(rows)}</section>')
 
 
+def _study(p: Page) -> str:
+    """Progress bars of the topics I am studying now. Display only: no links, nothing computed here."""
+    if not p.c.study:
+        return ""
+    rows = []
+    for t in p.c.study:
+        label = f"study-{t.id}" if CASE_SLUG.fullmatch(t.id) else f"study-{len(rows)}"
+        rows.append(
+            f'<li><div class="row"><b id="{label}">{p.both(t.title)}</b><span class="pct">{t.percent}%</span></div>'
+            f'<div class="bar" role="progressbar" aria-labelledby="{label}" aria-valuemin="0" '
+            f'aria-valuemax="100" aria-valuenow="{t.percent}"><i style="width:{t.percent}%"></i></div></li>')
+    asof = f' {p.t("study_asof")} {p.date(p.c.study_updated)}' if p.date(p.c.study_updated) else ""
+    return (f'<section class="box" id="study"><h2 class="h px"><span>{ARROW}{p.t("study")}{p.zh("study")}</span></h2>'
+            f'<p class="small">{p.t("study_line")}{asof}</p><ul class="study">{"".join(rows)}</ul></section>')
+
+
 def _trainer(p: Page) -> str:
     links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">{label}</a>'
                     for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
@@ -273,7 +289,7 @@ def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: 
     # the rest.
     # Wide screens: who I am, what I build and where I work on the left. Phones show Work last (CSS).
     side = [_trainer(p), _party(p, repos, site_root), _work(p, site_root)]
-    rest = [right_now(p, live), _pc_box(p, repos, site_root)]
+    rest = [right_now(p, live), _pc_box(p, repos, site_root), _study(p)]
     body = (f'{_top()}\n<div class="cols">\n'
             f'<div class="col side">\n{chr(10).join(s for s in side if s)}\n</div><!-- /side -->\n'
             f'<div class="col">\n{chr(10).join(s for s in rest if s)}\n</div>\n</div>')

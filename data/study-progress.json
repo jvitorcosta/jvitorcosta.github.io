@@ -1,0 +1,45 @@
+{
+  "updated": "2026-11-23",
+  "topics": [
+    {
+      "id": "foundations",
+      "title": {
+        "en": "LLM foundations and baseline",
+        "pt": "Fundamentos de LLM e linha de base"
+      },
+      "percent": 38
+    },
+    {
+      "id": "rag",
+      "title": {
+        "en": "Retrieval and RAG",
+        "pt": "Recuperação e RAG"
+      },
+      "percent": 0
+    },
+    {
+      "id": "agents",
+      "title": {
+        "en": "Agentic systems and MCP",
+        "pt": "Sistemas de agentes e MCP"
+      },
+      "percent": 0
+    },
+    {
+      "id": "evals",
+      "title": {
+        "en": "Evaluation",
+        "pt": "Avaliação de LLMs"
+      },
+      "percent": 0
+    },
+    {
+      "id": "fde-craft",
+      "title": {
+        "en": "FDE customer craft",
+        "pt": "FDE: trabalho com o cliente"
+      },
+      "percent": 0
+    }
+  ]
+}
