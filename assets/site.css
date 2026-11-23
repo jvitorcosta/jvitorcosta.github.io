@@ -442,7 +442,23 @@ button.btn { font-family: Inter, system-ui, sans-serif; }
 /* ---------- Studying now ---------- */
 .study { list-style: none; margin: 10px 0 0; padding: 0; }
 .study li { padding: 6px 0 8px; }
-.study .row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; line-height: 1.4; }
-.study .pct { flex: none; font-weight: 700; font-variant-numeric: tabular-nums; }
-.study .bar { height: 14px; margin-top: 4px; background: var(--soft); border: 3px solid var(--line); border-radius: 4px; overflow: hidden; }
-.study .bar i { display: block; height: 100%; background: var(--accent); }
+.tree .row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; line-height: 1.4; }
+.tree .pct { flex: none; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tree .bar { height: 14px; margin-top: 4px; background: var(--soft); border: 3px solid var(--line); border-radius: 4px; overflow: hidden; }
+.tree .bar i { display: block; height: 100%; background: var(--accent); }
+.tree > summary { display: block; margin-top: 10px; padding: 10px; background: var(--soft); border: 3px solid var(--line); border-radius: 5px; cursor: pointer; list-style: none; }
+.tree > summary::-webkit-details-marker, .topic > summary::-webkit-details-marker { display: none; }
+.tree > summary:hover { border-color: var(--accent); }
+.tree > summary:focus-visible, .topic > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.tree .now { display: inline-block; margin-bottom: 4px; padding: 1px 6px; font-size: 11px; font-weight: 700; color: var(--box); background: var(--accent); border-radius: 3px; }
+.tree .all { display: block; margin-top: 6px; font-size: 13px; font-weight: 700; color: var(--accent); }
+.tree[open] .all { visibility: hidden; height: 0; margin: 0; }
+.tree .bar { background: var(--box); }
+.study { margin-top: 8px; }
+.topic > summary { display: block; padding: 4px 0; cursor: pointer; list-style: none; }
+.items { list-style: none; margin: 4px 0 6px; padding: 0 0 0 12px; border-left: 3px solid var(--line); font-size: 13px; line-height: 1.4; }
+.items .item { display: flex; gap: 8px; align-items: baseline; padding: 2px 0; }
+.items .item > span:nth-child(2) { flex: 1; min-width: 0; }
+.items .mark { width: 1em; text-align: center; color: var(--accent); }
+.items .done > span:nth-child(2) { text-decoration: line-through; opacity: .7; }
+.study .bar { background: var(--soft); }

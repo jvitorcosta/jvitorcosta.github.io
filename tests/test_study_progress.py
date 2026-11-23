@@ -11,7 +11,7 @@ type: track
 
 Prose with a link [[Ignored Note]] outside any topic.
 
-## Agents <!-- topic id=agents role=ai now=yes pt="Agentes" -->
+## Agents <!-- topic id=agents role=ai now=yes current=yes pt="Agentes" -->
 - [[E5 Agents]]
 - [[34 ReAct]]
 - [[Harness#Lectures]]
@@ -48,7 +48,16 @@ def test_percent_comes_from_checkboxes_and_note_statuses(tmp_path):
     # in-progress 0.5, todo 0, Lectures 2 of 4 = 0.5, checked 1, unchecked 0: 2.0 / 5 = 40%
     assert data == {
         "updated": "2026-11-23",
-        "topics": [{"id": "agents", "title": {"en": "Agents", "pt": "Agentes"}, "percent": 40}],
+        "topics": [{
+            "id": "agents", "title": {"en": "Agents", "pt": "Agentes"}, "percent": 40, "current": True,
+            "items": [
+                {"text": "E5 Agents", "percent": 50},
+                {"text": "34 ReAct", "percent": 0},
+                {"text": "Harness: Lectures", "percent": 50},
+                {"text": "Build an MCP server", "percent": 100},
+                {"text": "Bank 7 aloud", "percent": 0},
+            ],
+        }],
     }
 
 
@@ -56,13 +65,14 @@ def test_only_now_topics_reach_the_site_and_each_has_a_percent(tmp_path):
     ids = [t["id"] for t in sp.build(vault(tmp_path), "Roadmap")["topics"]]
     assert ids == ["agents"]
     everything = sp.build(vault(tmp_path), "Roadmap", only_now=False)["topics"]
-    assert [(t["id"], t["percent"]) for t in everything] == [("agents", 40), ("security", 0)]
+    assert [(t["id"], t["percent"], t["current"]) for t in everything] == [
+        ("agents", 40, True), ("security", 0, False)]
 
 
 def test_output_never_leaks_paths_or_note_names(tmp_path):
     v = vault(tmp_path)
     text = json.dumps(sp.build(v, "Roadmap"))
-    for secret in ("Vault", "Areas", "E5 Agents", "Harness", "obsidian", "\\", "/"):
+    for secret in ("Vault", "Areas", "Study", "obsidian", ".md", "[[", "\\", "/"):
         assert secret not in text
 
 
@@ -120,3 +130,16 @@ def test_cli_reports_roadmap_errors_without_writing(tmp_path, capsys):
     assert sp.main(["--vault", str(v), "--note", "Roadmap", "--out", str(out)]) == 2
     assert "Gone" in capsys.readouterr().err
     assert not out.exists()
+
+
+def test_exactly_one_current_topic_among_the_ones_on_the_site(tmp_path):
+    none = ROADMAP.replace(" current=yes", "")
+    with pytest.raises(sp.RoadmapError, match="current"):
+        sp.build(vault(tmp_path, none), "Roadmap")
+    two = ROADMAP.replace('id=security role=ai now=no', 'id=security role=ai now=yes current=yes')
+    with pytest.raises(sp.RoadmapError, match="current"):
+        sp.build(vault(tmp_path, two), "Roadmap")
+    # a topic that is not on the site may not be the current one
+    hidden = ROADMAP.replace('now=no', 'now=no current=yes')
+    with pytest.raises(sp.RoadmapError, match="current"):
+        sp.build(vault(tmp_path, hidden), "Roadmap")

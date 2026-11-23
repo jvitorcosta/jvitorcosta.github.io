@@ -163,6 +163,8 @@ def test_study_progress_file_is_loaded():
     assert content.study, "data/study-progress.json lists at least one topic"
     for t in content.study:
         assert set(t.title) == {"en", "pt"} and 0 <= t.percent <= 100
+        assert t.items and all(0 <= i.percent <= 100 and i.text for i in t.items)
+    assert sum(t.current for t in content.study) == 1
     assert len({t.id for t in content.study}) == len(content.study)
     assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", content.study_updated)
 
@@ -177,10 +179,13 @@ def test_missing_study_file_means_no_section(tmp_path):
 @pytest.mark.parametrize("text", [
     "{not json",
     "[]",
-    '{"topics": [{"id": "a", "title": {"en": "A"}, "percent": 5}]}',  # no pt title
-    '{"topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 101}]}',
-    '{"topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": true}]}',
-    '{"topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 5, "url": "x"}]}',  # no extras
+    '{"updated": "2026-11-23", "topics": [{"id": "a", "title": {"en": "A"}, "percent": 5, "current": true, "items": []}]}',
+    '{"updated": "2026-11-23", "topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 101, "current": true, "items": [{"text": "x", "percent": 5}]}]}',
+    '{"updated": "2026-11-23", "topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": true, "current": true, "items": [{"text": "x", "percent": 5}]}]}',
+    '{"updated": "2026-11-23", "topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 5, "current": true, "items": [{"text": "x", "percent": 5}], "url": "x"}]}',  # no extras
+    '{"updated": "2026-11-23", "topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 5, "current": true, "items": [{"text": "x", "percent": 500}]}]}',
+    '{"updated": "2026-11-23", "topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 5, "current": true, "items": [{"text": "x", "percent": 5, "url": "y"}]}]}',
+    '{"updated": "2026-11-23", "topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 5, "current": false, "items": [{"text": "x", "percent": 5}]}]}',  # no current
 ])
 def test_bad_study_file_skips_the_section_with_warning(tmp_path, capsys, text):
     root = _copy_data(tmp_path)

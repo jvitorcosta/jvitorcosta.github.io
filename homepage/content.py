@@ -35,11 +35,21 @@ class Job:
 
 
 @dataclass(frozen=True)
+class StudyItem:
+    """One concept under a topic: a lesson, paper or exercise, and how far along it is (0-100)."""
+    text: str
+    percent: int
+
+
+@dataclass(frozen=True)
 class StudyTopic:
-    """One bar of the STUDY block: a topic I am studying now and how far along it is (0-100)."""
+    """A topic I am studying now, how far along it is (0-100), its concepts and whether it is the one
+    on the card (exactly one is)."""
     id: str
     title: dict[str, str]
     percent: int
+    current: bool = False
+    items: list[StudyItem] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -102,7 +112,12 @@ def _pc_box(path: Path) -> dict[str, dict[str, str]]:
 
 
 MAX_STUDY = 6
-STUDY_TOPIC_KEYS = {"id", "title", "percent"}
+STUDY_TOPIC_KEYS = {"id", "title", "percent", "current", "items"}
+STUDY_ITEM_KEYS = {"text", "percent"}
+
+
+def _percent(value: object) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and 0 <= value <= 100
 
 
 def _study(path: Path) -> tuple[list[StudyTopic], str]:
@@ -122,9 +137,18 @@ def _study(path: Path) -> tuple[list[StudyTopic], str]:
             percent = t["percent"]
             if not isinstance(t["id"], str) or not t["id"] or not all(isinstance(v, str) and v for v in title.values()):
                 raise ValueError("id and both titles must be text")
-            if isinstance(percent, bool) or not isinstance(percent, int) or not 0 <= percent <= 100:
+            if not _percent(percent):
                 raise ValueError("percent must be a whole number from 0 to 100")
-            topics.append(StudyTopic(t["id"], title, percent))
+            if not isinstance(t["current"], bool) or not isinstance(t["items"], list) or not t["items"]:
+                raise ValueError("current must be true or false and items a non-empty list")
+            items = []
+            for i in t["items"]:
+                if set(i) != STUDY_ITEM_KEYS or not isinstance(i["text"], str) or not i["text"]                         or not _percent(i["percent"]):
+                    raise ValueError("an item needs text and a whole percent from 0 to 100, nothing else")
+                items.append(StudyItem(i["text"], i["percent"]))
+            topics.append(StudyTopic(t["id"], title, percent, t["current"], items))
+        if sum(t.current for t in topics) != 1:
+            raise ValueError("exactly one topic must be current")
         if len(topics) > MAX_STUDY or len({t.id for t in topics}) != len(topics):
             raise ValueError(f"at most {MAX_STUDY} topics, each id once")
         return topics, updated

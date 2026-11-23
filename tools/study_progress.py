@@ -7,8 +7,10 @@ The roadmap note holds one `## ` topic per bar candidate; its comment
   - `- [ ]` / `- [x]`    0 or 100%
   - `- [[Note]]`         the note's `status` (todo 0, in-progress or reading 50, done 100)
   - `- [[Note#Heading]]` the share of ticked checkboxes under that heading of the note
-A topic's percent is the average of its items. Only `now=yes` topics are written, and only ids,
-titles and percents: no paths, no note names. The site renders the file and computes nothing.
+A topic's percent is the average of its items. Only `now=yes` topics are written, and exactly one of
+them is `current=yes`: the site's card shows that one, and its tree lists every written topic with
+its items. Written: ids, titles, percents and item labels (a checkbox's text, or a note's name):
+no paths. The site renders the file and computes nothing.
 Nothing here commits or pushes: review the diff, then open a PR.
 
 Exit codes: 0 ok, 1 `--check` found the file out of date, 2 a bad roadmap or a missing vault.
@@ -31,7 +33,7 @@ STATUS_SHARE = {"todo": 0.0, "later": 0.0, "next": 0.0, "in-progress": 0.5, "rea
                 "active": 0.5, "done": 1.0}
 TOPIC = re.compile(r"^##\s+(?P<title>.*?)\s*<!--\s*topic\s+(?P<attrs>.*?)-->\s*$")
 HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*$")
-BOX = re.compile(r"^\s*[-*]\s+\[(?P<mark>[ xX])\]")
+BOX = re.compile(r"^\s*[-*]\s+\[(?P<mark>[ xX])\]\s*(?P<text>.*?)\s*$")
 LINK = re.compile(r"^\s*[-*]\s+\[\[(?P<target>[^\]|]+)(?:\|[^\]]*)?\]\]\s*$")
 NUMBER = re.compile(r"^\d+\.\s*")
 
@@ -84,6 +86,12 @@ def _heading_share(lines: list[str], heading: str, note: str) -> float:
     return ticked / total
 
 
+def _item_label(target: str) -> str:
+    name, _, heading = target.partition("#")
+    name = name.strip()
+    return f"{name}: {heading.strip()}" if heading.strip() else name
+
+
 def _item_share(target: str, notes: dict[str, Path]) -> float:
     name, _, heading = target.partition("#")
     name = name.strip()
@@ -118,9 +126,10 @@ def build(vault: Path, note: str = DEFAULT_NOTE, today: str | None = None, only_
 
     def close() -> None:
         if current is not None:
-            if not current["shares"]:
+            if not current["items"]:
                 raise RoadmapError(f"topic {current['id']} has no items")
-            current["percent"] = int(sum(current["shares"]) / len(current["shares"]) * 100 + 0.5)
+            shares = [s for _, s in current["items"]]
+            current["percent"] = int(sum(shares) / len(shares) * 100 + 0.5)
             topics.append(current)
 
     for line in lines:
@@ -136,7 +145,7 @@ def build(vault: Path, note: str = DEFAULT_NOTE, today: str | None = None, only_
                 raise RoadmapError(f"duplicate topic id {tid}")
             seen.add(tid)
             current = {"id": tid, "title": {"en": title, "pt": attrs["pt"]}, "now": attrs.get("now") == "yes",
-                       "shares": []}
+                       "current": attrs.get("current") == "yes", "items": []}
             continue
         h2 = HEADING.match(line)
         if h2 and h2.group(1) == "##":
@@ -147,12 +156,19 @@ def build(vault: Path, note: str = DEFAULT_NOTE, today: str | None = None, only_
             continue
         box, link = BOX.match(line), LINK.match(line)
         if box:
-            current["shares"].append(0.0 if box.group("mark") == " " else 1.0)
+            current["items"].append((box.group("text"), 0.0 if box.group("mark") == " " else 1.0))
         elif link:
-            current["shares"].append(_item_share(link.group("target"), notes))
+            target = link.group("target")
+            current["items"].append((_item_label(target), _item_share(target, notes)))
     close()
-    out = [{"id": t["id"], "title": t["title"], "percent": t["percent"]}
-           for t in topics if t["now"] or not only_now]
+    shown = [t for t in topics if t["now"] or not only_now]
+    if only_now and sum(t["current"] for t in shown) != 1:
+        raise RoadmapError("exactly one now=yes topic must also be current=yes")
+    if any(t["current"] and not t["now"] for t in topics):
+        raise RoadmapError("the current topic must be now=yes")
+    out = [{"id": t["id"], "title": t["title"], "percent": t["percent"], "current": t["current"],
+            "items": [{"text": text, "percent": int(share * 100 + 0.5)} for text, share in t["items"]]}
+           for t in shown]
     return {"updated": today or date.today().isoformat(), "topics": out}
 
 

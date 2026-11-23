@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from homepage.content import Content, Job, PartyMember, StudyTopic
+from homepage.content import Content, Job, PartyMember, StudyItem, StudyTopic
 from homepage.model import Activity, Anime, Book, Film, LiveData, Repo, Song
 from homepage.render import clip, render_home, safe_url
 
@@ -76,26 +76,41 @@ def section(html, start, end=None):
     return html[i:html.index("</section>", i)]
 
 
-STUDY = [StudyTopic("agents", {"en": "Agentic systems & MCP", "pt": "Agentes e MCP"}, 40),
-         StudyTopic("evals", {"en": "Evaluation", "pt": "Avaliação"}, 0)]
+STUDY = [StudyTopic("agents", {"en": "Agentic systems & MCP", "pt": "Agentes e MCP"}, 40, True,
+                    [StudyItem("E5 Agents", 50), StudyItem("Build an MCP server", 100), StudyItem("ReAct", 0)]),
+         StudyTopic("evals", {"en": "Evaluation", "pt": "Avaliação"}, 0, False, [StudyItem("S6 Evaluation", 0)])]
 
 
-def test_study_section_has_a_bar_and_percent_per_topic_and_no_links(tmp_path):
-    html = render(tmp_path, content(study=STUDY, study_updated="2026-11-23"))
-    box = section(html, "study")
-    assert box.count('role="progressbar"') == 2
-    assert 'aria-valuenow="40"' in box and 'aria-valuenow="0"' in box
-    assert "40%" in box and "0%" in box
-    assert "Agentic systems &amp; MCP" in box and "Agentes e MCP" in box
-    assert "<a " not in box and "href" not in box
-    assert 'style="width:40%"' in box
+def test_study_card_shows_only_the_current_topic_until_opened(tmp_path):
+    box = section(render(tmp_path, content(study=STUDY, study_updated="2026-11-23")), "study")
+    head = box[:box.index("<ul")]  # everything before the tree list
+    assert "Agentic systems &amp; MCP" in head and "40%" in head
+    assert "Evaluation" not in head
+    assert box.count("<details") >= 1 and "<summary" in box
     assert "Nov 23" in box and "23 nov" in box
+
+
+def test_study_tree_lists_every_topic_with_bars_and_concepts(tmp_path):
+    box = section(render(tmp_path, content(study=STUDY)), "study")
+    assert box.count('role="progressbar"') == 3  # current card + one per topic in the tree... see below
+    assert 'aria-valuenow="40"' in box and 'aria-valuenow="0"' in box
+    for text in ("E5 Agents", "Build an MCP server", "ReAct", "S6 Evaluation", "Evaluation", "Avaliação"):
+        assert text in box
+    assert box.count('class="item done"') == 1 and box.count('class="item part"') == 1
+    assert box.count('class="item todo"') == 2
+
+
+def test_study_has_no_links(tmp_path):
+    box = section(render(tmp_path, content(study=STUDY)), "study")
+    assert "<a " not in box and "href" not in box
 
 
 def test_study_labels_name_their_bars(tmp_path):
     box = section(render(tmp_path, content(study=STUDY)), "study")
+    ids = re.findall(r'id="([^"]+)"', box)
+    assert len(ids) == len(set(ids))
     for m in re.finditer(r'aria-labelledby="([^"]+)"', box):
-        assert box.count(f'id="{m.group(1)}"') == 1
+        assert m.group(1) in ids
 
 
 def test_study_section_is_left_out_without_topics(tmp_path):

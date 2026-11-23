@@ -98,12 +98,15 @@ places or health data.
 
 ## Study progress: `data/study-progress.json`
 
-The STUDYING NOW box shows one progress bar per topic I am studying for AI engineer and forward
-deployed engineer roles. The page only renders the file: ids, English and Portuguese titles and a
-whole percent. No links, no paths, no note names. A broken file hides the box with a warning.
+The STUDYING NOW box is a card for the one topic I am studying right now (`current`); clicking it
+opens a tree of every topic on the site, each with a bar and its concepts (lessons, papers,
+exercises) marked done, partly done or to do. The page only renders the file: ids, English and
+Portuguese titles, whole percents, concept labels and which topic is current. Concept labels are
+in English only. No links, no paths. A broken file hides the box with a warning.
 
 The file is generated from the roadmap note in my study vault, so the bars and my own notes agree.
-The note decides which topics are `now=yes` (only those are written) and how each percent is
+The note decides which topics are `now=yes` (only those are written, and exactly one of them is
+`current=yes`) and how each percent is
 computed (ticked checkboxes and note statuses); the rules are in the docstring of
 `tools/study_progress.py`. To refresh it, one command, run by me or a routine:
 

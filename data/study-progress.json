@@ -7,7 +7,26 @@
         "en": "LLM foundations and baseline",
         "pt": "Fundamentos de LLM e linha de base"
       },
-      "percent": 38
+      "percent": 38,
+      "current": true,
+      "items": [
+        {
+          "text": "E0 LLM Foundations",
+          "percent": 50
+        },
+        {
+          "text": "E1 Running LLMs",
+          "percent": 0
+        },
+        {
+          "text": "First real interview done and debriefed",
+          "percent": 100
+        },
+        {
+          "text": "Baseline self-quiz: rate every row of the tracker red, amber or green",
+          "percent": 0
+        }
+      ]
     },
     {
       "id": "rag",
@@ -15,7 +34,34 @@
         "en": "Retrieval and RAG",
         "pt": "Recuperação e RAG"
       },
-      "percent": 0
+      "percent": 0,
+      "current": false,
+      "items": [
+        {
+          "text": "E2 Building a Vector Storage",
+          "percent": 0
+        },
+        {
+          "text": "E3 Retrieval Augmented Generation",
+          "percent": 0
+        },
+        {
+          "text": "E4 Advanced RAG",
+          "percent": 0
+        },
+        {
+          "text": "33 RAG",
+          "percent": 0
+        },
+        {
+          "text": "Retrieval eval lab: recall@k and MRR on a small corpus, chunking and hybrid search compared",
+          "percent": 0
+        },
+        {
+          "text": "Practice questions 1, 2, 3, 5, 6 and 18 answered aloud, timed",
+          "percent": 0
+        }
+      ]
     },
     {
       "id": "agents",
@@ -23,7 +69,34 @@
         "en": "Agentic systems and MCP",
         "pt": "Sistemas de agentes e MCP"
       },
-      "percent": 0
+      "percent": 0,
+      "current": false,
+      "items": [
+        {
+          "text": "E5 Agents",
+          "percent": 0
+        },
+        {
+          "text": "34 ReAct",
+          "percent": 0
+        },
+        {
+          "text": "Harness Engineering: Lectures",
+          "percent": 0
+        },
+        {
+          "text": "LangGraph live-code drill: an agent with a checkpointer, a step limit and a tool-failure path",
+          "percent": 0
+        },
+        {
+          "text": "Build one small MCP server (one tool, one resource) and call it from Claude",
+          "percent": 0
+        },
+        {
+          "text": "Practice questions 7, 8, 9 and 10 answered aloud, timed",
+          "percent": 0
+        }
+      ]
     },
     {
       "id": "evals",
@@ -31,7 +104,30 @@
         "en": "Evaluation",
         "pt": "Avaliação de LLMs"
       },
-      "percent": 0
+      "percent": 0,
+      "current": false,
+      "items": [
+        {
+          "text": "S6 Evaluation",
+          "percent": 0
+        },
+        {
+          "text": "35 Why Language Models Hallucinate",
+          "percent": 0
+        },
+        {
+          "text": "LLM judge on a golden set modelled on the Slack assistant's, calibrated against human labels",
+          "percent": 0
+        },
+        {
+          "text": "Trajectory and pass^k eval of the drill agent",
+          "percent": 0
+        },
+        {
+          "text": "Practice questions 11 and 12 answered aloud, timed",
+          "percent": 0
+        }
+      ]
     },
     {
       "id": "fde-craft",
@@ -39,7 +135,38 @@
         "en": "FDE customer craft",
         "pt": "FDE: trabalho com o cliente"
       },
-      "percent": 0
+      "percent": 0,
+      "current": false,
+      "items": [
+        {
+          "text": "No-code case drill 1: restate, clarify, scope a pilot, success metric and baseline, risks, first demo",
+          "percent": 0
+        },
+        {
+          "text": "No-code case drill 2",
+          "percent": 0
+        },
+        {
+          "text": "No-code case drill 3",
+          "percent": 0
+        },
+        {
+          "text": "ROI stories written from CV facts only",
+          "percent": 0
+        },
+        {
+          "text": "Anthropic Forward Deployed Engineer learning path (Skilljar, 11 courses)",
+          "percent": 0
+        },
+        {
+          "text": "A pilot plan and rollout checklist for a made-up customer",
+          "percent": 0
+        },
+        {
+          "text": "Practice questions 16, 17 and 24 answered aloud, timed",
+          "percent": 0
+        }
+      ]
     }
   ]
 }

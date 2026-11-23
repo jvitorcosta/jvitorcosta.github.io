@@ -10,7 +10,7 @@ import json
 import re
 from pathlib import Path
 
-from homepage.content import Content, PartyMember
+from homepage.content import Content, PartyMember, StudyTopic
 from homepage.markup import ARROW, Page, clip, esc, safe_url, versioned, warn
 from homepage.model import LiveData, Repo
 from homepage.right_now import right_now
@@ -128,20 +128,41 @@ def _pc_box(p: Page, repos: list[Repo], site_root: Path) -> str:
             f'<a href="{GITHUB_REPOS}">{p.t("all_on_github")}</a></h2>{"".join(rows)}</section>')
 
 
+def _bar(percent: int, label: str) -> str:
+    return (f'<div class="bar" role="progressbar" aria-labelledby="{label}" aria-valuemin="0" '
+            f'aria-valuemax="100" aria-valuenow="{percent}"><i style="width:{percent}%"></i></div>')
+
+
+def _study_slug(t: StudyTopic, n: int) -> str:
+    return t.id if CASE_SLUG.fullmatch(t.id) else f"t{n}"
+
+
 def _study(p: Page) -> str:
-    """Progress bars of the topics I am studying now. Display only: no links, nothing computed here."""
+    """The topic I am studying now as a card; opening it shows every topic with its concepts as a
+    tree. Display only: no links, nothing computed here."""
     if not p.c.study:
         return ""
-    rows = []
+    now = next((t for t in p.c.study if t.current), p.c.study[0])
+    slugs = {id(t): _study_slug(t, n) for n, t in enumerate(p.c.study)}
+    card = (f'<div class="row"><b id="study-now-{slugs[id(now)]}">{p.both(now.title)}</b>'
+            f'<span class="pct">{now.percent}%</span></div>{_bar(now.percent, f"study-now-{slugs[id(now)]}")}')
+    topics = []
     for t in p.c.study:
-        label = f"study-{t.id}" if CASE_SLUG.fullmatch(t.id) else f"study-{len(rows)}"
-        rows.append(
-            f'<li><div class="row"><b id="{label}">{p.both(t.title)}</b><span class="pct">{t.percent}%</span></div>'
-            f'<div class="bar" role="progressbar" aria-labelledby="{label}" aria-valuemin="0" '
-            f'aria-valuemax="100" aria-valuenow="{t.percent}"><i style="width:{t.percent}%"></i></div></li>')
+        label = f"study-{slugs[id(t)]}"
+        items = "".join(
+            f'<li class="item {"done" if i.percent >= 100 else "part" if i.percent else "todo"}">'
+            f'<span class="mark" aria-hidden="true">{"✓" if i.percent >= 100 else "◐" if i.percent else "○"}</span>'
+            f'<span>{esc(i.text)}</span><span class="pct">{i.percent}%</span></li>' for i in t.items)
+        topics.append(
+            f'<li><details class="topic"{" open" if t is now else ""}><summary>'
+            f'<span class="row"><b id="{label}">{p.both(t.title)}</b><span class="pct">{t.percent}%</span></span>'
+            f'{_bar(t.percent, label)}</summary><ul class="items">{items}</ul></details></li>')
     asof = f' {p.t("study_asof")} {p.date(p.c.study_updated)}' if p.date(p.c.study_updated) else ""
     return (f'<section class="box" id="study"><h2 class="h px"><span>{ARROW}{p.t("study")}{p.zh("study")}</span></h2>'
-            f'<p class="small">{p.t("study_line")}{asof}</p><ul class="study">{"".join(rows)}</ul></section>')
+            f'<p class="small">{p.t("study_line")}{asof}</p>'
+            f'<details class="tree"><summary><span class="now">{p.t("study_now")}</span>{card}'
+            f'<span class="all">{p.t("study_all")}</span></summary>'
+            f'<ul class="study">{"".join(topics)}</ul></details></section>')
 
 
 def _trainer(p: Page) -> str:
