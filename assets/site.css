@@ -455,6 +455,12 @@ button.btn { font-family: Inter, system-ui, sans-serif; }
 .tree[open] .all { visibility: hidden; height: 0; margin: 0; }
 .tree .bar { background: var(--box); }
 .study { margin-top: 8px; }
+.tree .gh { margin: 14px 0 0; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.subs { list-style: none; margin: 4px 0 8px; padding: 0 0 0 10px; border-left: 3px solid var(--line); }
+.subs > li { padding: 0; }
+.sub > summary { display: block; padding: 5px 0; font-size: 13px; font-weight: 600; cursor: pointer; list-style: none; }
+.sub > summary::-webkit-details-marker { display: none; }
+.sub > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .topic > summary { display: block; padding: 4px 0; cursor: pointer; list-style: none; }
 .items { list-style: none; margin: 4px 0 6px; padding: 0 0 0 12px; border-left: 3px solid var(--line); font-size: 13px; line-height: 1.4; }
 .items .item { display: flex; gap: 8px; align-items: baseline; padding: 2px 0; }

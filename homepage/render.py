@@ -137,32 +137,46 @@ def _study_slug(t: StudyTopic, n: int) -> str:
     return t.id if CASE_SLUG.fullmatch(t.id) else f"t{n}"
 
 
+def _glyph(percent: int) -> tuple[str, str]:
+    return ("done", "✓") if percent >= 100 else ("part", "◐") if percent else ("todo", "○")
+
+
+def _study_topic(p: Page, t: StudyTopic, slug: str, open_it: bool) -> str:
+    label = f"study-{slug}"
+    subs = []
+    for sub in t.subtopics:
+        items = "".join(
+            f'<li class="item {_glyph(i.percent)[0]}"><span class="mark" aria-hidden="true">'
+            f'{_glyph(i.percent)[1]}</span><span>{esc(i.text)}</span><span class="pct">{i.percent}%</span></li>'
+            for i in sub.items)
+        subs.append(f'<li><details class="sub"><summary><span class="row"><span>{esc(sub.title)}</span>'
+                    f'<span class="pct">{sub.percent}%</span></span></summary><ul class="items">{items}</ul>'
+                    "</details></li>")
+    return (f'<li><details class="topic"{" open" if open_it else ""}><summary>'
+            f'<span class="row"><b id="{label}">{p.both(t.title)}</b><span class="pct">{t.percent}%</span></span>'
+            f'{_bar(t.percent, label)}</summary><ul class="subs">{"".join(subs)}</ul></details></li>')
+
+
 def _study(p: Page) -> str:
-    """The topic I am studying now as a card; opening it shows every topic with its concepts as a
-    tree. Display only: no links, nothing computed here."""
+    """The topic I am studying now as a card; opening it shows every topic and lab with its
+    subtopics and concepts as a tree. Display only: no links, nothing computed here."""
     if not p.c.study:
         return ""
     now = next((t for t in p.c.study if t.current), p.c.study[0])
     slugs = {id(t): _study_slug(t, n) for n, t in enumerate(p.c.study)}
     card = (f'<div class="row"><b id="study-now-{slugs[id(now)]}">{p.both(now.title)}</b>'
             f'<span class="pct">{now.percent}%</span></div>{_bar(now.percent, f"study-now-{slugs[id(now)]}")}')
-    topics = []
-    for t in p.c.study:
-        label = f"study-{slugs[id(t)]}"
-        items = "".join(
-            f'<li class="item {"done" if i.percent >= 100 else "part" if i.percent else "todo"}">'
-            f'<span class="mark" aria-hidden="true">{"✓" if i.percent >= 100 else "◐" if i.percent else "○"}</span>'
-            f'<span>{esc(i.text)}</span><span class="pct">{i.percent}%</span></li>' for i in t.items)
-        topics.append(
-            f'<li><details class="topic"{" open" if t is now else ""}><summary>'
-            f'<span class="row"><b id="{label}">{p.both(t.title)}</b><span class="pct">{t.percent}%</span></span>'
-            f'{_bar(t.percent, label)}</summary><ul class="items">{items}</ul></details></li>')
+    groups = []
+    for kind, key in (("study", "study_topics"), ("lab", "study_labs")):
+        rows = "".join(_study_topic(p, t, slugs[id(t)], t is now) for t in p.c.study if t.kind == kind)
+        if rows:
+            groups.append(f'<h3 class="gh">{p.t(key)}</h3><ul class="study">{rows}</ul>')
     asof = f' {p.t("study_asof")} {p.date(p.c.study_updated)}' if p.date(p.c.study_updated) else ""
     return (f'<section class="box" id="study"><h2 class="h px"><span>{ARROW}{p.t("study")}{p.zh("study")}</span></h2>'
             f'<p class="small">{p.t("study_line")}{asof}</p>'
             f'<details class="tree"><summary><span class="now">{p.t("study_now")}</span>{card}'
             f'<span class="all">{p.t("study_all")}</span></summary>'
-            f'<ul class="study">{"".join(topics)}</ul></details></section>')
+            f'<div class="groups">{"".join(groups)}</div></details></section>')
 
 
 def _trainer(p: Page) -> str:
