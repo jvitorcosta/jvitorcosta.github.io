@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Leon Thomas",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02eeb464ea9a23de21dd7aa4c9",
-    "playing": true,
-    "title": "NOT FAIR",
-    "url": "https://open.spotify.com/track/277K8GOv27Pq3qS4IKSRoW"
+    "artist": "Ellie Goulding",
+    "cover": "https://i.scdn.co/image/ab67616d00001e0291538eb04634de568637b8be",
+    "playing": false,
+    "title": "Lights",
+    "url": "https://open.spotify.com/track/11ozIUBoXAgRTVWelDn4pL"
   },
   "updated": {
     "activity": "2026-11-23",
