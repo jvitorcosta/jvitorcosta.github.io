@@ -171,10 +171,12 @@ def _study(p: Page) -> str:
         rows = "".join(_study_topic(p, t, slugs[id(t)], t is now) for t in p.c.study if t.kind == kind)
         if rows:
             groups.append(f'<h3 class="gh">{p.t(key)}</h3><ul class="study">{rows}</ul>')
-    asof = f' {p.t("study_asof")} {p.date(p.c.study_updated)}' if p.date(p.c.study_updated) else ""
+    when = p.date(p.c.study_updated)
+    asof = f'<p class="small">{p.t("study_asof")} {when}</p>' if when else ""
     return (f'<section class="box" id="study"><h2 class="h px"><span>{ARROW}{p.t("study")}{p.zh("study")}</span></h2>'
-            f'<p class="small">{p.t("study_line")}{asof}</p>'
-            f'<details class="tree"><summary><span class="now">{p.t("study_now")}</span>{card}'
+            f'{asof}'
+            f'<details class="tree"><summary><span class="now">{p.t("study_now")}</span>'
+            f'<span class="path">{p.t("study_path")}</span>{card}'
             f'<span class="all">{p.t("study_all")}</span></summary>'
             f'<div class="groups">{"".join(groups)}</div></details></section>')
 

@@ -99,6 +99,14 @@ def test_study_card_shows_only_the_current_topic_until_opened(tmp_path):
     assert "Nov 23" in box and "23 nov" in box
 
 
+def test_study_card_has_the_path_label_and_no_why_sentence(tmp_path):
+    box = study_box(tmp_path)
+    head = box[:box.index('<div class="groups"')]
+    assert "AI Engineer / AI FDE path" in head
+    assert "become a better" not in box and "melhor" not in box
+    assert "as of" in box and "Nov 23" in box
+
+
 def test_study_tree_groups_topics_and_labs_with_subtopics_and_concepts(tmp_path):
     box = study_box(tmp_path)
     tree = box[box.index('<div class="groups"'):]
