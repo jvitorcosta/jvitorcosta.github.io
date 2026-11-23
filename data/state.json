@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-21",
-    "detail": "0.3 km/h",
-    "distance_km": 0.5,
-    "emoji": "🏅",
-    "moving_min": 116,
-    "sport": "Volleyball",
-    "title": "Afternoon Volleyball",
-    "url": "https://www.strava.com/activities/21075700138"
+    "date": "2026-11-22",
+    "detail": "",
+    "distance_km": null,
+    "emoji": "🏋️",
+    "moving_min": 34,
+    "sport": "WeightTraining",
+    "title": "Night Weight Training",
+    "url": "https://www.strava.com/activities/21090195848"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -153,18 +153,18 @@
     }
   ],
   "song": {
-    "artist": "B.o.B",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02caa23612279c2d059a0d3a82",
-    "playing": false,
-    "title": "Nothin' on You (feat. Bruno Mars)",
-    "url": "https://open.spotify.com/track/59dLtGBS26x7kc0rHbaPrq"
+    "artist": "Ella Mai",
+    "cover": "https://i.scdn.co/image/ab67616d00001e021067b9877d6435ae9ecb26ac",
+    "playing": true,
+    "title": "Boo'd Up",
+    "url": "https://open.spotify.com/track/0At2qAoaVjIwWNAqrscXli"
   },
   "updated": {
-    "activity": "2026-11-22",
-    "anime": "2026-11-22",
-    "book": "2026-11-22",
-    "film": "2026-11-22",
-    "repos": "2026-11-22",
-    "song": "2026-11-22"
+    "activity": "2026-11-23",
+    "anime": "2026-11-23",
+    "book": "2026-11-23",
+    "film": "2026-11-23",
+    "repos": "2026-11-23",
+    "song": "2026-11-23"
   }
 }
