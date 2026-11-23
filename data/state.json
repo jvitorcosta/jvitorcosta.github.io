@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Stevie Wonder",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02f97219e49a23bfdd4de7eed1",
-    "playing": true,
-    "title": "I Just Called To Say I Love You",
-    "url": "https://open.spotify.com/track/6RNDeRnWsRMjPdNVgupZCs"
+    "artist": "The Weeknd",
+    "cover": "https://i.scdn.co/image/ab67616d00001e027fcead687e99583072cc217b",
+    "playing": false,
+    "title": "Can't Feel My Face",
+    "url": "https://open.spotify.com/track/22VdIZQfgXJea34mQxlt81"
   },
   "updated": {
     "activity": "2026-11-23",
