@@ -10,6 +10,7 @@ the merge publishes it.
 | `data/pc_box.toml` | names, lines, tags and pins for rows in Projects |
 | `data/links.toml` | profile links (trainer buttons, the tiles at the end of each Lately row) |
 | `data/activity.toml` | the activity row used when Strava is off |
+| `data/study-progress.json` | the STUDYING NOW bars, **generated from my study roadmap, don't edit here** |
 | `data/jobs.json` | Experience roles, **copied from curriculum-vitae, don't edit here** |
 
 Before opening the PR:
@@ -94,6 +95,28 @@ allowed.
 Used only when the Strava secrets aren't set or Strava has never answered. Same fields as a
 Strava row. Leave out `distance_km` for activities without distance. Never add maps, routes,
 places or health data.
+
+## Study progress: `data/study-progress.json`
+
+The STUDYING NOW box shows one progress bar per topic I am studying for AI engineer and forward
+deployed engineer roles. The page only renders the file: ids, English and Portuguese titles and a
+whole percent. No links, no paths, no note names. A broken file hides the box with a warning.
+
+The file is generated from the roadmap note in my study vault, so the bars and my own notes agree.
+The note decides which topics are `now=yes` (only those are written) and how each percent is
+computed (ticked checkboxes and note statuses); the rules are in the docstring of
+`tools/study_progress.py`. To refresh it, one command, run by me or a routine:
+
+```bash
+uv run --python 3.12 python tools/study_progress.py --vault <vault folder>   # or set STUDY_VAULT
+git diff data/study-progress.json                                            # review, then open a PR
+```
+
+- Nothing commits or pushes: the merge of that PR is what publishes the new bars.
+- `--check` exits 1 when the file is out of date (a routine can use it to open the PR only when
+  something changed); `--note` picks another roadmap note name. Exit 2 means a bad roadmap (an
+  unresolved link, a duplicate id, a topic without items or a Portuguese title): nothing is written.
+- Only the topic list in the roadmap note changes the bars. The tests use a fake vault, never mine.
 
 ## Experience and the case pages
 

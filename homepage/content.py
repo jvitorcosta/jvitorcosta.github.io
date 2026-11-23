@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 import tomllib
 from dataclasses import dataclass, field
@@ -34,6 +35,14 @@ class Job:
 
 
 @dataclass(frozen=True)
+class StudyTopic:
+    """One bar of the STUDY block: a topic I am studying now and how far along it is (0-100)."""
+    id: str
+    title: dict[str, str]
+    percent: int
+
+
+@dataclass(frozen=True)
 class Content:
     strings: dict[str, dict[str, str]]
     links: dict[str, str]
@@ -41,6 +50,8 @@ class Content:
     jobs: list[Job] = field(default_factory=list)
     activity: Activity | None = None
     pc_box: dict[str, dict[str, str]] = field(default_factory=dict)
+    study: list[StudyTopic] = field(default_factory=list)
+    study_updated: str = ""
 
 
 def _toml(path: Path) -> dict:
@@ -90,6 +101,38 @@ def _pc_box(path: Path) -> dict[str, dict[str, str]]:
     return texts
 
 
+MAX_STUDY = 6
+STUDY_TOPIC_KEYS = {"id", "title", "percent"}
+
+
+def _study(path: Path) -> tuple[list[StudyTopic], str]:
+    """The generated study progress (tools/study_progress.py); a broken file hides the block."""
+    if not path.exists():
+        return [], ""
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        updated = data["updated"]
+        if not isinstance(updated, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", updated):
+            raise ValueError("updated must be YYYY-MM-DD")
+        topics = []
+        for t in data["topics"]:
+            if set(t) != STUDY_TOPIC_KEYS:
+                raise ValueError(f"a topic has keys {sorted(t)}, expected {sorted(STUDY_TOPIC_KEYS)}")
+            title = {lang: t["title"][lang] for lang in LANGS}
+            percent = t["percent"]
+            if not isinstance(t["id"], str) or not t["id"] or not all(isinstance(v, str) and v for v in title.values()):
+                raise ValueError("id and both titles must be text")
+            if isinstance(percent, bool) or not isinstance(percent, int) or not 0 <= percent <= 100:
+                raise ValueError("percent must be a whole number from 0 to 100")
+            topics.append(StudyTopic(t["id"], title, percent))
+        if len(topics) > MAX_STUDY or len({t.id for t in topics}) != len(topics):
+            raise ValueError(f"at most {MAX_STUDY} topics, each id once")
+        return topics, updated
+    except Exception as exc:
+        _warn(f"study block skipped, data/study-progress.json unreadable: {str(exc) or type(exc).__name__}")
+        return [], ""
+
+
 def _member(d: dict) -> PartyMember:
     return PartyMember(
         repo=d["repo"],
@@ -113,6 +156,7 @@ def load_content(root: Path) -> Content:
         Job(j["title"], j["company"], j["start"], j["end"])
         for j in (json.loads(jobs_file.read_text(encoding="utf-8")) if jobs_file.exists() else [])
     ]
+    study, study_updated = _study(data / "study-progress.json")
     return Content(
         strings={lang: dict(strings.get(lang, {})) for lang in LANGS},
         links={k: str(v) for k, v in _toml(data / "links.toml").items()},
@@ -120,4 +164,6 @@ def load_content(root: Path) -> Content:
         jobs=jobs,
         activity=_activity(data / "activity.toml"),
         pc_box=_pc_box(data / "pc_box.toml"),
+        study=study,
+        study_updated=study_updated,
     )

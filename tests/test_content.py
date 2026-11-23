@@ -156,3 +156,34 @@ def test_pc_box_title_tag_and_pin_are_loaded(tmp_path):
         'tag = "ai"\npin = true\n', encoding="utf-8")
     assert load_content(root).pc_box["ask-vitor"] == {
         "en": "a", "pt": "b", "title_en": "Ask Vitor", "title_pt": "Pergunte", "tag": "ai", "pin": "true"}
+
+
+def test_study_progress_file_is_loaded():
+    content = load_content(ROOT)
+    assert content.study, "data/study-progress.json lists at least one topic"
+    for t in content.study:
+        assert set(t.title) == {"en", "pt"} and 0 <= t.percent <= 100
+    assert len({t.id for t in content.study}) == len(content.study)
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", content.study_updated)
+
+
+def test_missing_study_file_means_no_section(tmp_path):
+    root = _copy_data(tmp_path)
+    (root / "data" / "study-progress.json").unlink(missing_ok=True)
+    c = load_content(root)
+    assert c.study == [] and c.study_updated == ""
+
+
+@pytest.mark.parametrize("text", [
+    "{not json",
+    "[]",
+    '{"topics": [{"id": "a", "title": {"en": "A"}, "percent": 5}]}',  # no pt title
+    '{"topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 101}]}',
+    '{"topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": true}]}',
+    '{"topics": [{"id": "a", "title": {"en": "A", "pt": "A"}, "percent": 5, "url": "x"}]}',  # no extras
+])
+def test_bad_study_file_skips_the_section_with_warning(tmp_path, capsys, text):
+    root = _copy_data(tmp_path)
+    (root / "data" / "study-progress.json").write_text(text, encoding="utf-8")
+    assert load_content(root).study == []
+    assert "::warning::study" in capsys.readouterr().err

@@ -438,3 +438,11 @@ button.btn { font-family: Inter, system-ui, sans-serif; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .links a:active, .btn:active { transform: none; }
 }
+
+/* ---------- Studying now ---------- */
+.study { list-style: none; margin: 10px 0 0; padding: 0; }
+.study li { padding: 6px 0 8px; }
+.study .row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; line-height: 1.4; }
+.study .pct { flex: none; font-weight: 700; font-variant-numeric: tabular-nums; }
+.study .bar { height: 14px; margin-top: 4px; background: var(--soft); border: 3px solid var(--line); border-radius: 4px; overflow: hidden; }
+.study .bar i { display: block; height: 100%; background: var(--accent); }

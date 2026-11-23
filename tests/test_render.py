@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from homepage.content import Content, Job, PartyMember
+from homepage.content import Content, Job, PartyMember, StudyTopic
 from homepage.model import Activity, Anime, Book, Film, LiveData, Repo, Song
 from homepage.render import clip, render_home, safe_url
 
@@ -74,6 +74,37 @@ def section(html, start, end=None):
     """The box with id `start`, up to its closing tag (`end` is kept for older call sites)."""
     i = html.index(f'id="{start}"')
     return html[i:html.index("</section>", i)]
+
+
+STUDY = [StudyTopic("agents", {"en": "Agentic systems & MCP", "pt": "Agentes e MCP"}, 40),
+         StudyTopic("evals", {"en": "Evaluation", "pt": "Avaliação"}, 0)]
+
+
+def test_study_section_has_a_bar_and_percent_per_topic_and_no_links(tmp_path):
+    html = render(tmp_path, content(study=STUDY, study_updated="2026-11-23"))
+    box = section(html, "study")
+    assert box.count('role="progressbar"') == 2
+    assert 'aria-valuenow="40"' in box and 'aria-valuenow="0"' in box
+    assert "40%" in box and "0%" in box
+    assert "Agentic systems &amp; MCP" in box and "Agentes e MCP" in box
+    assert "<a " not in box and "href" not in box
+    assert 'style="width:40%"' in box
+    assert "Nov 23" in box and "23 nov" in box
+
+
+def test_study_labels_name_their_bars(tmp_path):
+    box = section(render(tmp_path, content(study=STUDY)), "study")
+    for m in re.finditer(r'aria-labelledby="([^"]+)"', box):
+        assert box.count(f'id="{m.group(1)}"') == 1
+
+
+def test_study_section_is_left_out_without_topics(tmp_path):
+    assert 'id="study"' not in render(tmp_path, content())
+
+
+def test_study_section_sits_after_projects(tmp_path):
+    html = render(tmp_path, content(study=STUDY))
+    assert html.index('id="pc-box"') < html.index('id="study"')
 
 
 def test_sections_in_order(tmp_path):
