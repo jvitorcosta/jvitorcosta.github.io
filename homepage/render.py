@@ -157,20 +157,77 @@ def _study_topic(p: Page, t: StudyTopic, slug: str, open_it: bool) -> str:
             f'{_bar(t.percent, label)}</summary><ul class="subs">{"".join(subs)}</ul></details></li>')
 
 
+STEP = 34  # width given to each leaf of the study map
+MAP_BRANCH = {"study_topics": {"en": "TOPICS", "pt": "TÓPICOS"}, "study_labs": {"en": "LABS", "pt": "LABS"}}
+
+
+def _tspans(text: dict[str, str]) -> str:
+    """Both languages inside an SVG <text>. Never a <span>: in inline SVG the HTML parser treats
+    it as foreign and drops everything after it out of the SVG."""
+    return "".join(f'<tspan lang="{lang}">{esc(text[lang])}</tspan>' for lang in ("en", "pt"))
+
+
+def _study_map(p: Page, topics: list[tuple[str, list[StudyTopic]]], slugs: dict[int, str], now: StudyTopic) -> str:
+    """A small tree drawn as inline SVG: the path at the root, Topics and Labs under it, one
+    pixel square per topic that fills with its percent. Each square links to its place in the
+    list below (site.js opens it). Colours come from the palette's CSS variables, so both
+    palettes work; the current topic has a ring and the word NOW, not colour alone."""
+    leaves = sum(len(ts) for _, ts in topics)
+    gap = 14 * (len(topics) - 1)
+    width = max(320, leaves * STEP + gap)
+    x = (width - (leaves * STEP + gap)) / 2
+    mid = width / 2
+    root = esc(p.c.strings["en"]["study_path"])
+    edges, nodes, labels = [], [], []
+    for kind_key, ts in topics:
+        first = x + STEP / 2
+        centres = [first + i * STEP for i in range(len(ts))]
+        gx = sum(centres) / len(centres)
+        edges.append(f'<path d="M{mid:g} 28V40H{gx:g}V52"/>')
+        labels.append(f'<rect class="gbox" x="{gx - 36:g}" y="52" width="72" height="22"/>'
+                      f'<text x="{gx:g}" y="67">'
+                      f'{_tspans(MAP_BRANCH[kind_key])}</text>')
+        for t, cx in zip(ts, centres):
+            edges.append(f'<path d="M{gx:g} 74V89H{cx:g}V104"/>')
+            fill = 0 if not t.percent else max(2, round(t.percent / 100 * 22))
+            is_now = t is now
+            name_en, name_pt = esc(t.title["en"]), esc(t.title["pt"])
+            nodes.append(
+                f'<a class="sn{" now" if is_now else ""}" href="#study-{slugs[id(t)]}" '
+                f'{_aria(f"{name_en}, {t.percent}%", f"{name_pt}, {t.percent}%")}>'
+                f'<rect class="hit" x="{cx - STEP / 2:g}" y="98" width="{STEP}" height="40"/>'
+                f'<rect class="sq" x="{cx - 11:g}" y="105" width="22" height="22"/>'
+                f'<rect class="fl" x="{cx - 11:g}" y="{127 - fill}" width="22" height="{fill}"/>'
+                + (f'<rect class="ring" x="{cx - 15:g}" y="101" width="30" height="30"/>'
+                   f'<text x="{cx:g}" y="148">{_tspans({lang: s["study_now"] for lang, s in p.c.strings.items()})}</text>'
+                   if is_now else "")
+                + "</a>")
+        x += len(ts) * STEP + 14
+    return (f'<svg class="smap" viewBox="0 0 {width:g} 154" role="group" '
+            f'{_aria("Study map: topics and labs, with progress", "Mapa de estudo: tópicos e laboratórios, com progresso")}>'
+            f'<g class="edges">{"".join(edges)}</g>'
+            f'<rect class="gbox" x="{mid - 86:g}" y="4" width="172" height="24"/>'
+            f'<text x="{mid:g}" y="20">{root}</text>{"".join(labels)}{"".join(nodes)}</svg>')
+
+
 def _study(p: Page) -> str:
-    """The topic I am studying now as a card; opening it shows every topic and lab with its
-    subtopics and concepts as a tree. Display only: no links, nothing computed here."""
+    """The topic I am studying now as a card; opening it shows a small tree map and then every
+    topic and lab with its subtopics and concepts as a list. The only links are the map's
+    squares, which point inside the section. Nothing is computed here."""
     if not p.c.study:
         return ""
     now = next((t for t in p.c.study if t.current), p.c.study[0])
     slugs = {id(t): _study_slug(t, n) for n, t in enumerate(p.c.study)}
     card = (f'<div class="row"><b id="study-now-{slugs[id(now)]}">{p.both(now.title)}</b>'
             f'<span class="pct">{now.percent}%</span></div>{_bar(now.percent, f"study-now-{slugs[id(now)]}")}')
-    groups = []
+    groups, branches = [], []
     for kind, key in (("study", "study_topics"), ("lab", "study_labs")):
-        rows = "".join(_study_topic(p, t, slugs[id(t)], t is now) for t in p.c.study if t.kind == kind)
+        ts = [t for t in p.c.study if t.kind == kind]
+        rows = "".join(_study_topic(p, t, slugs[id(t)], t is now) for t in ts)
         if rows:
             groups.append(f'<h3 class="gh">{p.t(key)}</h3><ul class="study">{rows}</ul>')
+            branches.append((key, ts))
+    tree_map = _study_map(p, branches, slugs, now) if branches else ""
     when = p.date(p.c.study_updated)
     asof = f'<p class="small">{p.t("study_asof")} {when}</p>' if when else ""
     return (f'<section class="box" id="study"><h2 class="h px"><span>{ARROW}{p.t("study")}{p.zh("study")}</span></h2>'
@@ -178,7 +235,7 @@ def _study(p: Page) -> str:
             f'<details class="tree"><summary><span class="now">{p.t("study_now")}</span>'
             f'<span class="path">{p.t("study_path")}</span>{card}'
             f'<span class="all">{p.t("study_all")}</span></summary>'
-            f'<div class="groups">{"".join(groups)}</div></details></section>')
+            f'<div class="groups">{tree_map}{"".join(groups)}</div></details></section>')
 
 
 def _trainer(p: Page) -> str:
