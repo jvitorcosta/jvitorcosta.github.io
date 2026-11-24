@@ -11,7 +11,7 @@ import re
 from pathlib import Path
 
 from homepage.content import Content, PartyMember, StudyTopic
-from homepage.markup import ARROW, Page, clip, esc, safe_url, versioned, warn
+from homepage.markup import ARROW, ICONS, Page, clip, esc, safe_url, versioned, warn
 from homepage.model import LiveData, Repo
 from homepage.right_now import right_now
 
@@ -182,7 +182,9 @@ def _study(p: Page) -> str:
 
 
 def _trainer(p: Page) -> str:
-    links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">{label}</a>'
+    # Each button leads with its 20x20 pixel tile (tools/pixel_icons.py); the label already names it.
+    links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">'
+                    f'<img src="{versioned(f"{ICONS}/{key}.svg")}" alt="" width="20" height="20">{label}</a>'
                     for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
     nav = f'<nav class="links">{links}</nav>' if links else ""
     status = (f'<p class="status"><i aria-hidden="true"></i>{p.t("status")}</p>'

@@ -133,6 +133,14 @@ def test_brand_icons_contrast_with_their_circle():
     assert "invert" not in css()
 
 
+def test_contact_icons_read_on_their_tile():
+    """The four contact tiles (tools/pixel_icons.py) are white glyphs on a brand colour."""
+    for name in ("instagram", "github", "linkedin", "email"):
+        svg = (ROOT / "assets" / "icons" / f"{name}.svg").read_text(encoding="utf-8")
+        fills = re.findall(r'fill="(#[0-9a-f]{6})"', svg)
+        assert fills[1] == "#ffffff" and contrast(fills[1], fills[0]) >= 3.0, name
+
+
 def test_language_toggle_name_contains_visible_text():
     source = js()
     assert re.search(r'setAttribute\("aria-label",\s*label', source)

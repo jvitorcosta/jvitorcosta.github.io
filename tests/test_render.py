@@ -476,7 +476,7 @@ def test_language_toggle_label_contains_visible_text(tmp_path):
 
 
 def test_vendored_icons_are_plain_svgs():
-    for icon in ("spotify", "letterboxd", "myanimelist", "goodreads", "strava"):
+    for icon in ("spotify", "letterboxd", "myanimelist", "goodreads", "strava", "instagram", "github", "linkedin", "email"):
         svg = (ROOT / "assets" / "icons" / f"{icon}.svg").read_text(encoding="utf-8")
         assert svg.startswith("<svg") and "<script" not in svg and "href" not in svg
 
@@ -718,6 +718,14 @@ def test_trainer_card_keeps_the_four_contact_buttons(tmp_path):
     assert re.findall(r'href="([^"]+)"', nav) == [
         "https://github.com/jvitorcosta", "https://www.linkedin.com/in/jvpro/", "mailto:joaovpro17@gmail.com"]
     assert "Resume" not in nav and 'class="primary"' not in nav
+
+
+def test_trainer_buttons_lead_with_their_pixel_tile(tmp_path):
+    links = {**LINKS, "instagram": "https://www.instagram.com/joaovpi/"}
+    nav = re.search(r'<nav class="links">(.*?)</nav>', section(render(tmp_path, c=content(links=links)), "trainer")).group(1)
+    tiles = re.findall(r'<a href="[^"]+"><img src="assets/icons/(\w+)\.svg\?v=[0-9a-f]{8}" alt="" width="20" height="20">(\w+)</a>', nav)
+    assert tiles == [("instagram", "Instagram"), ("github", "GitHub"), ("linkedin", "LinkedIn"), ("email", "Email")]
+    assert not re.findall(r'<img[^>]*src="(?!assets/)', nav)
 
 
 def test_experience_leads_its_buttons_with_the_resume(tmp_path):
