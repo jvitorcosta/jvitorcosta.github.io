@@ -402,5 +402,6 @@ def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: 
             f'<div class="col">\n{chr(10).join(s for s in rest if s)}\n</div>\n</div>')
     # The footer sits outside <main> so it is the page's contentinfo landmark.
     return (f'<!doctype html>\n<html lang="en" class="pal-nu">\n{_head(p)}\n'
-            f'<body>\n<main class="in">\n{body}\n</main>\n{_footer(p, live)}\n'
+            f'<body>\n<a class="skip" href="#trainer">{p.t("skip")}</a>\n'
+            f'<main class="in">\n{body}\n</main>\n{_footer(p, live)}\n'
             f'</body>\n</html>\n')

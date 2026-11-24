@@ -582,6 +582,14 @@ def test_palette_labels_follow_the_language(tmp_path):
         assert f'aria-label="{en}" data-aria-en="{en}" data-aria-pt="{pt}"' in top
 
 
+def test_skip_link_is_first_and_lands_on_the_trainer_card(tmp_path):
+    html = render(tmp_path)
+    body = html[html.index("<body>"):]
+    assert body.startswith('<body>\n<a class="skip" href="#trainer">')
+    assert "Skip to content" in body and "Pular para o conteúdo" in body
+    assert html.index('class="skip"') < html.index('<header class="top">') < html.index('id="trainer"')
+
+
 def test_footer_is_a_landmark_outside_main(tmp_path):
     html = render(tmp_path)
     assert html.index("</main>") < html.index('<footer class="foot">')
