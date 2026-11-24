@@ -211,8 +211,19 @@ def _work(p: Page, site_root: Path) -> str:
     for j in p.c.jobs:
         start, end = _month(p, j.start), _month(p, j.end)
         dates = p.both({lang: f"{start[lang]} – {end[lang]}" for lang in ("en", "pt")})
-        roles.append(f"<li><b>{esc(j.title)}</b>{esc(j.company)} · {dates}</li>")
+        head = f"<b>{esc(j.title)}</b>{esc(j.company)} · {dates}"
+        if not j.details:
+            roles.append(f"<li>{head}</li>")
+            continue
+        # A native disclosure: opens with Enter or Space, works without JavaScript, and any number
+        # of roles can stay open. The bullets are the public resume's own English text, so they
+        # carry lang="en-US" (not "en", which would hide them on the Portuguese page).
+        groups = "".join((f"<h3>{esc(h)}</h3>" if h else "") + "<ul>" + "".join(f"<li>{esc(i)}</li>" for i in items) + "</ul>"
+                         for h, items in j.details)
+        roles.append(f'<li><details class="job"><summary>{head}</summary>'
+                     f'<div class="did" lang="en-US">{groups}</div></details></li>')
     jobs = f'<ol class="jobs">{"".join(roles)}</ol>' if roles else ""
+    hint = f'<p class="small hint">{p.t("work_hint")}</p>' if any(j.details for j in p.c.jobs) else ""
     # The resume PDF sits with the jobs it describes, as the one filled button.
     pdf = safe_url(p.c.links.get("resume", ""))
     linkedin = safe_url(p.c.links.get("linkedin", ""))
@@ -223,7 +234,7 @@ def _work(p: Page, site_root: Path) -> str:
     if resume:
         link += f'<p class="small aside"><a href="{resume}">{p.t("resume_case")} ›</a></p>'
     return (f'<section class="box" id="work"><h2 class="h px"><span>{ARROW}{p.t("work")}{p.zh("work")}</span></h2>'
-            f'<p class="small">{p.t("work_line")}</p>{jobs}{link}</section>')
+            f'<p class="small">{p.t("work_line")}</p>{hint}{jobs}{link}</section>')
 
 
 def _aria(en: str, pt: str) -> str:

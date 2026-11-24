@@ -49,8 +49,10 @@ subtitles are decoration with real meaning, not a third language.
 
 ## What the page shows, and what it never shows
 
-- **Side projects only.** Work for employers appears in Experience as title, company and dates,
-  nothing more: no work projects, no impact lines, no resume PDF button.
+- **Side projects in the tiles; the resume's words in Experience.** Each role shows title, company
+  and dates, and opens (a native `details`, closed by default) to the bullets of the public resume,
+  word for word from curriculum-vitae's `resume/resume.md`. Nothing is added or reworded on the
+  page, no client names, and the bullets stay in English on the Portuguese page (`lang="en-US"`).
 - **Never claim what the repo doesn't back up.** A tile or row says what the project really does
   today, not what it's meant to do one day.
 - **Coursework sorts last** in Projects, so it never pushes my own projects under "+ n more".

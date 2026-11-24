@@ -657,6 +657,25 @@ def test_footer_names_every_source_and_the_real_cadence(tmp_path):
     assert "every 4 hours" in foot and "a cada 4 horas" in foot
 
 
+def test_a_role_with_details_opens_and_keeps_its_summary(tmp_path):
+    details = (("", ("Built <a thing> & shipped it.",)), ("Data platform", ("Cut landing time.",)))
+    jobs = [Job("Senior AI/ML Engineer", "Qubika", "Feb 2026", "Jul 2026", details),
+            Job("AI/ML Software Engineer", "Nubank", "Sep 2022", "Jul 2026")]
+    work = section(render(tmp_path, c=content(jobs=jobs)), "work")
+    assert work.count("<details") == 1 and "<details open" not in work  # closed until clicked, no JS
+    first, rest = work.split("</details>", 1)
+    assert "<summary><b>Senior AI/ML Engineer</b>Qubika · " in first
+    assert "<li>Built &lt;a thing&gt; &amp; shipped it.</li>" in first and "<h3>Data platform</h3>" in first
+    assert 'lang="en-US"' in first and 'lang="en"' not in first.split("</summary>")[1]
+    assert "<li><b>AI/ML Software Engineer</b>Nubank" in rest  # no details: a plain row
+    assert "Tap a role" in work and "Toque em um cargo" in work
+
+
+def test_no_details_means_no_hint_and_no_disclosure(tmp_path):
+    work = section(render(tmp_path), "work")
+    assert "<details" not in work and "Tap a role" not in work
+
+
 def test_work_lists_each_role_with_its_dates(tmp_path):
     work = section(render(tmp_path), "work")
     assert '<ol class="jobs">' in work
