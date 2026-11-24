@@ -40,18 +40,18 @@
   },
   "repos": [
     {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-24T20:10:31Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
       "description": "",
       "homepage": "",
       "name": "curriculum-vitae",
       "pushed": "2026-11-22T19:25:27Z",
       "url": "https://github.com/jvitorcosta/curriculum-vitae"
-    },
-    {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-22T17:40:11Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Amazan",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02b6388d02f456cd1b5ff45a0c",
-    "playing": false,
-    "title": "Tomando uma & Beijando",
-    "url": "https://open.spotify.com/track/73qs8MrjWpQ5VjKxPvRZjj"
+    "artist": "Ozuna",
+    "cover": "https://i.scdn.co/image/ab67616d00001e0266ab16a0f75d517304f18efd",
+    "playing": true,
+    "title": "La Modelo",
+    "url": "https://open.spotify.com/track/2SbzdGpOKlH3HIAGTWTbwU"
   },
   "updated": {
     "activity": "2026-11-24",
