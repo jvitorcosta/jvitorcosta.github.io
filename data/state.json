@@ -40,18 +40,18 @@
   },
   "repos": [
     {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-24T20:10:31Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
-    },
-    {
       "description": "",
       "homepage": "",
       "name": "curriculum-vitae",
-      "pushed": "2026-11-22T19:25:27Z",
+      "pushed": "2026-11-24T20:59:52Z",
       "url": "https://github.com/jvitorcosta/curriculum-vitae"
+    },
+    {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-24T20:51:33Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Ozuna",
-    "cover": "https://i.scdn.co/image/ab67616d00001e0266ab16a0f75d517304f18efd",
+    "artist": "Morad",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02b5a9a8ee5ff389c5bb12a8d2",
     "playing": true,
-    "title": "La Modelo",
-    "url": "https://open.spotify.com/track/2SbzdGpOKlH3HIAGTWTbwU"
+    "title": "Seguimos",
+    "url": "https://open.spotify.com/track/0jxHoxepnhgRNt6nPkctxA"
   },
   "updated": {
     "activity": "2026-11-24",
