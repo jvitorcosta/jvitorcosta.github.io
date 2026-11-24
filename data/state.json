@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-22",
-    "detail": "",
-    "distance_km": null,
-    "emoji": "🏋️",
-    "moving_min": 34,
-    "sport": "WeightTraining",
-    "title": "Night Weight Training",
-    "url": "https://www.strava.com/activities/21090195848"
+    "date": "2026-11-23",
+    "detail": "15.9 km/h",
+    "distance_km": 71.0,
+    "emoji": "🏅",
+    "moving_min": 268,
+    "sport": "Volleyball",
+    "title": "Evening Volleyball",
+    "url": "https://www.strava.com/activities/21113009193"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -40,18 +40,18 @@
   },
   "repos": [
     {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-24T21:47:19Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
       "description": "",
       "homepage": "",
       "name": "curriculum-vitae",
       "pushed": "2026-11-24T21:17:24Z",
       "url": "https://github.com/jvitorcosta/curriculum-vitae"
-    },
-    {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-24T21:14:57Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "BUDAH",
-    "cover": "https://i.scdn.co/image/ab67616d00001e022bd929e3adf5088f747c52ea",
-    "playing": true,
-    "title": "Púrpura",
-    "url": "https://open.spotify.com/track/6LnTLKEM1mj9fHNFYYH5qT"
+    "artist": "Fort Minor",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02c5454d7ff89392760678c491",
+    "playing": false,
+    "title": "Remember the Name (feat. Styles of Beyond)",
+    "url": "https://open.spotify.com/track/7ccC26pJ3aDG81sS4FwdXF"
   },
   "updated": {
     "activity": "2026-11-24",
