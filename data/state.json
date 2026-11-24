@@ -153,18 +153,18 @@
     }
   ],
   "song": {
-    "artist": "Ellie Goulding",
-    "cover": "https://i.scdn.co/image/ab67616d00001e0291538eb04634de568637b8be",
-    "playing": false,
-    "title": "Lights",
-    "url": "https://open.spotify.com/track/11ozIUBoXAgRTVWelDn4pL"
+    "artist": "Maná",
+    "cover": "https://i.scdn.co/image/ab67616d00001e0214ba3e999835ddf8012772de",
+    "playing": true,
+    "title": "Mariposa Traicionera",
+    "url": "https://open.spotify.com/track/0Pjsm4AaJGPOXHoB6xCgJB"
   },
   "updated": {
-    "activity": "2026-11-23",
-    "anime": "2026-11-23",
-    "book": "2026-11-23",
-    "film": "2026-11-23",
-    "repos": "2026-11-23",
-    "song": "2026-11-23"
+    "activity": "2026-11-24",
+    "anime": "2026-11-24",
+    "book": "2026-11-24",
+    "film": "2026-11-24",
+    "repos": "2026-11-24",
+    "song": "2026-11-24"
   }
 }
