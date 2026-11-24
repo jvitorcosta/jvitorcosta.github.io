@@ -12,6 +12,7 @@ the merge publishes it.
 | `data/activity.toml` | the activity row used when Strava is off |
 | `data/study-progress.json` | the STUDYING NOW bars, **generated from my study roadmap, don't edit here** |
 | `data/jobs.json` | Experience roles, **copied from curriculum-vitae, don't edit here** |
+| `data/experience.json` | what I did in each role (the bullets that open under it), **copied from the resume bullets in curriculum-vitae, don't edit here** |
 
 Before opening the PR:
 

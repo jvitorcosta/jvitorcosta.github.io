@@ -29,6 +29,8 @@ def test_loads_links_jobs_and_activity():
     assert content.links["letterboxd"] == "https://letterboxd.com/zubu/"
     assert content.links["instagram"] == "https://www.instagram.com/joaovpi/"
     assert [j.company for j in content.jobs] == ["Qubika", "Nubank", "EloGroup"]
+    assert all(j.details for j in content.jobs)
+    assert content.jobs[0].details[0][1][0].startswith("Productionized a LightGBM fraud detection model")
     assert content.activity == Activity(
         "Ride", "🚴", "Night Ride", 5.0, 25, "12.1 km/h · 3 PRs", "2026-11-04", ""
     )

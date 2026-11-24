@@ -61,5 +61,6 @@ All hand-written text lives in `data/`, so content changes never touch code:
 | `data/links.toml` | profile links |
 | `data/activity.toml` | the activity row when Strava is off |
 | `data/jobs.json` | the Experience roles, copied from curriculum-vitae |
+| `data/experience.json` | the bullets that open under each role, copied from the public resume |
 
 How to change each one is in [docs/content.md](docs/content.md).

@@ -32,6 +32,8 @@ class Job:
     company: str
     start: str
     end: str
+    # What I did there, as (heading, bullets) groups copied from the public resume; may be empty.
+    details: tuple[tuple[str, tuple[str, ...]], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -195,6 +197,20 @@ def _member(d: dict) -> PartyMember:
     )
 
 
+def _job_details(path: Path) -> dict[str, tuple[tuple[str, tuple[str, ...]], ...]]:
+    """experience.json: {company: [{"heading": "", "items": ["…"]}]}. A broken file means no
+    details (the roles still show), with a warning."""
+    if not path.exists():
+        return {}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        return {company: tuple((str(g.get("heading", "")), tuple(str(i) for i in g["items"])) for g in groups)
+                for company, groups in raw.items()}
+    except (ValueError, KeyError, TypeError, AttributeError) as e:
+        _warn(f"experience.json skipped: {e}")
+        return {}
+
+
 def load_content(root: Path) -> Content:
     data = Path(root) / "data"
     strings = _toml(data / "strings.toml")
@@ -202,8 +218,9 @@ def load_content(root: Path) -> Content:
     if len(party) > MAX_PARTY:
         raise ValueError(f"party has {len(party)} members, max is {MAX_PARTY}")
     jobs_file = data / "jobs.json"
+    details = _job_details(data / "experience.json")
     jobs = [
-        Job(j["title"], j["company"], j["start"], j["end"])
+        Job(j["title"], j["company"], j["start"], j["end"], details.get(j["company"], ()))
         for j in (json.loads(jobs_file.read_text(encoding="utf-8")) if jobs_file.exists() else [])
     ]
     study, study_updated = _study(data / "study-progress.json")
