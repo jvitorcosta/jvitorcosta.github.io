@@ -109,7 +109,7 @@ def test_study_card_has_the_path_label_and_no_why_sentence(tmp_path):
 
 def test_study_tree_groups_topics_and_labs_with_subtopics_and_concepts(tmp_path):
     box = study_box(tmp_path)
-    tree = box[box.index('<div class="groups"'):]
+    tree = box[box.index('</svg>'):]  # the list under the map
     topics_at, labs_at = tree.index("Topics"), tree.index("Labs and practice")
     assert topics_at < tree.index("Evaluation") < labs_at < tree.index("Agent labs")
     for text in ("Agent loops", "Tools and MCP", "Judges", "MCP server", "E5 Agents",
@@ -120,9 +120,32 @@ def test_study_tree_groups_topics_and_labs_with_subtopics_and_concepts(tmp_path)
     assert tree.count('class="item todo"') == 3
 
 
-def test_study_has_no_links(tmp_path):
+def test_study_links_only_inside_the_section(tmp_path):
     box = study_box(tmp_path)
-    assert "<a " not in box and "href" not in box
+    hrefs = re.findall(r'href="([^"]*)"', box)
+    assert hrefs and all(h.startswith("#study-") for h in hrefs)
+    ids = set(re.findall(r'id="([^"]+)"', box))
+    assert all(h[1:] in ids for h in hrefs)  # every square lands on a real topic
+
+
+def test_study_map_is_an_svg_tree_with_one_square_per_topic(tmp_path):
+    box = study_box(tmp_path)
+    svg = box[box.index("<svg"):box.index("</svg>")]
+    assert svg.count('class="sn') == 3 and svg.count('class="sn now"') == 1
+    assert svg.count("<path") == 2 + 3  # root to Topics and Labs, then each group to its leaves
+    assert "TOPICS" in svg and "LABS" in svg and "TÓPICOS" in svg
+    assert "<span" not in svg  # a span would break out of the SVG when parsed as HTML
+    assert 'aria-label="Agentic systems &amp; MCP, 38%"' in svg and "http" not in svg
+    assert box.index("<svg") < box.index('class="gh"')  # the map leads, the list follows
+
+
+def test_study_map_fills_by_percent_and_never_hides_a_started_topic(tmp_path):
+    topics = [StudyTopic("a", {"en": "A", "pt": "A"}, 100, False, "study", []),
+              StudyTopic("b", {"en": "B", "pt": "B"}, 0, True, "study", []),
+              StudyTopic("c", {"en": "C", "pt": "C"}, 2, False, "study", [])]
+    svg = study_box(tmp_path, topics)
+    heights = [int(h) for h in re.findall(r'class="fl"[^>]* height="(\d+)"', svg)]
+    assert heights == [22, 0, 2]
 
 
 def test_study_labels_name_their_bars(tmp_path):

@@ -8,6 +8,15 @@
   var LANGS = ["en", "pt"];
   var SPOTIFY_TIMEOUT_MS = 4000;
 
+  // A square on the study map jumps to its topic in the list; open the details around it first.
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("#study a[href^='#study-']");
+    var t = a && document.getElementById(a.getAttribute("href").slice(1));
+    for (var d = t && t.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) {
+      d.open = true;
+    }
+  });
+
   function load(key) {
     try {
       return window.localStorage.getItem(key);
