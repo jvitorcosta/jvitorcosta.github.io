@@ -63,6 +63,13 @@ class Activity:
 
 
 @dataclass(frozen=True)
+class AboutFact:
+    id: str
+    source: str
+    text: str
+
+
+@dataclass(frozen=True)
 class Repo:
     name: str
     description: str

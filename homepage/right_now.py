@@ -126,7 +126,7 @@ def _duration(minutes: int) -> str:
 
 
 def _activity(p: Page, act: Activity) -> str:
-    if act.distance_km is not None:
+    if act.distance_km:  # 0 or missing means no distance (weights, boxing): show the duration
         headline = f"{act.title} · {act.distance_km:.1f} km"
         parts = [esc(_duration(act.moving_min))]
     else:
