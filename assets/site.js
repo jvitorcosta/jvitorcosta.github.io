@@ -37,7 +37,7 @@
   function initialPalette() {
     var stored = load("palette");
     if (PALETTES.indexOf(stored) >= 0) return stored;
-    return "nu"; // Nu Purple is the main theme, whatever the system colour scheme
+    return "nu"; // Purpura is the main theme, whatever the system colour scheme
   }
 
   function initialLang() {

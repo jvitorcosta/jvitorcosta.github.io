@@ -23,8 +23,8 @@ GITHUB_REPOS = "https://github.com/jvitorcosta?tab=repositories"
 PC_BOX_ROWS = 5  # with 5 the right column ends about level with the left on a laptop
 COURSEWORK = {"uni", "course"}
 # key, English name, Portuguese name, swatch colour
-PALETTES = (("night", "Red Lantern", "Lanterna Vermelha", "#d4a72c"),
-            ("nu", "Nu Purple", "Roxo Nu", "#820ad1"))
+PALETTES = (("night", "Mandarin", "Mandarim", "#d4a72c"),
+            ("nu", "Purpura", "Púrpura", "#820ad1"))
 # Browser-bar colour per palette: the same as --bg in assets/site.css.
 THEME_COLOR = {"night": "#8f1d1d", "nu": "#820ad1"}
 # Both languages stay visible and CSS marks the current one (html[lang]); site.js keeps the label.

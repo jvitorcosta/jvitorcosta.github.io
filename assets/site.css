@@ -35,7 +35,7 @@
 }
 
 /* jvitorcosta.github.io: Game Boy menu look, shared by the homepage and the case-study pages.
-   Palettes live on <html> (.pal-night is Red Lantern, .pal-nu); site.js picks one and marks it
+   Palettes live on <html> (.pal-night is Mandarin, .pal-nu); site.js picks one and marks it
    with data-pal. Every text pair below passes WCAG AA (tests/test_assets.py checks them). */
 
 .pal-night { --bg:#8f1d1d; --box:#f5e6c8; --ink:#3a1410; --line:#8a5a12; --shadow:#4a0b0b; --soft:#ead2a8; --accent:#a3161a; --hp:#e0a91b; --ink-on-bg:#fff3d6; --strava:#b03600; --strava-decoration:underline; color-scheme:light; }
