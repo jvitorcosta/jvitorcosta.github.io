@@ -13,7 +13,7 @@ work_zh = "经历"
 study_zh = "学习"
 intro = "Software engineer · Manaus, Brazil."
 # Trainer card pill under the motto; remove it from both languages to hide the pill.
-status = "Weird idea? Let's build it."
+status = "There is no tomorrow."
 resume = "Resume (PDF)"
 # Spanish in both languages on purpose: the page shows it once, as Spanish.
 motto = "Dios me prepara a fuego lento."
@@ -75,7 +75,7 @@ pc_box_zh = "项目"
 work_zh = "经历"
 study_zh = "学习"
 intro = "Engenheiro de software · Manaus, Brasil."
-status = "Ideia maluca? Bora construir."
+status = "Não existe amanhã."
 resume = "Currículo (PDF)"
 # Spanish in both languages on purpose: the page shows it once, as Spanish.
 motto = "Dios me prepara a fuego lento."

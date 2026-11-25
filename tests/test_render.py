@@ -806,10 +806,10 @@ def test_no_status_hides_the_pill(tmp_path):
     assert 'class="status"' not in render(tmp_path, content(strings=strings))
 
 
-def test_pill_invites_odd_ideas_in_a_few_words():
+def test_pill_line_is_short_in_both_languages():
     # It sits in a small pill, so it must stay short in both languages.
-    assert STRINGS["en"]["status"] == "Weird idea? Let's build it."
-    assert STRINGS["pt"]["status"] == "Ideia maluca? Bora construir."
+    assert STRINGS["en"]["status"] == "There is no tomorrow."
+    assert STRINGS["pt"]["status"] == "Não existe amanhã."
     assert all(len(STRINGS[lang]["status"]) <= 30 for lang in ("en", "pt"))
 
 
