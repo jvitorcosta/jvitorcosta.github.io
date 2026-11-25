@@ -15,7 +15,7 @@ from homepage.content import load_content
 from homepage.images import cache_image, prune
 from homepage.knowledge import build_knowledge, write_knowledge
 from homepage.model import Activity, Anime, Book, Film, LiveData, Repo, Song, from_dict
-from homepage.render import render_404, render_blog_feed, render_blog_index, render_blog_post, render_home
+from homepage.render import render_404, render_blog_feed, render_blog_index, render_blog_post, render_blog_sitemap, render_home
 from homepage.sources.github import fetch_repos
 from homepage.sources.goodreads import NothingReading, fetch_book
 from homepage.sources.letterboxd import fetch_film
@@ -123,6 +123,8 @@ def build(
         pages["feed.xml"] = render_blog_feed(posts)
         for name, text in pages.items():
             (blog_dir / name).write_bytes(text.replace("\r\n", "\n").encode("utf-8"))
+    # Always written (empty without posts): robots.txt lists it, so it must exist.
+    (root / "sitemap-blog.xml").write_bytes(render_blog_sitemap(posts).encode("utf-8"))
     (root / "404.html").write_bytes(render_404(content).replace("\r\n", "\n").encode("utf-8"))
     write_knowledge(root / "knowledge.json", build_knowledge(content.about, repos, live, updated, today))
     save_state(state_path, state)

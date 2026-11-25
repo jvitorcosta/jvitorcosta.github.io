@@ -7,5 +7,7 @@ index.html
 knowledge.json
 404.html
 blog/*.html
+blog/feed.xml
+sitemap-blog.xml
 data/state.json
 assets/live/
