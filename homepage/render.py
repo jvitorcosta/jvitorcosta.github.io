@@ -332,6 +332,14 @@ def _month(p: Page, text: str) -> dict[str, str]:
     return {lang: f'{s["months"].split()[en.index(month)]} {year}' for lang, s in p.c.strings.items()}
 
 
+def _group(heading: str, items: tuple[str, ...], first: bool) -> str:
+    bullets = "<ul>" + "".join(f"<li>{esc(i)}</li>" for i in items) + "</ul>"
+    if not heading:
+        return bullets
+    return (f'<details class="grp"{" open" if first else ""}><summary><span>{esc(heading)}</span>'
+            f'<span class="n">{len(items)}</span></summary>{bullets}</details>')
+
+
 def _work(p: Page, site_root: Path) -> str:
     roles = []
     for j in p.c.jobs:
@@ -344,8 +352,9 @@ def _work(p: Page, site_root: Path) -> str:
         # A native disclosure: opens with Enter or Space, works without JavaScript, and any number
         # of roles can stay open. The bullets are the public resume's own English text, so they
         # carry lang="en-US" (not "en", which would hide them on the Portuguese page).
-        groups = "".join((f"<h3>{esc(h)}</h3>" if h else "") + "<ul>" + "".join(f"<li>{esc(i)}</li>" for i in items) + "</ul>"
-                         for h, items in j.details)
+        # A group with a heading is its own small disclosure (the first one open), so a long role
+        # such as four groups of bullets reads as four short rows; a group without one is a plain list.
+        groups = "".join(_group(h, items, first=n == 0) for n, (h, items) in enumerate(j.details))
         # The first role opens on load, so a visitor sees proof without a click.
         opened = " open" if not any("<details" in r for r in roles) else ""
         roles.append(f'<li><details class="job"{opened}><summary>{head}</summary>'
