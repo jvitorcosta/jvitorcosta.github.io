@@ -238,6 +238,7 @@ header.top > a:hover { text-decoration: underline; }
 .job .did ul { margin: 4px 0 0; padding: 0 0 0 18px; }
 .job .did li { margin: 0 0 6px; padding: 0; border: 0; }
 .jobs .hint { margin-bottom: 0; }
+.menu .upd { display: block; margin-top: 3px; font-size: 12px; color: var(--ink); }
 .hint .click { display: none; }
 @media (hover: hover) and (pointer: fine) { .hint .tap { display: none; } .hint .click { display: inline; } }
 @media (prefers-reduced-motion: reduce) { .job > summary::after, .grp > summary::after { transition: none; } }

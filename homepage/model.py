@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, fields
+from dataclasses import asdict, dataclass, field, fields
 from typing import Any, TypeVar
 
 T = TypeVar("T")
@@ -85,6 +85,7 @@ class LiveData:
     book: Book | None
     activity: Activity | None
     anime: Anime | None = None
+    updated: dict[str, str] = field(default_factory=dict)  # source name -> ISO date of its last good fetch
 
 
 def to_dict(obj: Any) -> dict:
