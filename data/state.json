@@ -40,6 +40,13 @@
   },
   "repos": [
     {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-25T18:56:17Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
       "description": "Connect IQ watch faces for my Garmin Forerunner 255: a Pokémon Emerald battle scene and a planet of the day",
       "homepage": "",
       "name": "garmin-watchfaces",
@@ -52,13 +59,6 @@
       "name": "curriculum-vitae",
       "pushed": "2026-11-25T17:59:09Z",
       "url": "https://github.com/jvitorcosta/curriculum-vitae"
-    },
-    {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-25T16:57:35Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
