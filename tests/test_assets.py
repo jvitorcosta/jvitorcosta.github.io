@@ -73,7 +73,7 @@ def test_nu_purple_is_820AD1():
 
 
 def test_nu_purple_is_the_default_whatever_the_system_scheme():
-    """Nu Purple is the main theme: no light/dark switch in the CSS or the script."""
+    """Purpura is the main theme: no light/dark switch in the CSS or the script."""
     assert "prefers-color-scheme" not in css() and "prefers-color-scheme" not in js()
     assert 'return "nu";' in js()
     assert "pocket" not in css() and "pocket" not in js()

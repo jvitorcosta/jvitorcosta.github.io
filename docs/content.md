@@ -160,7 +160,7 @@ checks).
 ## Palettes and styles
 
 `assets/site.css` defines each palette as a `.pal-<name>` block of colour tokens. Pages start with
-`class="pal-nu"`, so visitors without JavaScript get Nu Purple. The
+`class="pal-nu"`, so visitors without JavaScript get Purpura. The
 list of palettes is in three places that must agree: `render.PALETTES`, `PALETTES` in
 `assets/site.js`, and `cv/site.py` in curriculum-vitae. Every palette must pass the contrast
 tests in `tests/test_assets.py`.

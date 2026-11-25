@@ -220,7 +220,7 @@ def test_head(tmp_path):
 
 def test_palette_and_language_buttons(tmp_path):
     html = render(tmp_path)
-    for p, label in (("night", "Red Lantern"), ("nu", "Nu Purple")):
+    for p, label in (("night", "Mandarin"), ("nu", "Purpura")):
         assert f'<button type="button" data-palette="{p}" aria-label="{label}"' in html
     assert 'data-palette="pocket"' not in html
     assert ('<button type="button" data-lang-toggle aria-label="EN / PT, switch language">'
@@ -593,7 +593,7 @@ def test_star_text_variants(tmp_path):
 def test_palette_labels_follow_the_language(tmp_path):
     top = render(tmp_path).split("</header>")[0]
     assert 'role="group" aria-label="Colours" data-aria-en="Colours" data-aria-pt="Cores"' in top
-    for en, pt in (("Red Lantern", "Lanterna Vermelha"), ("Nu Purple", "Roxo Nu")):
+    for en, pt in (("Mandarin", "Mandarim"), ("Purpura", "Púrpura")):
         assert f'aria-label="{en}" data-aria-en="{en}" data-aria-pt="{pt}"' in top
 
 
@@ -737,7 +737,7 @@ def test_work_lists_each_role_with_its_dates(tmp_path):
 
 def test_palette_dots_have_a_visible_name(tmp_path):
     top = render(tmp_path).split('<header class="top">')[1].split("</header>")[0]
-    assert 'title="Red Lantern" data-title-en="Red Lantern" data-title-pt="Lanterna Vermelha"' in top
+    assert 'title="Mandarin" data-title-en="Mandarin" data-title-pt="Mandarim"' in top
 
 
 def test_pc_box_row_has_a_title_and_a_tag(tmp_path):
@@ -1012,7 +1012,7 @@ def test_footer_has_back_to_top_link(tmp_path):
 
 def test_palette_name_shows_next_to_the_dots(tmp_path):
     html = render(tmp_path)
-    for key, en, pt in (("night", "Red Lantern", "Lanterna Vermelha"), ("nu", "Nu Purple", "Roxo Nu")):
+    for key, en, pt in (("night", "Mandarin", "Mandarim"), ("nu", "Purpura", "Púrpura")):
         assert (f'<span class="pn pn-{key}"><span lang="en">{en}</span><span lang="pt">{pt}</span></span>') in html
     assert 'class="pname" aria-hidden="true"' in html
 
@@ -1020,7 +1020,7 @@ def test_palette_name_shows_next_to_the_dots(tmp_path):
 def test_theme_color_follows_the_palette(tmp_path):
     html = render(tmp_path)
     assert '<meta name="theme-color" content="#820ad1">' in html
-    assert "#8f1d1d" in html  # the early script knows the Red Lantern colour
+    assert "#8f1d1d" in html  # the early script knows the Mandarin colour
     css = (ROOT / "assets" / "site.css").read_text(encoding="utf-8")
     for key, colour in (("night", "#8f1d1d"), ("nu", "#820ad1")):
         assert f".pal-{key} {{ --bg:{colour};" in css  # same colour as the palette background
