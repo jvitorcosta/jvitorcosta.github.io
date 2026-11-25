@@ -173,3 +173,13 @@ uv run --python 3.12 --group dev pytest
 | `test_workflow.py` | the workflow's state-branch logic, run as real shell against temp git repos |
 
 No test calls the real services: sources take a `get` function, and tests pass a fake one.
+
+## Blog posts
+
+`homepage/blog.py` turns `blog/posts/<slug>.md` into `blog/<slug>.html` (generated, git-ignored like `index.html`). See `docs/blog-plan-2026-11.md` for the plan; this is step 1, the post page.
+
+- A post starts with a `---` header (`title`, `date`, `summary` required; `updated`, `lane` post or fragment, `tags` like `[garmin, monkey-c]`, `cover` with `cover_alt` optional), then markdown.
+- The converter supports `##` and `###` headings, paragraphs, flat bullet or numbered lists, block quotes, fenced code with a language, an image alone on a line (alt text required, optional "caption"), and inline `code`, **bold**, *italic* and links. Anything else (raw HTML, tables, nested lists, `#` titles, links that are not http(s), mailto or relative, images outside `blog/`) fails with `file:line`; the build reports the post and leaves it out, like a source that fails.
+- Everything is escaped, never passed through. The post body is `lang="en-US"` so it shows on the Portuguese page too; the top bar, labels and footer are bilingual as elsewhere.
+- Pages sit in `blog/`, so asset paths start with `../`. Images go in `blog/images/` and are referenced as `images/name.png`.
+- `tests/fixtures/blog/sample-post.md` has every construct and is used only by the tests; there are no real posts yet.

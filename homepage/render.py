@@ -11,6 +11,8 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse
 
+from homepage import blog
+from homepage.blog import Post
 from homepage.content import Content, PartyMember, StudyTopic
 from homepage.markup import ARROW, ICONS, Page, clip, esc, safe_url, versioned, warn
 from homepage.model import LiveData, Repo
@@ -409,11 +411,11 @@ def _top(p: Page | None = None) -> str:
             "</header>")
 
 
-def _footer(p: Page, live: LiveData) -> str:
+def _footer(p: Page, live: LiveData | None = None, base: str = "") -> str:
     return (f'<footer class="foot">{p.t("footer")}<br>{p.t("made_by")}<br>'
             # "#top" scrolls to the top of the page by the HTML spec; no element needs that id.
             f'<a href="#top">{p.t("back_to_top")}</a> · '
-            f'<a href="site-privacy.html">{p.t("footer_privacy")}</a></footer>')
+            f'<a href="{base}site-privacy.html">{p.t("footer_privacy")}</a></footer>')
 
 
 def _json_ld(links: dict[str, str]) -> str:
@@ -455,6 +457,12 @@ def _head(p: Page) -> str:
 <script src="{versioned("assets/site.js")}" defer></script>
 <script type="application/ld+json">{_json_ld(p.c.links)}</script>
 </head>"""
+
+
+def render_blog_post(content: Content, post: Post) -> str:
+    """blog/<slug>.html: the post inside the same top bar, footer and palettes as the other pages."""
+    p = Page(content)
+    return blog.render_post(content, post, SITE, _top(), _footer(p, base="../"), THEME_COLOR["nu"], EARLY_PALETTE)
 
 
 def render_404(content: Content) -> str:

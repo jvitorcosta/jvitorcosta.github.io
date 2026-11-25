@@ -6,5 +6,6 @@ __pycache__/
 index.html
 knowledge.json
 404.html
+blog/*.html
 data/state.json
 assets/live/
