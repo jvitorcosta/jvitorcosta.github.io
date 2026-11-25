@@ -311,6 +311,21 @@ def _study(p: Page) -> str:
             f'<div class="groups">{tree_map}{"".join(groups)}</div></details></section>')
 
 
+def _writing(p: Page, posts: list[Post]) -> str:
+    """The newest post as one row, with a link to all of them; "" while there are no posts."""
+    if not posts:
+        return ""
+    post = posts[0]
+    minutes = p.t("blog_min", n=post.minutes)
+    when = blog._long_date(p, post.date)
+    return (f'<section class="box" id="writing"><h2 class="h px"><span>{ARROW}{p.t("blog")}{p.zh("blog")}</span>'
+            f'<a href="blog/">{p.t("blog_all")}</a></h2>'
+            f'<ul class="menu"><li><a class="row" href="blog/{post.slug}.html"><div class="body">'
+            f'<span class="k px">{p.t("blog_latest")}</span>'
+            f'<span class="t" lang="en-US">{esc(post.title)}</span>{when} · {minutes}<br>'
+            f'<span lang="en-US">{esc(clip(post.summary, 140))}</span></div></a></li></ul></section>')
+
+
 def _trainer(p: Page) -> str:
     # Each button leads with its 20x20 pixel tile (tools/pixel_icons.py); the label already names it.
     links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">'
@@ -392,8 +407,9 @@ def _title(en: str, pt: str) -> str:
     return f'title="{en}" data-title-en="{en}" data-title-pt="{pt}"'
 
 
-def _top(p: Page | None = None) -> str:
-    """The header; with a Page whose links set ask_api it also gets the ASK ME button."""
+def _top(p: Page | None = None, blog_href: str = "") -> str:
+    """The header; with a Page whose links set ask_api it also gets the ASK ME button, and with
+    a blog_href (there is at least one post) a BLOG link."""
     dots = "".join(
         f'<button type="button" data-palette="{key}" {_aria(en, pt)} {_title(en, pt)} '
         f'style="background:{colour}"></button>'
@@ -405,8 +421,9 @@ def _top(p: Page | None = None) -> str:
     # html.pal-*); it is aria-hidden because each dot already carries its name.
     names = "".join(f'<span class="pn pn-{key}"><span lang="en">{en}</span><span lang="pt">{pt}</span></span>'
                     for key, en, pt, _ in PALETTES)
+    blog = f'<a class="top-link" href="{blog_href}">BLOG</a>' if blog_href else ""
     return (f'<header class="top"><div class="sw" role="group" {_aria("Colours", "Cores")}>'
-            f'{dots}<span class="pname" aria-hidden="true">{names}</span></div>{ask}'
+            f'{dots}<span class="pname" aria-hidden="true">{names}</span></div>{ask}{blog}'
             f'<button type="button" data-lang-toggle aria-label="{LANG_TOGGLE_LABEL}">{LANG_TOGGLE}</button>'
             "</header>")
 
@@ -433,9 +450,11 @@ def _json_ld(links: dict[str, str]) -> str:
     return json.dumps(person, ensure_ascii=False).replace("<", "\\u003c")
 
 
-def _head(p: Page) -> str:
+def _head(p: Page, has_blog: bool = False) -> str:
     en = p.c.strings["en"]
     title, description = esc(en["page_title"]), esc(en["page_description"])
+    feed = (f'<link rel="alternate" type="application/atom+xml" title="{blog.FEED_TITLE}" '
+            f'href="{SITE}blog/feed.xml">' + "\n") if has_blog else ""
     return f"""<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -449,7 +468,7 @@ def _head(p: Page) -> str:
 <meta property="og:type" content="website">
 <meta property="og:image" content="{SITE}{versioned("og-image.png")}">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="favicon.ico" sizes="32x32">
+{feed}<link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script>{EARLY_PALETTE}</script>
@@ -459,10 +478,23 @@ def _head(p: Page) -> str:
 </head>"""
 
 
+def _blog_chrome(content: Content) -> blog.Chrome:
+    """The top bar, footer, colour and early script a page inside blog/ borrows from the site."""
+    return blog.Chrome(SITE, _top(blog_href="./"), _footer(Page(content), base="../"), THEME_COLOR["nu"], EARLY_PALETTE)
+
+
 def render_blog_post(content: Content, post: Post) -> str:
     """blog/<slug>.html: the post inside the same top bar, footer and palettes as the other pages."""
-    p = Page(content)
-    return blog.render_post(content, post, SITE, _top(), _footer(p, base="../"), THEME_COLOR["nu"], EARLY_PALETTE)
+    return blog.render_post(content, post, _blog_chrome(content))
+
+
+def render_blog_index(content: Content, posts: list[Post]) -> str:
+    """blog/index.html: every post, newest first, posts then fragments."""
+    return blog.render_index(content, posts, _blog_chrome(content))
+
+
+def render_blog_feed(posts: list[Post]) -> str:
+    return blog.render_feed(posts, SITE)
 
 
 def render_404(content: Content) -> str:
@@ -494,21 +526,22 @@ def render_404(content: Content) -> str:
 """
 
 
-def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: Path) -> str:
+def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: Path,
+                posts: list[Post] | tuple[Post, ...] = ()) -> str:
     p = Page(content)
     site_root = Path(site_root)
     # Two columns on a wide screen (assets/site.css), one on a phone. The code order is the phone
     # order, which screen readers and the keyboard follow too: who I am and my projects, then
     # the rest.
     # Wide screens: who I am, what I build and where I work on the left. Phones show Work last (CSS).
-    side = [_trainer(p), _ask(p), _party(p, repos, site_root), _work(p, site_root)]
+    side = [_trainer(p), _ask(p), _party(p, repos, site_root), _writing(p, list(posts)), _work(p, site_root)]
     rest = [right_now(p, live), _pc_box(p, repos, site_root), _study(p)]
-    body = (f'{_top(p)}\n<div class="cols">\n'
+    body = (f'{_top(p, "blog/" if posts else "")}\n<div class="cols">\n'
             f'<div class="col side">\n{chr(10).join(s for s in side if s)}\n</div><!-- /side -->\n'
             f'<div class="col">\n{chr(10).join(s for s in rest if s)}\n</div>\n</div>')
     # The footer sits outside <main> so it is the page's contentinfo landmark.
     script = f'<script src="{versioned("assets/ask.js")}" defer></script>\n' if _ask_api(p) else ""
-    return (f'<!doctype html>\n<html lang="en" class="pal-nu">\n{_head(p)}\n'
+    return (f'<!doctype html>\n<html lang="en" class="pal-nu">\n{_head(p, bool(posts))}\n'
             f'<body>\n<a class="skip" href="#trainer">{p.t("skip")}</a>\n'
             f'<main class="in">\n{body}\n</main>\n{_footer(p, live)}\n{script}'
             f'</body>\n</html>\n')

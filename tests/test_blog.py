@@ -4,8 +4,8 @@ from pathlib import Path
 import pytest
 
 from homepage.blog import BlogError, load_posts, parse_post
-from homepage.render import render_blog_post
-from tests.test_render import content
+from homepage.render import render_blog_feed, render_blog_index, render_blog_post, render_home
+from tests.test_render import REPOS, content, live
 
 ROOT = Path(__file__).resolve().parents[1]
 SAMPLE = (ROOT / "tests" / "fixtures" / "blog" / "sample-post.md").read_text(encoding="utf-8")
@@ -174,3 +174,73 @@ def test_a_post_without_a_cover_falls_back_to_the_home_share_image():
     html = render_blog_post(content(), parse_post(text, "sample-post"))
     assert re.search(r'og:image" content="https://jvitorcosta\.github\.io/og-image\.png\?v=[0-9a-f]{8}"', html)
     assert 'class="cover"' not in html
+
+
+FRAGMENT = (
+    "---\n"
+    "title: A short note\n"
+    "date: 2026-12-02\n"
+    "lane: fragment\n"
+    "tags: [til]\n"
+    "summary: Note & more\n"
+    "---\n\n"
+    "A note.\n"
+)
+
+
+def two_posts():
+    return [parse_post(FRAGMENT, "short-note"), parse_post(SAMPLE, "sample-post")]
+
+
+def test_the_index_lists_posts_and_fragments_with_their_dates():
+    html = render_blog_index(content(), two_posts())
+    assert html.index('<span lang="en">Posts</span>') < html.index("Fragments")
+    assert '<a class="row" href="sample-post.html">' in html and '<a class="row" href="short-note.html">' in html
+    assert '<span class="t" lang="en-US">A sample post for the tests</span>' in html
+    assert '<span lang="en-US">Note &amp; more</span>' in html
+    assert '<link rel="canonical" href="https://jvitorcosta.github.io/blog/">' in html
+    assert '<a href="feed.xml">' in html and 'rel="alternate" type="application/atom+xml"' in html
+    assert html.count("<h1") == 1 and 'href="../site-privacy.html"' in html
+
+
+def test_the_index_leaves_out_an_empty_lane():
+    html = render_blog_index(content(), [two_posts()[1]])
+    assert "Fragments" not in html and "Posts" in html
+
+
+def test_the_feed_is_atom_with_stable_ids_and_escaped_text():
+    import xml.dom.minidom
+    feed = render_blog_feed(two_posts())
+    assert feed.startswith('<?xml version="1.0" encoding="utf-8"?>\n<feed xmlns="http://www.w3.org/2005/Atom"')
+    assert "<id>https://jvitorcosta.github.io/blog/sample-post.html</id>" in feed
+    assert "<id>https://jvitorcosta.github.io/blog/short-note.html</id>" in feed
+    assert "<published>2026-11-26T00:00:00Z</published><updated>2026-11-27T00:00:00Z</updated>" in feed
+    assert "<summary>Note &amp; more</summary>" in feed and '<category term="garmin"/>' in feed
+    assert "<updated>2026-12-02T00:00:00Z</updated>" in feed.split("<entry>")[0]  # the newest entry
+    assert "<author><name>Vitor Pinheiro</name></author>" in feed
+    xml.dom.minidom.parseString(feed)  # well formed
+
+
+def test_an_empty_feed_is_still_valid_atom():
+    import xml.dom.minidom
+    xml.dom.minidom.parseString(render_blog_feed([]))
+
+
+def test_the_home_page_shows_the_blog_only_when_there_is_a_post(tmp_path):
+    none = render_home(content(), live(), REPOS, tmp_path)
+    assert 'id="writing"' not in none and 'class="top-link"' not in none and "feed.xml" not in none
+    html = render_home(content(), live(), REPOS, tmp_path, two_posts())
+    assert '<a class="top-link" href="blog/">BLOG</a>' in html
+    assert ('<link rel="alternate" type="application/atom+xml" title="Vitor Pinheiro: blog" '
+            'href="https://jvitorcosta.github.io/blog/feed.xml">') in html
+    start = html.index('id="writing"')
+    row = html[start:html.index("</section>", start)]
+    assert 'href="blog/short-note.html"' in row and "A short note" in row  # the newest post
+    assert "Latest post" in row and "Último post" in row and 'href="blog/"' in row
+
+
+def test_the_post_page_links_to_the_blog_and_the_feed():
+    html = page()
+    assert '<a href="./"><span lang="en">All posts</span>' in html
+    assert '<a class="top-link" href="./">BLOG</a>' in html
+    assert 'rel="alternate" type="application/atom+xml"' in html
