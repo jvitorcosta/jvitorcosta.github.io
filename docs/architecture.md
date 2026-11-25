@@ -121,7 +121,7 @@ before the page paints (so neither flashes), and JSON-LD describing me as a `Per
 
 Every visible text is written twice, as `<span lang="en">…</span><span lang="pt">…</span>`, by
 `Page.t(key)` (a key of `strings.toml`) or `Page.both({"en": …, "pt": …})`. `site.css` hides the
-spans that don't match `<html lang>`, and the EN > PT button only changes that attribute. So
+spans that don't match `<html lang>`, and the EN / PT button only changes that attribute. So
 there is one URL, no reload and nothing fetched when switching. Labels for screen readers
 (`aria-label`) and hover names (`title`) carry `data-aria-en`/`data-aria-pt` and
 `data-title-en`/`data-title-pt`, and `site.js` swaps them.

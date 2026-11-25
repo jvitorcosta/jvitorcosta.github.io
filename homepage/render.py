@@ -24,6 +24,11 @@ COURSEWORK = {"uni", "course"}
 # key, English name, Portuguese name, swatch colour
 PALETTES = (("night", "Red Lantern", "Lanterna Vermelha", "#d4a72c"),
             ("nu", "Nu Purple", "Roxo Nu", "#820ad1"))
+# Browser-bar colour per palette: the same as --bg in assets/site.css.
+THEME_COLOR = {"night": "#8f1d1d", "nu": "#820ad1"}
+# Both languages stay visible and CSS marks the current one (html[lang]); site.js keeps the label.
+LANG_TOGGLE = '<span class="l-en">EN</span> / <span class="l-pt">PT</span>'
+LANG_TOGGLE_LABEL = "EN / PT, switch language"
 CASE_SLUG = re.compile(r"[a-z0-9][a-z0-9-]*")
 RESUME_CASE = "resume-as-code"
 # Applies a remembered palette and language before the page paints, so neither flashes; site.js
@@ -31,7 +36,9 @@ RESUME_CASE = "resume-as-code"
 EARLY_PALETTE = ('try{var p=localStorage.getItem("palette");'
                  f'if(/^({"|".join(k for k, *_ in PALETTES)})$/.test(p)){{'
                  'var h=document.documentElement;h.className="pal-"+p;'
-                 'h.setAttribute("data-pal",p)}}catch(e){}'
+                 'h.setAttribute("data-pal",p);'
+                 f'var c={json.dumps(THEME_COLOR)}[p],m=document.querySelector("meta[name=theme-color]");'
+                 'if(m)m.content=c}}catch(e){}'
                  # Same rule as site.js initialLang: stored choice, else the browser language.
                  'var h=document.documentElement,l=(navigator.language||"").toLowerCase().indexOf("pt")?"en":"pt";'
                  'try{var s=localStorage.getItem("lang");if(s=="en"||s=="pt")l=s}catch(e){}h.lang=l;')
@@ -277,10 +284,15 @@ def _work(p: Page, site_root: Path) -> str:
         # carry lang="en-US" (not "en", which would hide them on the Portuguese page).
         groups = "".join((f"<h3>{esc(h)}</h3>" if h else "") + "<ul>" + "".join(f"<li>{esc(i)}</li>" for i in items) + "</ul>"
                          for h, items in j.details)
-        roles.append(f'<li><details class="job"><summary>{head}</summary>'
+        # The first role opens on load, so a visitor sees proof without a click.
+        opened = " open" if not any("<details" in r for r in roles) else ""
+        roles.append(f'<li><details class="job"{opened}><summary>{head}</summary>'
                      f'<div class="did" lang="en-US">{groups}</div></details></li>')
     jobs = f'<ol class="jobs">{"".join(roles)}</ol>' if roles else ""
-    hint = f'<p class="small hint">{p.t("work_hint")}</p>' if any(j.details for j in p.c.jobs) else ""
+    # "Tap" on touch screens, "Click" where a mouse hovers (assets/site.css picks one).
+    hint = (f'<p class="small hint"><span class="tap">{p.t("work_hint")}</span>'
+            f'<span class="click">{p.t("work_hint_click")}</span></p>'
+            if any(j.details for j in p.c.jobs) else "")
     # The resume PDF sits with the jobs it describes, as the one filled button.
     pdf = safe_url(p.c.links.get("resume", ""))
     linkedin = safe_url(p.c.links.get("linkedin", ""))
@@ -310,9 +322,13 @@ def _top() -> str:
         for key, en, pt, colour in PALETTES
     )
     # site.js swaps aria-label to data-aria-<lang> when the language changes.
+    # The name of the active palette sits next to the dots (CSS shows the one that matches
+    # html.pal-*); it is aria-hidden because each dot already carries its name.
+    names = "".join(f'<span class="pn pn-{key}"><span lang="en">{en}</span><span lang="pt">{pt}</span></span>'
+                    for key, en, pt, _ in PALETTES)
     return (f'<header class="top"><div class="sw" role="group" {_aria("Colours", "Cores")}>'
-            f'{dots}</div>'
-            '<button type="button" data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>'
+            f'{dots}<span class="pname" aria-hidden="true">{names}</span></div>'
+            f'<button type="button" data-lang-toggle aria-label="{LANG_TOGGLE_LABEL}">{LANG_TOGGLE}</button>'
             "</header>")
 
 
@@ -343,6 +359,7 @@ def _head(p: Page) -> str:
     return f"""<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="{THEME_COLOR["nu"]}">
 <title>{title}</title>
 <meta name="description" content="{description}">
 <link rel="canonical" href="{SITE}">
@@ -369,6 +386,7 @@ def render_404(content: Content) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="{THEME_COLOR["nu"]}">
 <meta name="robots" content="noindex">
 <title>{esc(content.strings["en"]["not_found_title"])}</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">

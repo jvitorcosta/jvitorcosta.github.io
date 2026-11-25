@@ -5,6 +5,7 @@
 
   var root = document.documentElement;
   var PALETTES = ["night", "nu"];
+  var THEME_COLOR = { night: "#8f1d1d", nu: "#820ad1" }; // the palettes' --bg, for the browser bar
   var LANGS = ["en", "pt"];
   var SPOTIFY_TIMEOUT_MS = 4000;
 
@@ -56,6 +57,13 @@
     PALETTES.forEach(function (p) { root.classList.remove("pal-" + p); });
     root.classList.add("pal-" + name);
     root.setAttribute("data-pal", name);
+    var meta = document.querySelector("meta[name=theme-color]");
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "theme-color";
+      document.head.appendChild(meta);
+    }
+    meta.content = THEME_COLOR[name];
     each("button[data-palette]", function (b) {
       b.setAttribute("aria-pressed", b.getAttribute("data-palette") === name ? "true" : "false");
     });
@@ -168,10 +176,19 @@
     if (LANGS.indexOf(code) < 0) return;
     root.lang = code;
     each("button[data-lang-toggle]", function (b) {
-      // WCAG 2.5.3: the accessible name starts with the visible text.
-      var label = code === "pt" ? "PT > EN" : "EN > PT";
-      b.textContent = label;
-      b.setAttribute("aria-label", label + (code === "pt" ? ", mudar idioma" : ", switch language"));
+      // Both languages stay visible; CSS fills the current one (html[lang]). WCAG 2.5.3: the
+      // accessible name starts with the visible text. Pages built before this change get the markup here.
+      if (!b.querySelector(".l-en")) {
+        b.textContent = "";
+        [["l-en", "EN"], [null, " / "], ["l-pt", "PT"]].forEach(function (part) {
+          if (!part[0]) { b.appendChild(document.createTextNode(part[1])); return; }
+          var s = document.createElement("span");
+          s.className = part[0];
+          s.textContent = part[1];
+          b.appendChild(s);
+        });
+      }
+      b.setAttribute("aria-label", "EN / PT" + (code === "pt" ? ", mudar idioma" : ", switch language"));
     });
     // Labels without visible text (palette dots and their group) follow the page language.
     each("[data-aria-en]", function (el) {
