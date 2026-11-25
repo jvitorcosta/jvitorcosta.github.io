@@ -147,10 +147,16 @@ main > header.top { padding: 0; }
 [data-palette][aria-pressed=true]::after { inset: 2px; }
 [data-palette]:focus-visible { outline: 3px solid var(--ink-on-bg); outline-offset: 0; }
 
+/* The active palette's name, next to the dots. */
+.sw { align-items: center; }
+.pname { margin-left: 8px; font-size: 12px; line-height: 1.4; color: var(--ink-on-bg); }
+.pn { display: none; }
+.pal-night .pn-night, .pal-nu .pn-nu { display: inline; }
+
 [data-lang-toggle] {
   min-width: 44px; min-height: 44px;
   padding: 0 10px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-on-bg);
   background: transparent;
   border: 3px solid var(--ink-on-bg);
@@ -158,6 +164,9 @@ main > header.top { padding: 0; }
   cursor: pointer;
 }
 [data-lang-toggle]:focus-visible { outline-color: var(--ink-on-bg); }
+/* Both languages show; the current one is a filled chip (shape, not colour alone). */
+[data-lang-toggle] span { padding: 2px 4px; border-radius: 2px; }
+html[lang=en] [data-lang-toggle] .l-en, html[lang=pt] [data-lang-toggle] .l-pt { color: var(--bg); background: var(--ink-on-bg); }
 
 header.top > a {
   display: inline-flex; align-items: center;
@@ -220,6 +229,8 @@ header.top > a:hover { text-decoration: underline; }
 .job .did ul { margin: 4px 0 0; padding: 0 0 0 18px; }
 .job .did li { margin: 0 0 6px; padding: 0; border: 0; }
 .jobs .hint { margin-bottom: 0; }
+.hint .click { display: none; }
+@media (hover: hover) and (pointer: fine) { .hint .tap { display: none; } .hint .click { display: inline; } }
 @media (prefers-reduced-motion: reduce) { .job > summary::after { transition: none; } }
 #work .aside { margin-top: 12px; font-size: 14px; }
 #work .aside a {
@@ -313,7 +324,7 @@ a.row:hover .t { text-decoration: underline; }
 }
 .menu .body { flex: 1; min-width: 0; font-size: 14px; line-height: 1.45; }
 .menu .t { display: block; font-size: 15px; font-weight: 700; }
-.k { display: block; margin-bottom: 4px; font-size: 10px; line-height: 1.5; }
+.k { display: block; margin-bottom: 4px; font-size: 12px; line-height: 1.5; }
 [data-field=artist] { display: block; }
 .review { display: block; margin-top: 2px; }
 .go {
@@ -331,7 +342,7 @@ a.row:hover .t { text-decoration: underline; }
   display: inline-block;
   margin-left: 4px;
   padding: 3px 5px;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.2;
   vertical-align: middle;
   color: #08130a;
@@ -390,7 +401,7 @@ a.row:hover .t { text-decoration: underline; }
 .mon .lv {
   position: absolute; top: 6px; left: 6px;
   padding: 3px 4px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink);
   background: var(--box);
   border: 2px solid var(--line);

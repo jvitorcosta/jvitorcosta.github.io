@@ -210,8 +210,8 @@ def test_palette_and_language_buttons(tmp_path):
     for p, label in (("night", "Red Lantern"), ("nu", "Nu Purple")):
         assert f'<button type="button" data-palette="{p}" aria-label="{label}"' in html
     assert 'data-palette="pocket"' not in html
-    assert ('<button type="button" data-lang-toggle aria-label="EN > PT, switch language">'
-            "EN > PT</button>") in html
+    assert ('<button type="button" data-lang-toggle aria-label="EN / PT, switch language">'
+            '<span class="l-en">EN</span> / <span class="l-pt">PT</span></button>') in html
 
 
 def test_profile_icons_link_to_profiles(tmp_path):
@@ -495,7 +495,9 @@ def test_no_external_image_sources(tmp_path):
 
 def test_language_toggle_label_contains_visible_text(tmp_path):
     html = render(tmp_path)
-    assert 'data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>' in html
+    m = re.search(r'data-lang-toggle aria-label="([^"]+)">(.*?)</button>', html)
+    visible = re.sub(r"<[^>]+>", "", m.group(2))
+    assert m.group(1).startswith(visible)  # WCAG 2.5.3: the name starts with the visible text
 
 
 def test_vendored_icons_are_plain_svgs():
@@ -693,7 +695,8 @@ def test_a_role_with_details_opens_and_keeps_its_summary(tmp_path):
     jobs = [Job("Senior AI/ML Engineer", "Qubika", "Feb 2026", "Jul 2026", details),
             Job("AI/ML Software Engineer", "Nubank", "Sep 2022", "Jul 2026")]
     work = section(render(tmp_path, c=content(jobs=jobs)), "work")
-    assert work.count("<details") == 1 and "<details open" not in work  # closed until clicked, no JS
+    assert work.count("<details") == 1  # a native disclosure, no JS
+    assert '<details class="job" open>' in work  # the first role opens on load
     first, rest = work.split("</details>", 1)
     assert "<summary><b>Senior AI/ML Engineer</b>Qubika · " in first
     assert "<li>Built &lt;a thing&gt; &amp; shipped it.</li>" in first and "<h3>Data platform</h3>" in first
@@ -836,3 +839,32 @@ def test_footer_has_back_to_top_link(tmp_path):
         assert f'<span lang="{lang}">{esc(STRINGS[lang]["back_to_top"])}</span>' in link.group(1)
     # With no element called "top", browsers scroll "#top" to the very top of the page.
     assert 'id="top"' not in html and 'name="top"' not in html
+
+
+def test_palette_name_shows_next_to_the_dots(tmp_path):
+    html = render(tmp_path)
+    for key, en, pt in (("night", "Red Lantern", "Lanterna Vermelha"), ("nu", "Nu Purple", "Roxo Nu")):
+        assert (f'<span class="pn pn-{key}"><span lang="en">{en}</span><span lang="pt">{pt}</span></span>') in html
+    assert 'class="pname" aria-hidden="true"' in html
+
+
+def test_theme_color_follows_the_palette(tmp_path):
+    html = render(tmp_path)
+    assert '<meta name="theme-color" content="#820ad1">' in html
+    assert "#8f1d1d" in html  # the early script knows the Red Lantern colour
+    css = (ROOT / "assets" / "site.css").read_text(encoding="utf-8")
+    for key, colour in (("night", "#8f1d1d"), ("nu", "#820ad1")):
+        assert f".pal-{key} {{ --bg:{colour};" in css  # same colour as the palette background
+
+
+def test_only_the_first_role_with_details_opens_and_the_hint_has_tap_and_click(tmp_path):
+    details = (("", ("Did a thing.",)),)
+    jobs = [Job("A", "Plain", "Jan 2026", "Feb 2026"),
+            Job("B", "First", "Jan 2025", "Dec 2025", details),
+            Job("C", "Second", "Jan 2024", "Dec 2024", details)]
+    work = section(render(tmp_path, c=content(jobs=jobs)), "work")
+    assert work.count('<details class="job" open>') == 1 and work.count("<details") == 2
+    assert work.index("<summary><b>B</b>") < work.index("</details>") < work.index("<summary><b>C</b>")
+    assert work.index('class="job" open') < work.index("<summary><b>B</b>")
+    assert '<span class="tap">' in work and '<span class="click">' in work
+    assert "Click a role to see what I did there." in work and "Clique em um cargo" in work
