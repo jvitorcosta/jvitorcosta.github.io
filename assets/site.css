@@ -226,13 +226,21 @@ header.top > a:hover { text-decoration: underline; }
 .job > summary:hover b { text-decoration: underline; }
 .job > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .job .did { padding: 4px 0 8px; font-size: 13.5px; line-height: 1.5; }
-.job .did h3 { margin: 10px 0 2px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+/* A headed group of bullets is a small disclosure inside the open role. */
+.grp { border-top: 2px dotted var(--soft); }
+.grp > summary { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; padding: 0 28px 0 0; cursor: pointer; list-style: none; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.grp > summary::-webkit-details-marker { display: none; }
+.grp > summary::after { content: "▶"; position: absolute; right: 4px; top: 50%; margin-top: -7px; font-size: 11px; transition: transform .12s; }
+.grp[open] > summary::after { transform: rotate(90deg); }
+.grp > summary:hover span:first-child { text-decoration: underline; }
+.grp > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.grp .n { flex: none; min-width: 22px; padding: 0 6px; text-align: center; font-size: 11px; color: var(--ink); background: var(--soft); border-radius: 3px; }
 .job .did ul { margin: 4px 0 0; padding: 0 0 0 18px; }
 .job .did li { margin: 0 0 6px; padding: 0; border: 0; }
 .jobs .hint { margin-bottom: 0; }
 .hint .click { display: none; }
 @media (hover: hover) and (pointer: fine) { .hint .tap { display: none; } .hint .click { display: inline; } }
-@media (prefers-reduced-motion: reduce) { .job > summary::after { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .job > summary::after, .grp > summary::after { transition: none; } }
 #work .aside { margin-top: 12px; font-size: 14px; }
 #work .aside a {
   display: inline-flex; align-items: center; min-height: 44px;

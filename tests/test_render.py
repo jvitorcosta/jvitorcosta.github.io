@@ -695,11 +695,14 @@ def test_a_role_with_details_opens_and_keeps_its_summary(tmp_path):
     jobs = [Job("Senior AI/ML Engineer", "Qubika", "Feb 2026", "Jul 2026", details),
             Job("AI/ML Software Engineer", "Nubank", "Sep 2022", "Jul 2026")]
     work = section(render(tmp_path, c=content(jobs=jobs)), "work")
-    assert work.count("<details") == 1  # a native disclosure, no JS
+    assert work.count('<details class="job"') == 1  # a native disclosure, no JS
     assert '<details class="job" open>' in work  # the first role opens on load
-    first, rest = work.split("</details>", 1)
+    first, rest = work.split("</details></li>", 1)  # the end of the first role
     assert "<summary><b>Senior AI/ML Engineer</b>Qubika · " in first
-    assert "<li>Built &lt;a thing&gt; &amp; shipped it.</li>" in first and "<h3>Data platform</h3>" in first
+    assert "<li>Built &lt;a thing&gt; &amp; shipped it.</li>" in first
+    # a headed group is its own small disclosure with a count (closed here: it is not the first group)
+    assert ('<details class="grp"><summary><span>Data platform</span><span class="n">1</span></summary>'
+            "<ul><li>Cut landing time.</li></ul></details>") in first
     assert 'lang="en-US"' in first and 'lang="en"' not in first.split("</summary>")[1]
     assert "<li><b>AI/ML Software Engineer</b>Nubank" in rest  # no details: a plain row
     assert "Tap a role" in work and "Toque em um cargo" in work
@@ -1016,8 +1019,16 @@ def test_only_the_first_role_with_details_opens_and_the_hint_has_tap_and_click(t
             Job("B", "First", "Jan 2025", "Dec 2025", details),
             Job("C", "Second", "Jan 2024", "Dec 2024", details)]
     work = section(render(tmp_path, c=content(jobs=jobs)), "work")
-    assert work.count('<details class="job" open>') == 1 and work.count("<details") == 2
+    assert work.count('<details class="job" open>') == 1 and work.count('<details class="job"') == 2
     assert work.index("<summary><b>B</b>") < work.index("</details>") < work.index("<summary><b>C</b>")
     assert work.index('class="job" open') < work.index("<summary><b>B</b>")
     assert '<span class="tap">' in work and '<span class="click">' in work
     assert "Click a role to see what I did there." in work and "Clique em um cargo" in work
+
+
+def test_the_first_headed_group_of_a_role_opens_and_the_rest_stay_closed(tmp_path):
+    details = (("AI systems", ("One.", "Two.")), ("Data platform", ("Three.",)), ("Analytics", ("Four.",)))
+    work = section(render(tmp_path, c=content(jobs=[Job("A", "Nubank", "Jan 2022", "Jan 2023", details)])), "work")
+    assert work.count('<details class="grp"') == 3 and work.count('<details class="grp" open>') == 1
+    assert work.index('<details class="grp" open>') < work.index("<span>Data platform</span>")
+    assert '<span class="n">2</span>' in work  # the count of bullets in the first group
