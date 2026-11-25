@@ -235,7 +235,7 @@ header.top > a:hover { text-decoration: underline; }
   width: 72px; height: 72px;
   padding: 4px;
   box-sizing: border-box;
-  background: var(--soft);
+  background: var(--bg); /* the portrait is transparent, so it takes the palette's colour */
   border: 3px solid var(--line);
 }
 h1.name { margin: 0 0 8px; font-size: 14px; line-height: 1.5; }
