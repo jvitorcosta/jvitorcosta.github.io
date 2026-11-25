@@ -40,18 +40,18 @@
   },
   "repos": [
     {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-25T14:17:07Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
       "description": "Connect IQ watch faces for my Garmin Forerunner 255: a Pokémon Emerald battle scene and a planet of the day",
       "homepage": "",
       "name": "garmin-watchfaces",
       "pushed": "2026-11-25T14:16:24Z",
       "url": "https://github.com/jvitorcosta/garmin-watchfaces"
-    },
-    {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-25T14:16:07Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "",
@@ -155,7 +155,7 @@
   "song": {
     "artist": "Dreamville",
     "cover": "https://i.scdn.co/image/ab67616d00001e027e4d9f2b77109ba3380662ba",
-    "playing": true,
+    "playing": false,
     "title": "Adonis Interlude (The Montage) (with J. Cole)",
     "url": "https://open.spotify.com/track/5Mkbqot9JUaN5XhRgqITME"
   },
