@@ -554,7 +554,7 @@ button.btn { font-family: Inter, system-ui, sans-serif; }
 .tree .bar { background: var(--box); }
 .study { margin-top: 8px; }
 /* The tree map (inline SVG from render._study_map): palette variables, so both themes work. */
-.smap { display: block; width: 100%; height: auto; margin: 10px 0 0; overflow: visible; }
+.smap { display: block; width: 100%; max-width: 400px; height: auto; margin: 10px 0 0; overflow: visible; }
 .smap path { fill: none; stroke: var(--line); stroke-width: 2; }
 .smap .gbox { fill: var(--soft); stroke: var(--line); stroke-width: 2; }
 .smap .sq { fill: var(--box); stroke: var(--line); stroke-width: 3; }

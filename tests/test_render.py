@@ -139,6 +139,19 @@ def test_study_map_is_an_svg_tree_with_one_square_per_topic(tmp_path):
     assert box.index("<svg") < box.index('class="gh"')  # the map leads, the list follows
 
 
+def test_study_map_squares_are_44_px_tap_areas_on_a_phone(tmp_path):
+    topics = [StudyTopic(str(n), {"en": f"T{n}", "pt": f"T{n}"}, 10, n == 0, "study", []) for n in range(5)]
+    svg = study_box(tmp_path, topics + [StudyTopic("lab", {"en": "L", "pt": "L"}, 0, False, "lab", [])])
+    view_w = float(re.search(r'viewBox="0 0 ([\d.]+) ', svg).group(1))
+    hits = [(float(w), float(h)) for w, h in re.findall(r'class="hit"[^>]* width="([\d.]+)" height="([\d.]+)"', svg)]
+    assert len(hits) == 6 and all(w >= 44 and h >= 44 for w, h in hits)
+    # A phone's card is about 300 px wide: the drawing may not be wider than that, or it shrinks the squares.
+    assert view_w <= 300
+    # The two groups are stacked, so the Labs group sits below the Topics group.
+    boxes = [int(y) for y in re.findall(r'class="gbox" x="[\d.]+" y="(\d+)" width="72"', svg)]
+    assert boxes[1] > boxes[0] + 100
+
+
 def test_study_map_fills_by_percent_and_never_hides_a_started_topic(tmp_path):
     topics = [StudyTopic("a", {"en": "A", "pt": "A"}, 100, False, "study", []),
               StudyTopic("b", {"en": "B", "pt": "B"}, 0, True, "study", []),
