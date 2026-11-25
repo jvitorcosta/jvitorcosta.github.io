@@ -18,7 +18,7 @@ text = "Vitor eats three meals a day and likes protein (meat, rice and beans). H
 [[fact]]
 id = "about.home"
 source = "About Vitor"
-text = "Vitor lives with his family in Manaus. His room doubles as his workshop, with three screens and hardware projects."
+text = "Vitor lives in Manaus. His room doubles as his workshop, with three screens and hardware projects."
 
 [[fact]]
 id = "about.ai-daily"
@@ -38,17 +38,7 @@ text = "Vitor is into Japanese and Chinese culture and studies Mandarin."
 [[fact]]
 id = "about.sports"
 source = "About Vitor"
-text = "Beach volleyball is Vitor's favorite sport (the beach, the technique, the explosiveness). He also plays indoor volleyball, trains at the gym (full-body training now) and runs. He is taking a break from boxing and plans to be back next year."
-
-[[fact]]
-id = "about.car"
-source = "About Vitor"
-text = "Vitor drives a Honda City (since April 2026) and is working on it to improve the driving and steering feel."
-
-[[fact]]
-id = "about.travel"
-source = "About Vitor"
-text = "Vitor worked in São Paulo for Nubank and loves Pinheiros. He often goes to the Northeast coast (Ceará, Pernambuco) for the beaches with his family, and loved his first trip to João Pessoa recently. He likes Pará, where he has family."
+text = "Beach volleyball is Vitor's favorite sport (the beach, the technique, the explosiveness). He also plays indoor volleyball, trains at the gym (full-body training now) and runs."
 
 [[fact]]
 id = "about.music"
@@ -65,17 +55,17 @@ text = "Vitor is open to new roles."
 [[fact]]
 id = "cv.role.qubika"
 source = "CV · Experience"
-text = "Vitor was a Senior AI/ML Engineer at Qubika from Feb 2026 to Jul 2026, a remote part-time contract allocated to a US client, Coastal Community Bank."
+text = "Vitor was a Senior AI/ML Engineer at Qubika from Feb 2026 to Jul 2026, a remote part-time contract allocated to a US client."
 
 [[fact]]
 id = "cv.role.nubank"
 source = "CV · Experience"
-text = "Vitor was a Software Engineer (Machine Learning) at Nubank from Sep 2022 to Jul 2026, in São Paulo (hybrid), in the Global Lending Credit Infra team. He joined as an intern and was promoted to Engineer; the title was later renamed from Machine Learning Engineer to Software Engineer in a company-wide change."
+text = "Vitor was a Software Engineer (Machine Learning) at Nubank from Sep 2022 to Jul 2026, in São Paulo (hybrid), in the Global Lending Credit Infra team. He joined as an intern and was promoted to Engineer."
 
 [[fact]]
 id = "cv.role.elogroup"
 source = "CV · Experience"
-text = "Vitor was a Data Scientist Intern at EloGroup from Jun 2021 to Sep 2022, working remotely and allocated to the client Comgás."
+text = "Vitor was a Data Scientist Intern at EloGroup from Jun 2021 to Sep 2022, working remotely and allocated to a client."
 
 [[fact]]
 id = "cv.qubika.fraud-model"
@@ -135,7 +125,7 @@ text = "As a Nubank intern, Vitor supported development of credit-risk and loan-
 [[fact]]
 id = "cv.elogroup.forecasting"
 source = "CV · Experience"
-text = "At EloGroup, Vitor helped cut natural-gas contractual fines by roughly R$200M in the first three months for Comgás, Brazil's largest natural-gas distributor, by co-implementing a LightGBM/SARIMAX/Holt-Winters forecasting ensemble over 24 city-level demand series."
+text = "At EloGroup, Vitor helped cut natural-gas contractual fines by roughly R$200M in the first three months for a natural-gas distributor, by co-implementing a LightGBM/SARIMAX/Holt-Winters forecasting ensemble over 24 city-level demand series."
 
 [[fact]]
 id = "cv.elogroup.pipelines"
