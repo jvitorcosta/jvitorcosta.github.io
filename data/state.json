@@ -43,14 +43,14 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-25T14:17:07Z",
+      "pushed": "2026-11-25T16:20:47Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Connect IQ watch faces for my Garmin Forerunner 255: a Pokémon Emerald battle scene and a planet of the day",
       "homepage": "",
       "name": "garmin-watchfaces",
-      "pushed": "2026-11-25T14:16:24Z",
+      "pushed": "2026-11-25T16:16:17Z",
       "url": "https://github.com/jvitorcosta/garmin-watchfaces"
     },
     {
