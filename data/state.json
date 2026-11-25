@@ -40,18 +40,18 @@
   },
   "repos": [
     {
-      "description": "",
-      "homepage": "",
-      "name": "curriculum-vitae",
-      "pushed": "2026-11-25T17:49:23Z",
-      "url": "https://github.com/jvitorcosta/curriculum-vitae"
-    },
-    {
       "description": "Connect IQ watch faces for my Garmin Forerunner 255: a Pokémon Emerald battle scene and a planet of the day",
       "homepage": "",
       "name": "garmin-watchfaces",
-      "pushed": "2026-11-25T17:24:25Z",
+      "pushed": "2026-11-25T18:11:39Z",
       "url": "https://github.com/jvitorcosta/garmin-watchfaces"
+    },
+    {
+      "description": "",
+      "homepage": "",
+      "name": "curriculum-vitae",
+      "pushed": "2026-11-25T17:59:09Z",
+      "url": "https://github.com/jvitorcosta/curriculum-vitae"
     },
     {
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
