@@ -297,6 +297,9 @@ def test_build_writes_one_page_per_blog_post(site):
     page = (site / "blog" / "sample-post.html").read_bytes().decode("utf-8")
     assert "A sample post for the tests" in page and "\r" not in page
     assert not (site / "blog" / "broken.html").exists()
+    assert "sample-post.html" in (site / "blog" / "index.html").read_text(encoding="utf-8")
+    assert "<id>https://jvitorcosta.github.io/blog/sample-post.html</id>" in (site / "blog" / "feed.xml").read_text(encoding="utf-8")
+    assert 'href="blog/"' in (site / "index.html").read_text(encoding="utf-8")  # the BLOG link on the home page
 
 
 def test_build_without_posts_writes_no_blog_folder(site):

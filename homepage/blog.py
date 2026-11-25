@@ -269,7 +269,11 @@ def load_posts(root: Path) -> list[Post]:
     return sorted(posts, key=lambda post: (post.date, post.slug), reverse=True)
 
 
-# ---------- the page ----------
+# ---------- the pages ----------
+
+FEED_TITLE = "Vitor Pinheiro: blog"
+FEED_SUBTITLE = "Posts and short notes about what I build."
+
 
 def _long_date(p: Page, iso: str) -> str:
     """"Nov 26, 2026" / "26 nov 2026" for an ISO date, in both languages."""
@@ -281,64 +285,139 @@ def _long_date(p: Page, iso: str) -> str:
     return p.both(text)
 
 
-def render_post(content: Content, post: Post, site: str, top: str, footer: str, theme_color: str,
-                early_script: str) -> str:
-    """The standalone page for one post. `top`, `footer`, `theme_color` and `early_script` come from
-    render.py so the blog shares the chrome of the rest of the site; pages sit in blog/, so every
-    asset path starts with ../"""
-    p = Page(content)
-    url = f"{site}blog/{post.slug}.html"
-    title = f"{esc(post.title)} | Vitor Pinheiro"
-    summary = esc(post.summary)
-    image = f"{site}blog/{post.cover}" if post.cover else f"{site}{versioned('og-image.png')}"
-    published = f'<time datetime="{post.date}">{_long_date(p, post.date)}</time>'
-    updated = (f' · <time datetime="{post.updated}">{p.t("blog_updated")} {_long_date(p, post.updated)}</time>'
-               if post.updated and post.updated != post.date else "")
-    tags = "".join(f'<li>{esc(t)}</li>' for t in post.tags)
-    tag_list = f'<ul class="tags" aria-label="Tags">{tags}</ul>' if tags else ""
-    cover = (f'<figure class="cover"><img src="{esc(post.cover)}" alt="{esc(post.cover_alt)}"></figure>'
-             if post.cover else "")
-    meta = (f'<p class="meta">{published}{updated} · {p.t("blog_min", n=post.minutes)}</p>')
-    modified = f'\n<meta property="article:modified_time" content="{post.updated}">' if post.updated else ""
+@dataclass(frozen=True)
+class Chrome:
+    """What the blog pages borrow from render.py, so they share the site's top bar, footer,
+    palettes and early script. Pages sit in blog/, so asset paths start with ../"""
+
+    site: str
+    top: str
+    footer: str
+    theme_color: str
+    early_script: str
+
+
+def _shell(c: Chrome, *, title: str, description: str, url: str, og_type: str, image: str,
+           meta: str, main: str, skip_to: str, p: Page) -> str:
     return f"""<!doctype html>
 <html lang="en" class="pal-nu">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="{theme_color}">
-<title>{title}</title>
-<meta name="description" content="{summary}">
+<meta name="theme-color" content="{c.theme_color}">
+<title>{esc(title)}</title>
+<meta name="description" content="{esc(description)}">
 <link rel="canonical" href="{url}">
-<meta property="og:title" content="{esc(post.title)}">
-<meta property="og:description" content="{summary}">
+<meta property="og:title" content="{esc(title.removesuffix(" | Vitor Pinheiro"))}">
+<meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{url}">
-<meta property="og:type" content="article">
-<meta property="og:image" content="{image}">
-<meta property="article:published_time" content="{post.date}">{modified}
+<meta property="og:type" content="{og_type}">
+<meta property="og:image" content="{image}">{meta}
 <meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="application/atom+xml" title="{FEED_TITLE}" href="{c.site}blog/feed.xml">
 <link rel="icon" href="../favicon.ico" sizes="32x32">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
-<script>{early_script}</script>
+<script>{c.early_script}</script>
 <link rel="stylesheet" href="../{versioned("assets/site.css")}">
 <script src="../{versioned("assets/site.js")}" defer></script>
 </head>
 <body>
-<a class="skip" href="#post">{p.t("skip")}</a>
+<a class="skip" href="#{skip_to}">{p.t("skip")}</a>
 <main class="in">
-{top}
-<article class="box post" id="post">
-<p class="crumb"><a href="../">{ARROW}{p.t("back_home")}</a></p>
+{c.top}
+{main}
+</main>
+{c.footer}
+</body>
+</html>
+"""
+
+
+def _meta_line(p: Page, post: Post) -> str:
+    published = f'<time datetime="{post.date}">{_long_date(p, post.date)}</time>'
+    updated = (f' · <time datetime="{post.updated}">{p.t("blog_updated")} {_long_date(p, post.updated)}</time>'
+               if post.updated and post.updated != post.date else "")
+    return f'<p class="meta">{published}{updated} · {p.t("blog_min", n=post.minutes)}</p>'
+
+
+def render_post(content: Content, post: Post, c: Chrome) -> str:
+    """The standalone page for one post."""
+    p = Page(content)
+    tags = "".join(f"<li>{esc(t)}</li>" for t in post.tags)
+    tag_list = f'<ul class="tags" aria-label="Tags">{tags}</ul>' if tags else ""
+    cover = (f'<figure class="cover"><img src="{esc(post.cover)}" alt="{esc(post.cover_alt)}"></figure>'
+             if post.cover else "")
+    image = f"{c.site}blog/{post.cover}" if post.cover else f"{c.site}{versioned('og-image.png')}"
+    modified = f'\n<meta property="article:modified_time" content="{post.updated}">' if post.updated else ""
+    main = f"""<article class="box post" id="post">
+<p class="crumb"><a href="../">{ARROW}{p.t("back_home")}</a> · <a href="./">{p.t("blog_all")}</a></p>
 <h1 class="post-title">{esc(post.title)}</h1>
-{meta}
+{_meta_line(p, post)}
 {tag_list}
 {cover}
 <div class="prose" lang="en-US">
 {post.body}
 </div>
-</article>
-</main>
-{footer}
-</body>
-</html>
-"""
+</article>"""
+    return _shell(c, title=f"{post.title} | Vitor Pinheiro", description=post.summary,
+                  url=f"{c.site}blog/{post.slug}.html", og_type="article", image=image,
+                  meta=f'\n<meta property="article:published_time" content="{post.date}">{modified}',
+                  main=main, skip_to="post", p=p)
+
+
+def _entry(p: Page, post: Post) -> str:
+    """One row of the index: title, date and reading time, summary. The text is the post's own
+    English, so it carries lang="en-US" and shows on the Portuguese page too."""
+    return (f'<li><a class="row" href="{post.slug}.html"><div class="body">'
+            f'<span class="t" lang="en-US">{esc(post.title)}</span>{_meta_line(p, post)}'
+            f'<span lang="en-US">{esc(post.summary)}</span></div></a></li>')
+
+
+def render_index(content: Content, posts: list[Post], c: Chrome) -> str:
+    """blog/index.html: every post, newest first, in two lists (posts, then fragments)."""
+    p = Page(content)
+    lists = ""
+    for lane, key in (("post", "blog_posts"), ("fragment", "blog_fragments")):
+        rows = "".join(_entry(p, post) for post in posts if post.lane == lane)
+        if rows:
+            lists += f'<h2 class="gh">{p.t(key)}</h2><ul class="menu blog-list">{rows}</ul>'
+    main = f"""<section class="box post" id="blog-index">
+<p class="crumb"><a href="../">{ARROW}{p.t("back_home")}</a></p>
+<h1 class="post-title">{p.t("blog_title")}</h1>
+<p class="small">{p.t("blog_intro")} <a href="feed.xml">{p.t("blog_feed")}</a></p>
+{lists}
+</section>"""
+    return _shell(c, title="Blog | Vitor Pinheiro", description=FEED_SUBTITLE, url=f"{c.site}blog/",
+                  og_type="website", image=f"{c.site}{versioned('og-image.png')}", meta="",
+                  main=main, skip_to="blog-index", p=p)
+
+
+def _stamp(iso: str) -> str:
+    return f"{iso}T00:00:00Z"
+
+
+def render_feed(posts: list[Post], site: str) -> str:
+    """blog/feed.xml, Atom: the permalink is each entry's id, so it never changes. Entries carry
+    the summary and a link, not the body, whose relative image paths would break in a reader."""
+    def newest(post: Post) -> str:
+        return post.updated or post.date
+
+    entries = "".join(
+        f"<entry><title>{esc(post.title)}</title>"
+        f'<link rel="alternate" type="text/html" href="{site}blog/{post.slug}.html"/>'
+        f"<id>{site}blog/{post.slug}.html</id>"
+        f"<published>{_stamp(post.date)}</published><updated>{_stamp(newest(post))}</updated>"
+        f"<summary>{esc(post.summary)}</summary>"
+        + "".join(f'<category term="{esc(t)}"/>' for t in post.tags)
+        + "</entry>\n"
+        for post in posts)
+    updated = _stamp(max((newest(post) for post in posts), default="1970-01-01"))
+    return ('<?xml version="1.0" encoding="utf-8"?>\n'
+            '<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">\n'
+            f"<title>{esc(FEED_TITLE)}</title><subtitle>{esc(FEED_SUBTITLE)}</subtitle>\n"
+            f'<link rel="self" type="application/atom+xml" href="{site}blog/feed.xml"/>\n'
+            f'<link rel="alternate" type="text/html" href="{site}blog/"/>\n'
+            f"<id>{site}blog/</id><updated>{updated}</updated>\n"
+            "<author><name>Vitor Pinheiro</name></author>\n"
+            f"{entries}</feed>\n")

@@ -115,6 +115,7 @@ main > header.top { padding: 0; }
   .col { display: contents; }
   #right-now { order: 1; }
   #party { order: 2; }
+  #writing { order: 2; }
   #pc-box { order: 3; }
   #work { order: 4; }
 }
@@ -178,6 +179,9 @@ header.top > a {
   text-decoration: none;
 }
 header.top > a:hover { text-decoration: underline; }
+/* The BLOG link looks like the language button. */
+header.top > a.top-link { margin-left: auto; padding: 0 10px; font-size: 12px; border: 3px solid var(--ink-on-bg); border-radius: 4px; }
+header.top > a.top-link:hover { text-decoration: none; background: rgba(255, 255, 255, .12); }
 
 /* ---------- boxes ---------- */
 .box {
@@ -239,6 +243,8 @@ header.top > a:hover { text-decoration: underline; }
 .job .did li { margin: 0 0 6px; padding: 0; border: 0; }
 .jobs .hint { margin-bottom: 0; }
 /* A blog post: a reading column inside the usual pixel box. */
+.blog-list .row { display: block; }
+.blog-list .meta { margin: 2px 0 4px; }
 .post .crumb { margin: 0 0 10px; font-size: 14px; }
 .post-title { margin: 0 0 6px; font: 400 18px/1.5 "Press Start 2P", monospace; color: var(--ink); }
 .post .meta { margin: 0 0 8px; font-size: 14px; color: var(--ink); }
