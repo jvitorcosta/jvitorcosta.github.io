@@ -43,8 +43,15 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-24T21:47:19Z",
+      "pushed": "2026-11-25T06:22:45Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
+      "description": "Connect IQ watch faces for my Garmin Forerunner 255: a Pokémon Emerald battle scene and a planet of the day",
+      "homepage": "",
+      "name": "garmin-watchfaces",
+      "pushed": "2026-11-25T06:06:40Z",
+      "url": "https://github.com/jvitorcosta/garmin-watchfaces"
     },
     {
       "description": "",
@@ -143,21 +150,14 @@
       "name": "haylou-faces",
       "pushed": "2026-11-05T22:16:17Z",
       "url": "https://github.com/jvitorcosta/haylou-faces"
-    },
-    {
-      "description": "Connect IQ watch faces for my Garmin Forerunner 255: a Pokémon Emerald battle scene and a planet of the day",
-      "homepage": "",
-      "name": "garmin-watchfaces",
-      "pushed": "2026-11-05T22:16:10Z",
-      "url": "https://github.com/jvitorcosta/garmin-watchfaces"
     }
   ],
   "song": {
-    "artist": "Vulgo FK",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02d7e6ac3704f854f9912b345e",
-    "playing": true,
-    "title": "FOGO E GASOLINA",
-    "url": "https://open.spotify.com/track/7p1GSxbkFdqcg4Wbgv8X6E"
+    "artist": "Dreamville",
+    "cover": "https://i.scdn.co/image/ab67616d00001e027e4d9f2b77109ba3380662ba",
+    "playing": false,
+    "title": "Adonis Interlude (The Montage) (with J. Cole)",
+    "url": "https://open.spotify.com/track/5Mkbqot9JUaN5XhRgqITME"
   },
   "updated": {
     "activity": "2026-11-25",
