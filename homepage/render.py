@@ -497,6 +497,10 @@ def render_blog_feed(posts: list[Post]) -> str:
     return blog.render_feed(posts, SITE)
 
 
+def render_blog_sitemap(posts: list[Post]) -> str:
+    return blog.render_sitemap(posts, SITE)
+
+
 def render_404(content: Content) -> str:
     """GitHub Pages serves 404.html for any missing path, so every URL in it is root-relative."""
     p = Page(content)

@@ -7,6 +7,7 @@ HTML: all text is escaped, links and images must be http(s), mailto or site-rela
 
 from __future__ import annotations
 
+import json
 import math
 import re
 import sys
@@ -341,6 +342,26 @@ def _meta_line(p: Page, post: Post) -> str:
     return f'<p class="meta">{published}{updated} · {p.t("blog_min", n=post.minutes)}</p>'
 
 
+def _json_ld(post: Post, site: str, image: str) -> str:
+    """BlogPosting data for search engines. The dates are the ones shown on the page, and "<" is
+    escaped so a title can never close the script tag."""
+    data = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "description": post.summary,
+        "datePublished": post.date,
+        "dateModified": post.updated or post.date,
+        "inLanguage": "en",
+        "image": image,
+        "mainEntityOfPage": f"{site}blog/{post.slug}.html",
+        "author": {"@type": "Person", "name": "Vitor Pinheiro", "url": site},
+    }
+    if post.tags:
+        data["keywords"] = ", ".join(post.tags)
+    return json.dumps(data, ensure_ascii=False).replace("<", "\\u003c")
+
+
 def render_post(content: Content, post: Post, c: Chrome) -> str:
     """The standalone page for one post."""
     p = Page(content)
@@ -362,7 +383,8 @@ def render_post(content: Content, post: Post, c: Chrome) -> str:
 </article>"""
     return _shell(c, title=f"{post.title} | Vitor Pinheiro", description=post.summary,
                   url=f"{c.site}blog/{post.slug}.html", og_type="article", image=image,
-                  meta=f'\n<meta property="article:published_time" content="{post.date}">{modified}',
+                  meta=(f'\n<meta property="article:published_time" content="{post.date}">{modified}'
+                        f'\n<script type="application/ld+json">{_json_ld(post, c.site, image)}</script>'),
                   main=main, skip_to="post", p=p)
 
 
@@ -421,3 +443,18 @@ def render_feed(posts: list[Post], site: str) -> str:
             f"<id>{site}blog/</id><updated>{updated}</updated>\n"
             "<author><name>Vitor Pinheiro</name></author>\n"
             f"{entries}</feed>\n")
+
+
+def render_sitemap(posts: list[Post], site: str) -> str:
+    """sitemap-blog.xml: the blog index and each post, with the day each last changed. It is written
+    even with no posts (an empty list), so the Sitemap line in robots.txt never points at nothing."""
+    def newest(post: Post) -> str:
+        return post.updated or post.date
+
+    urls = []
+    if posts:
+        urls.append((f"{site}blog/", max(newest(post) for post in posts)))
+        urls += [(f"{site}blog/{post.slug}.html", newest(post)) for post in posts]
+    rows = "".join(f"  <url><loc>{esc(url)}</loc><lastmod>{day}</lastmod></url>\n" for url, day in urls)
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + rows + "</urlset>\n")
