@@ -108,12 +108,12 @@ def build(
 
     live_dir.mkdir(parents=True, exist_ok=True)
     prune(live_dir, used)
-    live = LiveData(song=song, film=film, book=book, activity=activity, anime=anime)
+    updated = state.get("updated") if isinstance(state.get("updated"), dict) else {}
+    live = LiveData(song=song, film=film, book=book, activity=activity, anime=anime, updated=updated)
     html = render_home(content, live, repos, root)
     index = root / "index.html"
     index.write_bytes(html.replace("\r\n", "\n").encode("utf-8"))
     (root / "404.html").write_bytes(render_404(content).replace("\r\n", "\n").encode("utf-8"))
-    updated = state.get("updated") if isinstance(state.get("updated"), dict) else {}
     write_knowledge(root / "knowledge.json", build_knowledge(content.about, repos, live, updated, today))
     save_state(state_path, state)
     report_stale(state, today)

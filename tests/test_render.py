@@ -1045,3 +1045,18 @@ def test_the_first_headed_group_of_a_role_opens_and_the_rest_stay_closed(tmp_pat
     assert work.count('<details class="grp"') == 3 and work.count('<details class="grp" open>') == 1
     assert work.index('<details class="grp" open>') < work.index("<span>Data platform</span>")
     assert '<span class="n">2</span>' in work  # the count of bullets in the first group
+
+
+def test_live_rows_say_when_their_source_last_answered(tmp_path):
+    lv = live(updated={"film": "2026-11-24", "anime": "2026-11-23", "book": "2026-11-22",
+                       "activity": "2026-11-21", "song": "2026-11-25"})
+    box = section(render(tmp_path, lv=lv), "right-now")
+    for en, pt in (("Updated Nov 24", "Atualizado em 24 nov"), ("Updated Nov 23", "Atualizado em 23 nov"),
+                   ("Updated Nov 22", "Atualizado em 22 nov"), ("Updated Nov 21", "Atualizado em 21 nov")):
+        assert f'<span class="upd"><span lang="en">{en}</span><span lang="pt">{pt}</span></span>' in box
+    assert box.count('class="upd"') == 4  # the Spotify row is live in the browser, so it has none
+
+
+def test_a_row_without_a_known_fetch_date_has_no_updated_line(tmp_path):
+    box = section(render(tmp_path, lv=live(updated={"film": "not a date"})), "right-now")
+    assert 'class="upd"' not in box

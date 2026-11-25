@@ -77,7 +77,7 @@ def _marks_text(rating: float | None, liked: bool) -> dict[str, str]:
     return {lang: ", ".join(w) for lang, w in words.items()}
 
 
-def _film(p: Page, film: Film) -> str:
+def _film(p: Page, film: Film, updated: str = "") -> str:
     year = f" ({esc(film.year)})" if film.year else ""
     glyphs = " ".join(m for m in (_stars(film.rating), "♥" if film.liked else "") if m)
     marks = (f'<span aria-hidden="true">{glyphs}</span>'
@@ -87,12 +87,12 @@ def _film(p: Page, film: Film) -> str:
     review = (f'<br><i class="review">“{esc(clip(film.review, 70))}”</i>'
               if film.review else "")
     body = (f'<span class="k px">{p.t("watched")}</span>'
-            f'<span class="t">{esc(clip(film.title, 80))}{year}</span>{detail}{review}')
+            f'<span class="t">{esc(clip(film.title, 80))}{year}</span>{detail}{review}{p.updated(updated)}')
     inner = _thumb(film.poster, tall=True) + f'<div class="body">{body}</div>'
     return f"<li>{_row(film.url, inner)}{p.go('letterboxd')}</li>"
 
 
-def _anime(p: Page, anime: Anime) -> str:
+def _anime(p: Page, anime: Anime, updated: str = "") -> str:
     """What I'm watching, with episode progress; else the last one I finished, with my score."""
     bar = ""
     if not anime.watching:
@@ -104,19 +104,19 @@ def _anime(p: Page, anime: Anime) -> str:
     else:
         detail = p.t("ep", ep=anime.episode)
     body = (f'<span class="k px">{p.t("anime_watching" if anime.watching else "finished")}</span>'
-            f'<span class="t">{esc(clip(anime.title, 80))}</span>{detail}{bar}')
+            f'<span class="t">{esc(clip(anime.title, 80))}</span>{detail}{bar}{p.updated(updated)}')
     inner = _thumb(anime.cover, tall=True) + f'<div class="body">{body}</div>'
     return f"<li>{_row(anime.url, inner)}{p.go('myanimelist')}</li>"
 
 
-def _book(p: Page, book: Book) -> str:
+def _book(p: Page, book: Book, updated: str = "") -> str:
     detail = esc(book.author)
     bar = ""
     if book.page is not None and book.pages:
         detail += " · " + p.t("page_of", page=book.page, pages=book.pages)
         bar = f'<div class="hp"><i style="width:{round(100 * book.page / book.pages)}%"></i></div>'
     body = (f'<span class="k px">{p.t("finished" if book.finished else "reading")}</span>'
-            f'<span class="t">{esc(clip(book.title, 80))}</span>{detail}{bar}')
+            f'<span class="t">{esc(clip(book.title, 80))}</span>{detail}{bar}{p.updated(updated)}')
     inner = _thumb(book.cover, tall=True) + f'<div class="body">{body}</div>'
     return f"<li>{_row(book.url, inner)}{p.go('goodreads')}</li>"
 
@@ -125,7 +125,7 @@ def _duration(minutes: int) -> str:
     return f"{minutes} min" if minutes < 60 else f"{minutes // 60}h{minutes % 60:02d}"
 
 
-def _activity(p: Page, act: Activity) -> str:
+def _activity(p: Page, act: Activity, updated: str = "") -> str:
     if act.distance_km:  # 0 or missing means no distance (weights, boxing): show the duration
         headline = f"{act.title} · {act.distance_km:.1f} km"
         parts = [esc(_duration(act.moving_min))]
@@ -142,17 +142,18 @@ def _activity(p: Page, act: Activity) -> str:
     view = (f'<a class="strava-link" href="{esc(link)}">'
             f'{p.both({"en": "View on Strava", "pt": "View on Strava"})}</a>' if link else "")
     body = (f'<span class="k px">{p.t("moving")}</span>'
-            f'<span class="t">{esc(headline)}</span>{" · ".join(parts)}{view}')
+            f'<span class="t">{esc(headline)}</span>{" · ".join(parts)}{view}{p.updated(updated)}')
     inner = (f'<div class="stv" aria-hidden="true">{esc(act.emoji)}</div>'
              f'<div class="body">{body}</div>')
     return f'<li><div class="row">{inner}</div>{p.go("strava")}</li>'
 
 
 def right_now(p: Page, live: LiveData) -> str:
+    # Each row says when its source last answered, so a row that has been stuck for days shows it.
     others = [
-        render(p, value)
-        for render, value in ((_film, live.film), (_anime, live.anime), (_book, live.book),
-                              (_activity, live.activity))
+        render(p, value, live.updated.get(name, ""))
+        for render, value, name in ((_film, live.film, "film"), (_anime, live.anime, "anime"),
+                                    (_book, live.book, "book"), (_activity, live.activity, "activity"))
         if value is not None
     ]
     # Hidden while only the empty Spotify shell is in it; site.js reveals it after a fetch.

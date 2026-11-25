@@ -88,15 +88,26 @@ class Page:
         """The Chinese subtitle of a section heading (strings[key_zh]), shown in both languages."""
         return f' <span class="zh" lang="zh-Hans">{esc(self.c.strings["en"][f"{key}_zh"])}</span>'
 
-    def date(self, iso: str) -> str:
+    def _day(self, iso: str) -> dict[str, str] | None:
+        """"Nov 24" / "24 nov" for an ISO date, per language; None when it is not a date."""
         try:
             d = date.fromisoformat(iso[:10])
         except ValueError:
+            return None
+        return {lang: s["date"].format(month=s["months"].split()[d.month - 1], day=d.day)
+                for lang, s in self.c.strings.items()}
+
+    def date(self, iso: str) -> str:
+        day = self._day(iso)
+        return self.both(day) if day else ""
+
+    def updated(self, iso: str) -> str:
+        """A small "Updated Nov 24" line for a live row; "" when the last good fetch is unknown."""
+        day = self._day(iso)
+        if not day:
             return ""
-        return self.both({
-            lang: s["date"].format(month=s["months"].split()[d.month - 1], day=d.day)
-            for lang, s in self.c.strings.items()
-        })
+        text = {lang: s["updated_on"].format(date=day[lang]) for lang, s in self.c.strings.items()}
+        return f'<span class="upd">{self.both(text)}</span>'
 
     def go(self, platform: str) -> str:
         """Pixel brand tile at the end of a row, linking to Vitor's profile there."""
