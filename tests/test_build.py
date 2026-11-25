@@ -286,3 +286,19 @@ def test_knowledge_json_holds_no_never_share_category(site):
 ])
 def test_never_share_patterns_catch_known_leaks(leak):
     assert any(p.search(leak) for p in NEVER_SHARE_PATTERNS)
+
+
+def test_build_writes_one_page_per_blog_post(site):
+    posts = site / "blog" / "posts"
+    posts.mkdir(parents=True)
+    shutil.copy(ROOT / "tests" / "fixtures" / "blog" / "sample-post.md", posts / "sample-post.md")
+    (posts / "broken.md").write_text("no header\n", encoding="utf-8")  # reported, not fatal
+    build(site, sources(), get=fake_get)
+    page = (site / "blog" / "sample-post.html").read_bytes().decode("utf-8")
+    assert "A sample post for the tests" in page and "\r" not in page
+    assert not (site / "blog" / "broken.html").exists()
+
+
+def test_build_without_posts_writes_no_blog_folder(site):
+    build(site, sources(), get=fake_get)
+    assert not (site / "blog").exists()

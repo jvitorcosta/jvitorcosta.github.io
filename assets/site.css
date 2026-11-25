@@ -238,6 +238,26 @@ header.top > a:hover { text-decoration: underline; }
 .job .did ul { margin: 4px 0 0; padding: 0 0 0 18px; }
 .job .did li { margin: 0 0 6px; padding: 0; border: 0; }
 .jobs .hint { margin-bottom: 0; }
+/* A blog post: a reading column inside the usual pixel box. */
+.post .crumb { margin: 0 0 10px; font-size: 14px; }
+.post-title { margin: 0 0 6px; font: 400 18px/1.5 "Press Start 2P", monospace; color: var(--ink); }
+.post .meta { margin: 0 0 8px; font-size: 14px; color: var(--ink); }
+.post .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; padding: 0; list-style: none; }
+.post .tags li { padding: 1px 8px; font-size: 12px; color: var(--ink); background: var(--soft); border: 2px solid var(--line); border-radius: 3px; }
+.post .cover { margin: 12px 0; }
+.prose { max-width: 70ch; font-size: 16px; line-height: 1.65; }
+.prose h2 { margin: 26px 0 8px; font-size: 13px; line-height: 1.6; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); font-family: "Press Start 2P", monospace; font-weight: 400; }
+.prose h3 { margin: 18px 0 6px; font-size: 16px; color: var(--ink); }
+.prose p, .prose ul, .prose ol, .prose pre, .prose blockquote, .prose figure { margin: 0 0 14px; }
+.prose ul, .prose ol { padding-left: 22px; }
+.prose li { margin: 0 0 4px; }
+.prose a { color: var(--accent); text-underline-offset: 3px; }
+.prose code { padding: 1px 4px; font: 14px/1.4 ui-monospace, Consolas, monospace; background: var(--soft); border-radius: 3px; }
+.prose pre { overflow-x: auto; padding: 12px; background: var(--soft); border: 2px solid var(--line); border-radius: 3px; }
+.prose pre code { padding: 0; background: none; font-size: 13.5px; line-height: 1.5; }
+.prose blockquote { padding: 2px 14px; border-left: 4px solid var(--line); }
+.prose figure img, .post .cover img { display: block; max-width: 100%; height: auto; image-rendering: auto; border: 3px solid var(--line); }
+.prose figcaption { margin-top: 6px; font-size: 13.5px; }
 .menu .upd { display: block; margin-top: 3px; font-size: 12px; color: var(--ink); }
 .hint .click { display: none; }
 @media (hover: hover) and (pointer: fine) { .hint .tap { display: none; } .hint .click { display: inline; } }
