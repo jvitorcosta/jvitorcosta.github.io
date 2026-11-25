@@ -11,8 +11,8 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse
 
-from homepage.content import Content, PartyMember
-from homepage.markup import ARROW, Page, clip, esc, safe_url, versioned, warn
+from homepage.content import Content, PartyMember, StudyTopic
+from homepage.markup import ARROW, ICONS, Page, clip, esc, safe_url, versioned, warn
 from homepage.model import LiveData, Repo
 from homepage.right_now import right_now
 
@@ -25,6 +25,11 @@ COURSEWORK = {"uni", "course"}
 # key, English name, Portuguese name, swatch colour
 PALETTES = (("night", "Red Lantern", "Lanterna Vermelha", "#d4a72c"),
             ("nu", "Nu Purple", "Roxo Nu", "#820ad1"))
+# Browser-bar colour per palette: the same as --bg in assets/site.css.
+THEME_COLOR = {"night": "#8f1d1d", "nu": "#820ad1"}
+# Both languages stay visible and CSS marks the current one (html[lang]); site.js keeps the label.
+LANG_TOGGLE = '<span class="l-en">EN</span> / <span class="l-pt">PT</span>'
+LANG_TOGGLE_LABEL = "EN / PT, switch language"
 CASE_SLUG = re.compile(r"[a-z0-9][a-z0-9-]*")
 RESUME_CASE = "resume-as-code"
 # Applies a remembered palette and language before the page paints, so neither flashes; site.js
@@ -32,7 +37,9 @@ RESUME_CASE = "resume-as-code"
 EARLY_PALETTE = ('try{var p=localStorage.getItem("palette");'
                  f'if(/^({"|".join(k for k, *_ in PALETTES)})$/.test(p)){{'
                  'var h=document.documentElement;h.className="pal-"+p;'
-                 'h.setAttribute("data-pal",p)}}catch(e){}'
+                 'h.setAttribute("data-pal",p);'
+                 f'var c={json.dumps(THEME_COLOR)}[p],m=document.querySelector("meta[name=theme-color]");'
+                 'if(m)m.content=c}}catch(e){}'
                  # Same rule as site.js initialLang: stored choice, else the browser language.
                  'var h=document.documentElement,l=(navigator.language||"").toLowerCase().indexOf("pt")?"en":"pt";'
                  'try{var s=localStorage.getItem("lang");if(s=="en"||s=="pt")l=s}catch(e){}h.lang=l;')
@@ -188,8 +195,120 @@ def _ask(p: Page) -> str:
             f'<a href="site-privacy.html">{p.t("privacy_link")} ›</a></p></section>')
 
 
+def _bar(percent: int, label: str) -> str:
+    return (f'<div class="bar" role="progressbar" aria-labelledby="{label}" aria-valuemin="0" '
+            f'aria-valuemax="100" aria-valuenow="{percent}"><i style="width:{percent}%"></i></div>')
+
+
+def _study_slug(t: StudyTopic, n: int) -> str:
+    return t.id if CASE_SLUG.fullmatch(t.id) else f"t{n}"
+
+
+def _glyph(percent: int) -> tuple[str, str]:
+    return ("done", "✓") if percent >= 100 else ("part", "◐") if percent else ("todo", "○")
+
+
+def _study_topic(p: Page, t: StudyTopic, slug: str, open_it: bool) -> str:
+    label = f"study-{slug}"
+    subs = []
+    for sub in t.subtopics:
+        items = "".join(
+            f'<li class="item {_glyph(i.percent)[0]}"><span class="mark" aria-hidden="true">'
+            f'{_glyph(i.percent)[1]}</span><span>{esc(i.text)}</span><span class="pct">{i.percent}%</span></li>'
+            for i in sub.items)
+        subs.append(f'<li><details class="sub"><summary><span class="row"><span>{esc(sub.title)}</span>'
+                    f'<span class="pct">{sub.percent}%</span></span></summary><ul class="items">{items}</ul>'
+                    "</details></li>")
+    return (f'<li><details class="topic"{" open" if open_it else ""}><summary>'
+            f'<span class="row"><b id="{label}">{p.both(t.title)}</b><span class="pct">{t.percent}%</span></span>'
+            f'{_bar(t.percent, label)}</summary><ul class="subs">{"".join(subs)}</ul></details></li>')
+
+
+STEP = 34  # width given to each leaf of the study map
+MAP_BRANCH = {"study_topics": {"en": "TOPICS", "pt": "TÓPICOS"}, "study_labs": {"en": "LABS", "pt": "LABS"}}
+
+
+def _tspans(text: dict[str, str]) -> str:
+    """Both languages inside an SVG <text>. Never a <span>: in inline SVG the HTML parser treats
+    it as foreign and drops everything after it out of the SVG."""
+    return "".join(f'<tspan lang="{lang}">{esc(text[lang])}</tspan>' for lang in ("en", "pt"))
+
+
+def _study_map(p: Page, topics: list[tuple[str, list[StudyTopic]]], slugs: dict[int, str], now: StudyTopic) -> str:
+    """A small tree drawn as inline SVG: the path at the root, Topics and Labs under it, one
+    pixel square per topic that fills with its percent. Each square links to its place in the
+    list below (site.js opens it). Colours come from the palette's CSS variables, so both
+    palettes work; the current topic has a ring and the word NOW, not colour alone."""
+    leaves = sum(len(ts) for _, ts in topics)
+    gap = 14 * (len(topics) - 1)
+    width = max(320, leaves * STEP + gap)
+    x = (width - (leaves * STEP + gap)) / 2
+    mid = width / 2
+    root = esc(p.c.strings["en"]["study_path"])
+    edges, nodes, labels = [], [], []
+    for kind_key, ts in topics:
+        first = x + STEP / 2
+        centres = [first + i * STEP for i in range(len(ts))]
+        gx = sum(centres) / len(centres)
+        edges.append(f'<path d="M{mid:g} 28V40H{gx:g}V52"/>')
+        labels.append(f'<rect class="gbox" x="{gx - 36:g}" y="52" width="72" height="22"/>'
+                      f'<text x="{gx:g}" y="67">'
+                      f'{_tspans(MAP_BRANCH[kind_key])}</text>')
+        for t, cx in zip(ts, centres):
+            edges.append(f'<path d="M{gx:g} 74V89H{cx:g}V104"/>')
+            fill = 0 if not t.percent else max(2, round(t.percent / 100 * 22))
+            is_now = t is now
+            name_en, name_pt = esc(t.title["en"]), esc(t.title["pt"])
+            nodes.append(
+                f'<a class="sn{" now" if is_now else ""}" href="#study-{slugs[id(t)]}" '
+                f'{_aria(f"{name_en}, {t.percent}%", f"{name_pt}, {t.percent}%")}>'
+                f'<rect class="hit" x="{cx - STEP / 2:g}" y="98" width="{STEP}" height="40"/>'
+                f'<rect class="sq" x="{cx - 11:g}" y="105" width="22" height="22"/>'
+                f'<rect class="fl" x="{cx - 11:g}" y="{127 - fill}" width="22" height="{fill}"/>'
+                + (f'<rect class="ring" x="{cx - 15:g}" y="101" width="30" height="30"/>'
+                   f'<text x="{cx:g}" y="148">{_tspans({lang: s["study_now"] for lang, s in p.c.strings.items()})}</text>'
+                   if is_now else "")
+                + "</a>")
+        x += len(ts) * STEP + 14
+    return (f'<svg class="smap" viewBox="0 0 {width:g} 154" role="group" '
+            f'{_aria("Study map: topics and labs, with progress", "Mapa de estudo: tópicos e laboratórios, com progresso")}>'
+            f'<g class="edges">{"".join(edges)}</g>'
+            f'<rect class="gbox" x="{mid - 86:g}" y="4" width="172" height="24"/>'
+            f'<text x="{mid:g}" y="20">{root}</text>{"".join(labels)}{"".join(nodes)}</svg>')
+
+
+def _study(p: Page) -> str:
+    """The topic I am studying now as a card; opening it shows a small tree map and then every
+    topic and lab with its subtopics and concepts as a list. The only links are the map's
+    squares, which point inside the section. Nothing is computed here."""
+    if not p.c.study:
+        return ""
+    now = next((t for t in p.c.study if t.current), p.c.study[0])
+    slugs = {id(t): _study_slug(t, n) for n, t in enumerate(p.c.study)}
+    card = (f'<div class="row"><b id="study-now-{slugs[id(now)]}">{p.both(now.title)}</b>'
+            f'<span class="pct">{now.percent}%</span></div>{_bar(now.percent, f"study-now-{slugs[id(now)]}")}')
+    groups, branches = [], []
+    for kind, key in (("study", "study_topics"), ("lab", "study_labs")):
+        ts = [t for t in p.c.study if t.kind == kind]
+        rows = "".join(_study_topic(p, t, slugs[id(t)], t is now) for t in ts)
+        if rows:
+            groups.append(f'<h3 class="gh">{p.t(key)}</h3><ul class="study">{rows}</ul>')
+            branches.append((key, ts))
+    tree_map = _study_map(p, branches, slugs, now) if branches else ""
+    when = p.date(p.c.study_updated)
+    asof = f'<p class="small">{p.t("study_asof")} {when}</p>' if when else ""
+    return (f'<section class="box" id="study"><h2 class="h px"><span>{ARROW}{p.t("study")}{p.zh("study")}</span></h2>'
+            f'{asof}'
+            f'<details class="tree"><summary><span class="now">{p.t("study_now")}</span>'
+            f'<span class="path">{p.t("study_path")}</span>{card}'
+            f'<span class="all">{p.t("study_all")}</span></summary>'
+            f'<div class="groups">{tree_map}{"".join(groups)}</div></details></section>')
+
+
 def _trainer(p: Page) -> str:
-    links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">{label}</a>'
+    # Each button leads with its 20x20 pixel tile (tools/pixel_icons.py); the label already names it.
+    links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">'
+                    f'<img src="{versioned(f"{ICONS}/{key}.svg")}" alt="" width="20" height="20">{label}</a>'
                     for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
     if _ask_api(p):
         links = _ask_opener(p, "ask_talk") + links
@@ -218,8 +337,24 @@ def _work(p: Page, site_root: Path) -> str:
     for j in p.c.jobs:
         start, end = _month(p, j.start), _month(p, j.end)
         dates = p.both({lang: f"{start[lang]} – {end[lang]}" for lang in ("en", "pt")})
-        roles.append(f"<li><b>{esc(j.title)}</b>{esc(j.company)} · {dates}</li>")
+        head = f"<b>{esc(j.title)}</b>{esc(j.company)} · {dates}"
+        if not j.details:
+            roles.append(f"<li>{head}</li>")
+            continue
+        # A native disclosure: opens with Enter or Space, works without JavaScript, and any number
+        # of roles can stay open. The bullets are the public resume's own English text, so they
+        # carry lang="en-US" (not "en", which would hide them on the Portuguese page).
+        groups = "".join((f"<h3>{esc(h)}</h3>" if h else "") + "<ul>" + "".join(f"<li>{esc(i)}</li>" for i in items) + "</ul>"
+                         for h, items in j.details)
+        # The first role opens on load, so a visitor sees proof without a click.
+        opened = " open" if not any("<details" in r for r in roles) else ""
+        roles.append(f'<li><details class="job"{opened}><summary>{head}</summary>'
+                     f'<div class="did" lang="en-US">{groups}</div></details></li>')
     jobs = f'<ol class="jobs">{"".join(roles)}</ol>' if roles else ""
+    # "Tap" on touch screens, "Click" where a mouse hovers (assets/site.css picks one).
+    hint = (f'<p class="small hint"><span class="tap">{p.t("work_hint")}</span>'
+            f'<span class="click">{p.t("work_hint_click")}</span></p>'
+            if any(j.details for j in p.c.jobs) else "")
     # The resume PDF sits with the jobs it describes, as the one filled button.
     pdf = safe_url(p.c.links.get("resume", ""))
     linkedin = safe_url(p.c.links.get("linkedin", ""))
@@ -230,7 +365,7 @@ def _work(p: Page, site_root: Path) -> str:
     if resume:
         link += f'<p class="small aside"><a href="{resume}">{p.t("resume_case")} ›</a></p>'
     return (f'<section class="box" id="work"><h2 class="h px"><span>{ARROW}{p.t("work")}{p.zh("work")}</span></h2>'
-            f'<p class="small">{p.t("work_line")}</p>{jobs}{link}</section>')
+            f'<p class="small">{p.t("work_line")}</p>{hint}{jobs}{link}</section>')
 
 
 def _aria(en: str, pt: str) -> str:
@@ -251,14 +386,20 @@ def _top(p: Page | None = None) -> str:
     )
     ask = _ask_opener(p, "ask_open", ' class="ask-open"') if p and _ask_api(p) else ""
     # site.js swaps aria-label to data-aria-<lang> when the language changes.
+    # The name of the active palette sits next to the dots (CSS shows the one that matches
+    # html.pal-*); it is aria-hidden because each dot already carries its name.
+    names = "".join(f'<span class="pn pn-{key}"><span lang="en">{en}</span><span lang="pt">{pt}</span></span>'
+                    for key, en, pt, _ in PALETTES)
     return (f'<header class="top"><div class="sw" role="group" {_aria("Colours", "Cores")}>'
-            f'{dots}</div>{ask}'
-            '<button type="button" data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>'
+            f'{dots}<span class="pname" aria-hidden="true">{names}</span></div>{ask}'
+            f'<button type="button" data-lang-toggle aria-label="{LANG_TOGGLE_LABEL}">{LANG_TOGGLE}</button>'
             "</header>")
 
 
 def _footer(p: Page, live: LiveData) -> str:
     return (f'<footer class="foot">{p.t("footer")}<br>{p.t("made_by")}<br>'
+            # "#top" scrolls to the top of the page by the HTML spec; no element needs that id.
+            f'<a href="#top">{p.t("back_to_top")}</a> · '
             f'<a href="site-privacy.html">{p.t("footer_privacy")}</a></footer>')
 
 
@@ -283,6 +424,7 @@ def _head(p: Page) -> str:
     return f"""<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="{THEME_COLOR["nu"]}">
 <title>{title}</title>
 <meta name="description" content="{description}">
 <link rel="canonical" href="{SITE}">
@@ -309,6 +451,7 @@ def render_404(content: Content) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="{THEME_COLOR["nu"]}">
 <meta name="robots" content="noindex">
 <title>{esc(content.strings["en"]["not_found_title"])}</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -336,12 +479,13 @@ def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: 
     # the rest.
     # Wide screens: who I am, what I build and where I work on the left. Phones show Work last (CSS).
     side = [_trainer(p), _ask(p), _party(p, repos, site_root), _work(p, site_root)]
-    rest = [right_now(p, live), _pc_box(p, repos, site_root)]
+    rest = [right_now(p, live), _pc_box(p, repos, site_root), _study(p)]
     body = (f'{_top(p)}\n<div class="cols">\n'
             f'<div class="col side">\n{chr(10).join(s for s in side if s)}\n</div><!-- /side -->\n'
             f'<div class="col">\n{chr(10).join(s for s in rest if s)}\n</div>\n</div>')
     # The footer sits outside <main> so it is the page's contentinfo landmark.
     script = f'<script src="{versioned("assets/ask.js")}" defer></script>\n' if _ask_api(p) else ""
     return (f'<!doctype html>\n<html lang="en" class="pal-nu">\n{_head(p)}\n'
-            f'<body>\n<main class="in">\n{body}\n</main>\n{_footer(p, live)}\n{script}'
+            f'<body>\n<a class="skip" href="#trainer">{p.t("skip")}</a>\n'
+            f'<main class="in">\n{body}\n</main>\n{_footer(p, live)}\n{script}'
             f'</body>\n</html>\n')

@@ -68,6 +68,13 @@ a { color: inherit; }
   font-weight: 400;
   letter-spacing: .5px;
 }
+/* First thing the keyboard reaches: hidden until focused, then jumps past the palette and language buttons. */
+.skip {
+  position: absolute; left: 8px; top: -100px; z-index: 10;
+  padding: 10px 14px; font: 600 15px/1.2 Inter, system-ui, sans-serif;
+  color: var(--ink); background: var(--box); border: 3px solid var(--line); border-radius: 4px;
+}
+.skip:focus { top: 8px; outline: 3px solid var(--accent); outline-offset: 2px; }
 .sr {
   position: absolute !important;
   width: 1px; height: 1px;
@@ -140,10 +147,16 @@ main > header.top { padding: 0; }
 [data-palette][aria-pressed=true]::after { inset: 2px; }
 [data-palette]:focus-visible { outline: 3px solid var(--ink-on-bg); outline-offset: 0; }
 
+/* The active palette's name, next to the dots. */
+.sw { align-items: center; }
+.pname { margin-left: 8px; font-size: 12px; line-height: 1.4; color: var(--ink-on-bg); }
+.pn { display: none; }
+.pal-night .pn-night, .pal-nu .pn-nu { display: inline; }
+
 [data-lang-toggle], .ask-open {
   min-width: 44px; min-height: 44px;
   padding: 0 10px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-on-bg);
   background: transparent;
   border: 3px solid var(--ink-on-bg);
@@ -152,6 +165,9 @@ main > header.top { padding: 0; }
 }
 [data-lang-toggle]:focus-visible, .ask-open:focus-visible { outline-color: var(--ink-on-bg); }
 .ask-open { margin-left: auto; }
+/* Both languages show; the current one is a filled chip (shape, not colour alone). */
+[data-lang-toggle] span { padding: 2px 4px; border-radius: 2px; }
+html[lang=en] [data-lang-toggle] .l-en, html[lang=pt] [data-lang-toggle] .l-pt { color: var(--bg); background: var(--ink-on-bg); }
 
 header.top > a {
   display: inline-flex; align-items: center;
@@ -202,9 +218,24 @@ header.top > a:hover { text-decoration: underline; }
 .jobs li { padding: 8px 0; border-bottom: 2px dotted var(--soft); }
 .jobs li:last-child { border-bottom: 0; }
 .jobs b { display: block; font-size: 15px; }
+/* A role that opens (native details): the whole title block is the button, with a chevron. */
+.job > summary { position: relative; min-height: 44px; padding: 2px 28px 2px 0; cursor: pointer; list-style: none; }
+.job > summary::-webkit-details-marker { display: none; }
+.job > summary::after { content: "▶"; position: absolute; right: 4px; top: 50%; margin-top: -8px; font-size: 12px; color: var(--accent); transition: transform .12s; }
+.job[open] > summary::after { transform: rotate(90deg); }
+.job > summary:hover b { text-decoration: underline; }
+.job > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.job .did { padding: 4px 0 8px; font-size: 13.5px; line-height: 1.5; }
+.job .did h3 { margin: 10px 0 2px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.job .did ul { margin: 4px 0 0; padding: 0 0 0 18px; }
+.job .did li { margin: 0 0 6px; padding: 0; border: 0; }
+.jobs .hint { margin-bottom: 0; }
+.hint .click { display: none; }
+@media (hover: hover) and (pointer: fine) { .hint .tap { display: none; } .hint .click { display: inline; } }
+@media (prefers-reduced-motion: reduce) { .job > summary::after { transition: none; } }
 #work .aside { margin-top: 12px; font-size: 14px; }
 #work .aside a {
-  display: inline-flex; align-items: center; min-height: 24px;
+  display: inline-flex; align-items: center; min-height: 44px;
   color: var(--ink); text-underline-offset: 3px;
 }
 
@@ -216,7 +247,7 @@ header.top > a:hover { text-decoration: underline; }
   width: 72px; height: 72px;
   padding: 4px;
   box-sizing: border-box;
-  background: var(--soft);
+  background: var(--bg); /* the portrait is transparent, so it takes the palette's colour */
   border: 3px solid var(--line);
 }
 h1.name { margin: 0 0 8px; font-size: 14px; line-height: 1.5; }
@@ -310,6 +341,12 @@ h1.name .zh, .h .zh {
 .ask a { font-weight: 600; text-underline-offset: 3px; }
 .ask-notice { margin: 10px 0 0; font-size: 13px; }
 
+/* The pixel tile before a button label: one CSS pixel per art pixel, so it stays crisp. */
+.links a img { flex: none; width: 20px; height: 20px; margin-right: 8px; image-rendering: pixelated; }
+.links a:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.links a:hover, .btn:hover { text-decoration: underline; }
+.links a:active, .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--shadow); }
+
 /* ---------- Right now ---------- */
 .menu { list-style: none; margin: 4px 0 0; padding: 0; }
 .menu > li { display: flex; align-items: center; gap: 10px; border-bottom: 2px dotted var(--soft); }
@@ -341,7 +378,7 @@ a.row:hover .t { text-decoration: underline; }
 }
 .menu .body { flex: 1; min-width: 0; font-size: 14px; line-height: 1.45; }
 .menu .t { display: block; font-size: 15px; font-weight: 700; }
-.k { display: block; margin-bottom: 4px; font-size: 10px; line-height: 1.5; }
+.k { display: block; margin-bottom: 4px; font-size: 12px; line-height: 1.5; }
 [data-field=artist] { display: block; }
 .review { display: block; margin-top: 2px; }
 .go {
@@ -359,7 +396,7 @@ a.row:hover .t { text-decoration: underline; }
   display: inline-block;
   margin-left: 4px;
   padding: 3px 5px;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.2;
   vertical-align: middle;
   color: #08130a;
@@ -418,7 +455,7 @@ a.row:hover .t { text-decoration: underline; }
 .mon .lv {
   position: absolute; top: 6px; left: 6px;
   padding: 3px 4px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink);
   background: var(--box);
   border: 2px solid var(--line);
@@ -447,7 +484,7 @@ a.mon:hover b { text-decoration: underline; }
   font-weight: 700;
   text-decoration: none;
 }
-.pc .try { flex: none; font-size: 14px; color: var(--accent); white-space: nowrap; }
+.pc .try { flex: none; min-width: 44px; font-size: 14px; color: var(--accent); white-space: nowrap; }
 .pc .more { display: flex; padding: 0; font-size: 15px; color: var(--ink); }
 .pc .try:hover, .pc .more:hover { text-decoration: underline; }
 .pc > :last-child { border-bottom: 0; }
@@ -490,3 +527,48 @@ button.btn { font-family: Inter, system-ui, sans-serif; }
   .links a:active, .btn:active { transform: none; }
   .ask-cursor { animation: none; }
 }
+
+/* ---------- Studying now ---------- */
+.study { list-style: none; margin: 10px 0 0; padding: 0; }
+.study li { padding: 6px 0 8px; }
+.tree .row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; line-height: 1.4; }
+.tree .pct { flex: none; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tree .bar { height: 14px; margin-top: 4px; background: var(--soft); border: 3px solid var(--line); border-radius: 4px; overflow: hidden; }
+.tree .bar i { display: block; height: 100%; background: var(--accent); }
+.tree > summary { display: block; margin-top: 10px; padding: 10px; background: var(--soft); border: 3px solid var(--line); border-radius: 5px; cursor: pointer; list-style: none; }
+.tree > summary::-webkit-details-marker, .topic > summary::-webkit-details-marker { display: none; }
+.tree > summary:hover { border-color: var(--accent); }
+.tree > summary:focus-visible, .topic > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.tree .now { display: inline-block; margin-bottom: 4px; padding: 1px 6px; font-size: 11px; font-weight: 700; color: var(--box); background: var(--accent); border-radius: 3px; }
+.tree .path { margin-left: 8px; font-size: 12px; font-weight: 700; }
+.tree .all { display: block; margin-top: 6px; font-size: 13px; font-weight: 700; color: var(--accent); }
+.tree[open] .all { visibility: hidden; height: 0; margin: 0; }
+.tree .bar { background: var(--box); }
+.study { margin-top: 8px; }
+/* The tree map (inline SVG from render._study_map): palette variables, so both themes work. */
+.smap { display: block; width: 100%; height: auto; margin: 10px 0 0; overflow: visible; }
+.smap path { fill: none; stroke: var(--line); stroke-width: 2; }
+.smap .gbox { fill: var(--soft); stroke: var(--line); stroke-width: 2; }
+.smap .sq { fill: var(--box); stroke: var(--line); stroke-width: 3; }
+.smap .fl { fill: var(--accent); }
+.smap .hit { fill: transparent; }
+.smap .ring { fill: none; stroke: var(--accent); stroke-width: 2; }
+.smap text { fill: var(--ink); font: 700 11px/1 Inter, system-ui, sans-serif; text-anchor: middle; }
+.smap .now text { fill: var(--accent); }
+.smap .sn { cursor: pointer; }
+.smap .sn:hover .sq { stroke: var(--accent); }
+.smap .sn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.tree .gh { margin: 14px 0 0; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.subs { list-style: none; margin: 4px 0 8px; padding: 0 0 0 10px; border-left: 3px solid var(--line); }
+.subs > li { padding: 0; }
+.sub > summary { display: flex; align-items: center; min-height: 44px; padding: 5px 0; font-size: 13px; font-weight: 600; cursor: pointer; list-style: none; }
+.sub > summary .row { flex: 1; }
+.sub > summary::-webkit-details-marker { display: none; }
+.sub > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.topic > summary { display: block; padding: 4px 0; cursor: pointer; list-style: none; }
+.items { list-style: none; margin: 4px 0 6px; padding: 0 0 0 12px; border-left: 3px solid var(--line); font-size: 13px; line-height: 1.4; }
+.items .item { display: flex; gap: 8px; align-items: baseline; padding: 2px 0; }
+.items .item > span:nth-child(2) { flex: 1; min-width: 0; }
+.items .mark { width: 1em; text-align: center; color: var(--accent); }
+.items .done > span:nth-child(2) { text-decoration: line-through; opacity: .7; }
+.study .bar { background: var(--soft); }

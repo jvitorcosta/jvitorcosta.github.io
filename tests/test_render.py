@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from homepage.content import Content, Job, PartyMember
+from homepage.content import Content, Job, PartyMember, StudyItem, StudySubtopic, StudyTopic
 from homepage.model import Activity, Anime, Book, Film, LiveData, Repo, Song
 from homepage.render import clip, render_home, safe_url
 
@@ -76,6 +76,100 @@ def section(html, start, end=None):
     return html[i:html.index("</section>", i)]
 
 
+STUDY = [
+    StudyTopic("agents", {"en": "Agentic systems & MCP", "pt": "Agentes e MCP"}, 38, True, "study", [
+        StudySubtopic("Agent loops", 25, [StudyItem("E5 Agents", 50), StudyItem("ReAct", 0)]),
+        StudySubtopic("Tools and MCP", 50, [StudyItem("Build an MCP server", 100), StudyItem("MCP vs API", 0)])]),
+    StudyTopic("evals", {"en": "Evaluation", "pt": "Avaliação"}, 0, False, "study", [
+        StudySubtopic("Judges", 0, [StudyItem("S6 Evaluation", 0)])]),
+    StudyTopic("agent-labs", {"en": "Agent labs", "pt": "Laboratórios de agentes"}, 10, False, "lab", [
+        StudySubtopic("MCP server", 10, [StudyItem("One tool", 10)])]),
+]
+
+
+def study_box(tmp_path, topics=STUDY):
+    return section(render(tmp_path, content(study=topics, study_updated="2026-11-23")), "study")
+
+
+def test_study_card_shows_only_the_current_topic_until_opened(tmp_path):
+    box = study_box(tmp_path)
+    head = box[:box.index('<div class="groups"')]
+    assert "Agentic systems &amp; MCP" in head and "38%" in head
+    assert "Evaluation" not in head and "Agent labs" not in head
+    assert "Nov 23" in box and "23 nov" in box
+
+
+def test_study_card_has_the_path_label_and_no_why_sentence(tmp_path):
+    box = study_box(tmp_path)
+    head = box[:box.index('<div class="groups"')]
+    assert "AI Engineer / AI FDE path" in head
+    assert "become a better" not in box and "melhor" not in box
+    assert "as of" in box and "Nov 23" in box
+
+
+def test_study_tree_groups_topics_and_labs_with_subtopics_and_concepts(tmp_path):
+    box = study_box(tmp_path)
+    tree = box[box.index('</svg>'):]  # the list under the map
+    topics_at, labs_at = tree.index("Topics"), tree.index("Labs and practice")
+    assert topics_at < tree.index("Evaluation") < labs_at < tree.index("Agent labs")
+    for text in ("Agent loops", "Tools and MCP", "Judges", "MCP server", "E5 Agents",
+                 "Build an MCP server", "S6 Evaluation", "One tool", "Avaliação"):
+        assert text in tree
+    assert tree.count('class="sub"') == 4
+    assert tree.count('class="item done"') == 1 and tree.count('class="item part"') == 2
+    assert tree.count('class="item todo"') == 3
+
+
+def test_study_links_only_inside_the_section(tmp_path):
+    box = study_box(tmp_path)
+    hrefs = re.findall(r'href="([^"]*)"', box)
+    assert hrefs and all(h.startswith("#study-") for h in hrefs)
+    ids = set(re.findall(r'id="([^"]+)"', box))
+    assert all(h[1:] in ids for h in hrefs)  # every square lands on a real topic
+
+
+def test_study_map_is_an_svg_tree_with_one_square_per_topic(tmp_path):
+    box = study_box(tmp_path)
+    svg = box[box.index("<svg"):box.index("</svg>")]
+    assert svg.count('class="sn') == 3 and svg.count('class="sn now"') == 1
+    assert svg.count("<path") == 2 + 3  # root to Topics and Labs, then each group to its leaves
+    assert "TOPICS" in svg and "LABS" in svg and "TÓPICOS" in svg
+    assert "<span" not in svg  # a span would break out of the SVG when parsed as HTML
+    assert 'aria-label="Agentic systems &amp; MCP, 38%"' in svg and "http" not in svg
+    assert box.index("<svg") < box.index('class="gh"')  # the map leads, the list follows
+
+
+def test_study_map_fills_by_percent_and_never_hides_a_started_topic(tmp_path):
+    topics = [StudyTopic("a", {"en": "A", "pt": "A"}, 100, False, "study", []),
+              StudyTopic("b", {"en": "B", "pt": "B"}, 0, True, "study", []),
+              StudyTopic("c", {"en": "C", "pt": "C"}, 2, False, "study", [])]
+    svg = study_box(tmp_path, topics)
+    heights = [int(h) for h in re.findall(r'class="fl"[^>]* height="(\d+)"', svg)]
+    assert heights == [22, 0, 2]
+
+
+def test_study_labels_name_their_bars(tmp_path):
+    box = study_box(tmp_path)
+    ids = re.findall(r'id="([^"]+)"', box)
+    assert len(ids) == len(set(ids))
+    for m in re.finditer(r'aria-labelledby="([^"]+)"', box):
+        assert m.group(1) in ids
+
+
+def test_study_without_labs_has_no_labs_group(tmp_path):
+    box = study_box(tmp_path, STUDY[:2])
+    assert "Labs and practice" not in box and "Topics" in box
+
+
+def test_study_section_is_left_out_without_topics(tmp_path):
+    assert 'id="study"' not in render(tmp_path, content())
+
+
+def test_study_section_sits_after_projects(tmp_path):
+    html = render(tmp_path, content(study=STUDY))
+    assert html.index('id="pc-box"') < html.index('id="study"')
+
+
 def test_sections_in_order(tmp_path):
     # Code order is the wide-screen order, left column first; phones move Lately up and Work to the end.
     html = render(tmp_path)
@@ -116,8 +210,8 @@ def test_palette_and_language_buttons(tmp_path):
     for p, label in (("night", "Red Lantern"), ("nu", "Nu Purple")):
         assert f'<button type="button" data-palette="{p}" aria-label="{label}"' in html
     assert 'data-palette="pocket"' not in html
-    assert ('<button type="button" data-lang-toggle aria-label="EN > PT, switch language">'
-            "EN > PT</button>") in html
+    assert ('<button type="button" data-lang-toggle aria-label="EN / PT, switch language">'
+            '<span class="l-en">EN</span> / <span class="l-pt">PT</span></button>') in html
 
 
 def test_profile_icons_link_to_profiles(tmp_path):
@@ -401,11 +495,13 @@ def test_no_external_image_sources(tmp_path):
 
 def test_language_toggle_label_contains_visible_text(tmp_path):
     html = render(tmp_path)
-    assert 'data-lang-toggle aria-label="EN > PT, switch language">EN > PT</button>' in html
+    m = re.search(r'data-lang-toggle aria-label="([^"]+)">(.*?)</button>', html)
+    visible = re.sub(r"<[^>]+>", "", m.group(2))
+    assert m.group(1).startswith(visible)  # WCAG 2.5.3: the name starts with the visible text
 
 
 def test_vendored_icons_are_plain_svgs():
-    for icon in ("spotify", "letterboxd", "myanimelist", "goodreads", "strava"):
+    for icon in ("spotify", "letterboxd", "myanimelist", "goodreads", "strava", "instagram", "github", "linkedin", "email"):
         svg = (ROOT / "assets" / "icons" / f"{icon}.svg").read_text(encoding="utf-8")
         assert svg.startswith("<svg") and "<script" not in svg and "href" not in svg
 
@@ -486,6 +582,14 @@ def test_palette_labels_follow_the_language(tmp_path):
     assert 'role="group" aria-label="Colours" data-aria-en="Colours" data-aria-pt="Cores"' in top
     for en, pt in (("Red Lantern", "Lanterna Vermelha"), ("Nu Purple", "Roxo Nu")):
         assert f'aria-label="{en}" data-aria-en="{en}" data-aria-pt="{pt}"' in top
+
+
+def test_skip_link_is_first_and_lands_on_the_trainer_card(tmp_path):
+    html = render(tmp_path)
+    body = html[html.index("<body>"):]
+    assert body.startswith('<body>\n<a class="skip" href="#trainer">')
+    assert "Skip to content" in body and "Pular para o conteúdo" in body
+    assert html.index('class="skip"') < html.index('<header class="top">') < html.index('id="trainer"')
 
 
 def test_footer_is_a_landmark_outside_main(tmp_path):
@@ -586,6 +690,26 @@ def test_footer_names_every_source_and_the_real_cadence(tmp_path):
     assert "every 4 hours" in foot and "a cada 4 horas" in foot
 
 
+def test_a_role_with_details_opens_and_keeps_its_summary(tmp_path):
+    details = (("", ("Built <a thing> & shipped it.",)), ("Data platform", ("Cut landing time.",)))
+    jobs = [Job("Senior AI/ML Engineer", "Qubika", "Feb 2026", "Jul 2026", details),
+            Job("AI/ML Software Engineer", "Nubank", "Sep 2022", "Jul 2026")]
+    work = section(render(tmp_path, c=content(jobs=jobs)), "work")
+    assert work.count("<details") == 1  # a native disclosure, no JS
+    assert '<details class="job" open>' in work  # the first role opens on load
+    first, rest = work.split("</details>", 1)
+    assert "<summary><b>Senior AI/ML Engineer</b>Qubika · " in first
+    assert "<li>Built &lt;a thing&gt; &amp; shipped it.</li>" in first and "<h3>Data platform</h3>" in first
+    assert 'lang="en-US"' in first and 'lang="en"' not in first.split("</summary>")[1]
+    assert "<li><b>AI/ML Software Engineer</b>Nubank" in rest  # no details: a plain row
+    assert "Tap a role" in work and "Toque em um cargo" in work
+
+
+def test_no_details_means_no_hint_and_no_disclosure(tmp_path):
+    work = section(render(tmp_path), "work")
+    assert "<details" not in work and "Tap a role" not in work
+
+
 def test_work_lists_each_role_with_its_dates(tmp_path):
     work = section(render(tmp_path), "work")
     assert '<ol class="jobs">' in work
@@ -649,6 +773,14 @@ def test_trainer_card_keeps_the_four_contact_buttons(tmp_path):
     assert "Resume" not in nav and 'class="primary"' not in nav
 
 
+def test_trainer_buttons_lead_with_their_pixel_tile(tmp_path):
+    links = {**LINKS, "instagram": "https://www.instagram.com/joaovpi/"}
+    nav = re.search(r'<nav class="links">(.*?)</nav>', section(render(tmp_path, c=content(links=links)), "trainer")).group(1)
+    tiles = re.findall(r'<a href="[^"]+"><img src="assets/icons/(\w+)\.svg\?v=[0-9a-f]{8}" alt="" width="20" height="20">(\w+)</a>', nav)
+    assert tiles == [("instagram", "Instagram"), ("github", "GitHub"), ("linkedin", "LinkedIn"), ("email", "Email")]
+    assert not re.findall(r'<img[^>]*src="(?!assets/)', nav)
+
+
 def test_experience_leads_its_buttons_with_the_resume(tmp_path):
     work = section(render(tmp_path), "work")
     row = re.search(r'<div class="links">(.*?)</div>', work).group(1)
@@ -677,10 +809,10 @@ def test_no_status_hides_the_pill(tmp_path):
     assert 'class="status"' not in render(tmp_path, content(strings=strings))
 
 
-def test_pill_invites_odd_ideas_in_a_few_words():
+def test_pill_line_is_short_in_both_languages():
     # It sits in a small pill, so it must stay short in both languages.
-    assert STRINGS["en"]["status"] == "Weird idea? Let's build it."
-    assert STRINGS["pt"]["status"] == "Ideia maluca? Bora construir."
+    assert STRINGS["en"]["status"] == "There is no tomorrow."
+    assert STRINGS["pt"]["status"] == "Não existe amanhã."
     assert all(len(STRINGS[lang]["status"]) <= 30 for lang in ("en", "pt"))
 
 
@@ -849,3 +981,43 @@ def test_site_privacy_page_headings_are_scoped_to_each_language():
     assert "<h1>Privacidade deste site e do Ask Vitor</h1>" in pt
     assert re.findall(r"<h2>(.*?)</h2>", pt) == ["O site", "Ask Vitor"]
     assert "Privacidade" not in en and "Privacy of this site" not in pt
+
+
+def test_footer_has_back_to_top_link(tmp_path):
+    html = render(tmp_path)
+    foot = html[html.index('<footer class="foot">'):html.index("</footer>")]
+    link = re.search(r'<a href="#top"[^>]*>(.*?)</a>', foot)
+    assert link, "footer has no back-to-top link"
+    for lang in ("en", "pt"):
+        assert f'<span lang="{lang}">{esc(STRINGS[lang]["back_to_top"])}</span>' in link.group(1)
+    # With no element called "top", browsers scroll "#top" to the very top of the page.
+    assert 'id="top"' not in html and 'name="top"' not in html
+
+
+def test_palette_name_shows_next_to_the_dots(tmp_path):
+    html = render(tmp_path)
+    for key, en, pt in (("night", "Red Lantern", "Lanterna Vermelha"), ("nu", "Nu Purple", "Roxo Nu")):
+        assert (f'<span class="pn pn-{key}"><span lang="en">{en}</span><span lang="pt">{pt}</span></span>') in html
+    assert 'class="pname" aria-hidden="true"' in html
+
+
+def test_theme_color_follows_the_palette(tmp_path):
+    html = render(tmp_path)
+    assert '<meta name="theme-color" content="#820ad1">' in html
+    assert "#8f1d1d" in html  # the early script knows the Red Lantern colour
+    css = (ROOT / "assets" / "site.css").read_text(encoding="utf-8")
+    for key, colour in (("night", "#8f1d1d"), ("nu", "#820ad1")):
+        assert f".pal-{key} {{ --bg:{colour};" in css  # same colour as the palette background
+
+
+def test_only_the_first_role_with_details_opens_and_the_hint_has_tap_and_click(tmp_path):
+    details = (("", ("Did a thing.",)),)
+    jobs = [Job("A", "Plain", "Jan 2026", "Feb 2026"),
+            Job("B", "First", "Jan 2025", "Dec 2025", details),
+            Job("C", "Second", "Jan 2024", "Dec 2024", details)]
+    work = section(render(tmp_path, c=content(jobs=jobs)), "work")
+    assert work.count('<details class="job" open>') == 1 and work.count("<details") == 2
+    assert work.index("<summary><b>B</b>") < work.index("</details>") < work.index("<summary><b>C</b>")
+    assert work.index('class="job" open') < work.index("<summary><b>B</b>")
+    assert '<span class="tap">' in work and '<span class="click">' in work
+    assert "Click a role to see what I did there." in work and "Clique em um cargo" in work

@@ -97,7 +97,7 @@ code was written. The code keeps the old names:
 How each section decides what to show:
 
 - **Trainer card:** name and Chinese name, intro, motto, a short pill (`status` in
-  `data/strings.toml`, "Weird idea? Let's build it."; remove it from both languages to hide it), then the Instagram, GitHub, LinkedIn and Email
+  `data/strings.toml`, "There is no tomorrow."; remove it from both languages to hide it), then the Instagram, GitHub, LinkedIn and Email
   buttons from `data/links.toml` (an empty link is left out). Experience ends with a filled
   Resume (PDF) button (`resume` link) next to LinkedIn.
 - **Favorites:** the tiles in `data/party.toml`, in file order. A tile links to its `url` if set,
@@ -122,7 +122,7 @@ before the page paints (so neither flashes), and JSON-LD describing me as a `Per
 
 Every visible text is written twice, as `<span lang="en">…</span><span lang="pt">…</span>`, by
 `Page.t(key)` (a key of `strings.toml`) or `Page.both({"en": …, "pt": …})`. `site.css` hides the
-spans that don't match `<html lang>`, and the EN > PT button only changes that attribute. So
+spans that don't match `<html lang>`, and the EN / PT button only changes that attribute. So
 there is one URL, no reload and nothing fetched when switching. Labels for screen readers
 (`aria-label`) and hover names (`title`) carry `data-aria-en`/`data-aria-pt` and
 `data-title-en`/`data-title-pt`, and `site.js` swaps them.

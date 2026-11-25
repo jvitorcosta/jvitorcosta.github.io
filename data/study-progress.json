@@ -1,0 +1,887 @@
+{
+  "updated": "2026-11-23",
+  "topics": [
+    {
+      "id": "foundations",
+      "title": {
+        "en": "LLM foundations",
+        "pt": "Fundamentos de LLM"
+      },
+      "percent": 2,
+      "current": false,
+      "kind": "study",
+      "subtopics": [
+        {
+          "title": "Tokens and embeddings",
+          "percent": 10,
+          "items": [
+            {
+              "text": "E0 LLM Foundations",
+              "percent": 50
+            },
+            {
+              "text": "18 Byte-pair encoding",
+              "percent": 0
+            },
+            {
+              "text": "09 word2vec",
+              "percent": 0
+            },
+            {
+              "text": "Why the same text costs different token counts (Portuguese, numbers, code)",
+              "percent": 0
+            },
+            {
+              "text": "What an embedding is and what it does not tell you",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Generation and chat models",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Generation as a loop of next-token probabilities",
+              "percent": 0
+            },
+            {
+              "text": "Chat model versus base model: template plus instruction tuning",
+              "percent": 0
+            },
+            {
+              "text": "Sampling: temperature, top-p, top-k",
+              "percent": 0
+            },
+            {
+              "text": "Context window and what fills it",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Transformer and attention",
+          "percent": 0,
+          "items": [
+            {
+              "text": "19 Attention Is All You Need",
+              "percent": 0
+            },
+            {
+              "text": "17 Bahdanau attention",
+              "percent": 0
+            },
+            {
+              "text": "What an attention weight is and what it is not",
+              "percent": 0
+            },
+            {
+              "text": "Transformer versus other architectures",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Running and prompting models",
+          "percent": 0,
+          "items": [
+            {
+              "text": "E1 Running LLMs",
+              "percent": 0
+            },
+            {
+              "text": "24 GPT-3",
+              "percent": 0
+            },
+            {
+              "text": "32 Chain-of-Thought",
+              "percent": 0
+            },
+            {
+              "text": "Call a hosted or local model through an OpenAI-compatible API",
+              "percent": 0
+            },
+            {
+              "text": "Zero-shot, few-shot and chain-of-thought on the same task",
+              "percent": 0
+            },
+            {
+              "text": "Validated structured (JSON) output",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Interview questions",
+          "percent": 0,
+          "items": [
+            {
+              "text": "What is an LLM, in 30 seconds",
+              "percent": 0
+            },
+            {
+              "text": "Transformer versus other architectures",
+              "percent": 0
+            },
+            {
+              "text": "Does this problem need an LLM, and what stays in code (question 24)",
+              "percent": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rag",
+      "title": {
+        "en": "Retrieval and RAG",
+        "pt": "Recuperação e RAG"
+      },
+      "percent": 0,
+      "current": true,
+      "kind": "study",
+      "subtopics": [
+        {
+          "title": "Chunking and embeddings",
+          "percent": 0,
+          "items": [
+            {
+              "text": "E2 Building a Vector Storage",
+              "percent": 0
+            },
+            {
+              "text": "Split documents into chunks sized for retrieval",
+              "percent": 0
+            },
+            {
+              "text": "Structure-aware chunks: sections, code blocks, tables kept whole",
+              "percent": 0
+            },
+            {
+              "text": "Pick an embedding model and explain the trade-offs",
+              "percent": 0
+            },
+            {
+              "text": "Metadata on every chunk",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Vector search",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Store and query embeddings in a vector database",
+              "percent": 0
+            },
+            {
+              "text": "Check the index against brute force",
+              "percent": 0
+            },
+            {
+              "text": "Hybrid search: keyword plus vector",
+              "percent": 0
+            },
+            {
+              "text": "Reranking with a cross-encoder or an LLM",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Retrieve then generate",
+          "percent": 0,
+          "items": [
+            {
+              "text": "E3 Retrieval Augmented Generation",
+              "percent": 0
+            },
+            {
+              "text": "33 RAG",
+              "percent": 0
+            },
+            {
+              "text": "A retrieve-then-generate pipeline without a framework",
+              "percent": 0
+            },
+            {
+              "text": "Grounded prompts with citations",
+              "percent": 0
+            },
+            {
+              "text": "Conversation memory for a RAG chatbot",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Advanced retrieval",
+          "percent": 0,
+          "items": [
+            {
+              "text": "E4 Advanced RAG",
+              "percent": 0
+            },
+            {
+              "text": "Query rewriting, multi-query and RAG-fusion",
+              "percent": 0
+            },
+            {
+              "text": "Structured queries and safe text-to-SQL",
+              "percent": 0
+            },
+            {
+              "text": "Permission-aware retrieval",
+              "percent": 0
+            },
+            {
+              "text": "Index freshness and document version changes",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Measuring RAG and hallucinations",
+          "percent": 0,
+          "items": [
+            {
+              "text": "35 Why Language Models Hallucinate",
+              "percent": 0
+            },
+            {
+              "text": "Retrieval metrics: recall@k, precision, MRR",
+              "percent": 0
+            },
+            {
+              "text": "Generation metrics: faithfulness and answer relevance",
+              "percent": 0
+            },
+            {
+              "text": "Ways to reduce hallucinations",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Interview questions",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Debug a wrong RAG answer (question 1)",
+              "percent": 0
+            },
+            {
+              "text": "Chunk size and overlap (question 2)",
+              "percent": 0
+            },
+            {
+              "text": "Hybrid versus dense search, and when to rerank (question 3)",
+              "percent": 0
+            },
+            {
+              "text": "RAG versus fine-tuning (question 4)",
+              "percent": 0
+            },
+            {
+              "text": "Evaluate RAG (question 5)",
+              "percent": 0
+            },
+            {
+              "text": "Reduce hallucinations (question 6)",
+              "percent": 0
+            },
+            {
+              "text": "Keep an index consistent when documents change (question 18)",
+              "percent": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "agents",
+      "title": {
+        "en": "Agentic systems and MCP",
+        "pt": "Sistemas de agentes e MCP"
+      },
+      "percent": 0,
+      "current": false,
+      "kind": "study",
+      "subtopics": [
+        {
+          "title": "Agent loops",
+          "percent": 0,
+          "items": [
+            {
+              "text": "E5 Agents",
+              "percent": 0
+            },
+            {
+              "text": "34 ReAct",
+              "percent": 0
+            },
+            {
+              "text": "A ReAct loop with thought, action and observation, from scratch",
+              "percent": 0
+            },
+            {
+              "text": "Agent versus deterministic workflow",
+              "percent": 0
+            },
+            {
+              "text": "Plan-and-execute and reflection",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Tools and MCP",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Function calling and structured outputs",
+              "percent": 0
+            },
+            {
+              "text": "MCP: servers, clients, tools, resources, prompts",
+              "percent": 0
+            },
+            {
+              "text": "MCP versus a plain API",
+              "percent": 0
+            },
+            {
+              "text": "Vendor SDK versus an agent framework",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Reliability and control",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Step limits and stop conditions",
+              "percent": 0
+            },
+            {
+              "text": "Tool failures, bounded retries and loop detection",
+              "percent": 0
+            },
+            {
+              "text": "Human-in-the-loop approvals",
+              "percent": 0
+            },
+            {
+              "text": "Context engineering: what goes in the window and when",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Orchestration and memory",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Harness Engineering: Lectures",
+              "percent": 0
+            },
+            {
+              "text": "LangGraph: state, reducers, checkpointer, resume after failure",
+              "percent": 0
+            },
+            {
+              "text": "Memory: private, shared, retrieval, recency and importance",
+              "percent": 0
+            },
+            {
+              "text": "Multi-agent patterns and when one agent is enough",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Interview questions",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Agent versus workflow (question 7)",
+              "percent": 0
+            },
+            {
+              "text": "Tool failures and infinite loops (question 8)",
+              "percent": 0
+            },
+            {
+              "text": "LangGraph versus a chain, and resume after failure (question 9)",
+              "percent": 0
+            },
+            {
+              "text": "Agent memory design (question 10)",
+              "percent": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evals",
+      "title": {
+        "en": "Evaluation",
+        "pt": "Avaliação de LLMs"
+      },
+      "percent": 0,
+      "current": false,
+      "kind": "study",
+      "subtopics": [
+        {
+          "title": "Evaluation basics",
+          "percent": 0,
+          "items": [
+            {
+              "text": "S6 Evaluation",
+              "percent": 0
+            },
+            {
+              "text": "Choose benchmarks that match the task",
+              "percent": 0
+            },
+            {
+              "text": "Combine human and model-based evaluation",
+              "percent": 0
+            },
+            {
+              "text": "Run a standard evaluation harness",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Eval sets and metrics",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Build an eval set of 20 to 50 tasks from real failures",
+              "percent": 0
+            },
+            {
+              "text": "Label each task with the capability it tests",
+              "percent": 0
+            },
+            {
+              "text": "Golden datasets with reference answers",
+              "percent": 0
+            },
+            {
+              "text": "A regression gate before shipping",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Agent evals",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Outcome grading versus trajectory grading",
+              "percent": 0
+            },
+            {
+              "text": "pass@k versus pass^k",
+              "percent": 0
+            },
+            {
+              "text": "Cost and latency as eval dimensions",
+              "percent": 0
+            },
+            {
+              "text": "Cases where the right move is to refuse or escalate",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "LLM as judge",
+          "percent": 0,
+          "items": [
+            {
+              "text": "One rubric dimension at a time, allowing unknown",
+              "percent": 0
+            },
+            {
+              "text": "A judge model different from the generator",
+              "percent": 0
+            },
+            {
+              "text": "Calibrate the judge against human labels",
+              "percent": 0
+            },
+            {
+              "text": "Tools: Ragas and DeepEval",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Interview questions",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Build an eval set and decide a change is safe to ship (question 11)",
+              "percent": 0
+            },
+            {
+              "text": "LLM as judge: which examples, how to trust it (question 12)",
+              "percent": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fde-craft",
+      "title": {
+        "en": "FDE customer craft",
+        "pt": "FDE: trabalho com o cliente"
+      },
+      "percent": 0,
+      "current": false,
+      "kind": "study",
+      "subtopics": [
+        {
+          "title": "Discovery",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Restate the problem in your own words",
+              "percent": 0
+            },
+            {
+              "text": "Clarifying questions: users, today's process, what a good outcome is",
+              "percent": 0
+            },
+            {
+              "text": "Constraints: data, security, existing systems",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Scoping a pilot",
+          "percent": 0,
+          "items": [
+            {
+              "text": "A pilot scope small enough to demo",
+              "percent": 0
+            },
+            {
+              "text": "Success metric and baseline",
+              "percent": 0
+            },
+            {
+              "text": "Risks and a rollout plan",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Delivery and stakeholders",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Security review and stakeholder questions",
+              "percent": 0
+            },
+            {
+              "text": "The first demo",
+              "percent": 0
+            },
+            {
+              "text": "Handoff and ownership after launch",
+              "percent": 0
+            },
+            {
+              "text": "ROI stories, from CV facts only",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Learning path",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Anthropic Forward Deployed Engineer learning path (11 courses)",
+              "percent": 0
+            },
+            {
+              "text": "The \"Path to Forward Deployed AI Engineer\" map",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Interview questions",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Walk through a system I shipped and its biggest failure (question 16)",
+              "percent": 0
+            },
+            {
+              "text": "Turn an ambiguous customer requirement into a technical solution (question 17)",
+              "percent": 0
+            },
+            {
+              "text": "Does this problem need an LLM (question 24)",
+              "percent": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lab-rag",
+      "title": {
+        "en": "Retrieval labs",
+        "pt": "Laboratórios de recuperação"
+      },
+      "percent": 0,
+      "current": false,
+      "kind": "lab",
+      "subtopics": [
+        {
+          "title": "Course labs",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Run the E2 vector storage lab",
+              "percent": 0
+            },
+            {
+              "text": "Run the E3 RAG lab",
+              "percent": 0
+            },
+            {
+              "text": "Run the E4 advanced RAG lab",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Retrieval eval project",
+          "percent": 0,
+          "items": [
+            {
+              "text": "A small corpus with questions and known source chunks",
+              "percent": 0
+            },
+            {
+              "text": "recall@k and MRR measured",
+              "percent": 0
+            },
+            {
+              "text": "Chunking strategies compared",
+              "percent": 0
+            },
+            {
+              "text": "Hybrid search added and compared",
+              "percent": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lab-agents",
+      "title": {
+        "en": "Agent and MCP labs",
+        "pt": "Laboratórios de agentes e MCP"
+      },
+      "percent": 0,
+      "current": false,
+      "kind": "lab",
+      "subtopics": [
+        {
+          "title": "Course lab",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Run the E5 agents lab",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "LangGraph drill",
+          "percent": 0,
+          "items": [
+            {
+              "text": "An agent with a checkpointer",
+              "percent": 0
+            },
+            {
+              "text": "A step limit and a stop condition",
+              "percent": 0
+            },
+            {
+              "text": "A tool-failure path and a resume",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "MCP server",
+          "percent": 0,
+          "items": [
+            {
+              "text": "One tool and one resource",
+              "percent": 0
+            },
+            {
+              "text": "Call it from Claude",
+              "percent": 0
+            },
+            {
+              "text": "A test that exercises it",
+              "percent": 0
+            },
+            {
+              "text": "Notes for the project page",
+              "percent": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lab-evals",
+      "title": {
+        "en": "Evaluation labs",
+        "pt": "Laboratórios de avaliação"
+      },
+      "percent": 0,
+      "current": false,
+      "kind": "lab",
+      "subtopics": [
+        {
+          "title": "LLM judge project",
+          "percent": 0,
+          "items": [
+            {
+              "text": "A golden set of real questions",
+              "percent": 0
+            },
+            {
+              "text": "A rubric with one dimension at a time",
+              "percent": 0
+            },
+            {
+              "text": "Calibration against human labels",
+              "percent": 0
+            },
+            {
+              "text": "An automated run that can gate a change",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Agent eval",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Trajectory grading of the drill agent",
+              "percent": 0
+            },
+            {
+              "text": "pass^k over repeated runs",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Course lab",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Run a benchmark with an evaluation harness (S6)",
+              "percent": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": {
+        "en": "Case and mock practice",
+        "pt": "Casos e entrevistas simuladas"
+      },
+      "percent": 8,
+      "current": false,
+      "kind": "lab",
+      "subtopics": [
+        {
+          "title": "FDE case drills",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Case drill 1: restate, clarify, scope a pilot, metric, risks, first demo",
+              "percent": 0
+            },
+            {
+              "text": "Case drill 2",
+              "percent": 0
+            },
+            {
+              "text": "Case drill 3",
+              "percent": 0
+            },
+            {
+              "text": "A pilot plan and rollout checklist for a made-up customer",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Spoken answers",
+          "percent": 0,
+          "items": [
+            {
+              "text": "Record and re-listen to five answers",
+              "percent": 0
+            },
+            {
+              "text": "The 30-second answers in English and Portuguese for the red topics",
+              "percent": 0
+            }
+          ]
+        },
+        {
+          "title": "Mock interviews",
+          "percent": 25,
+          "items": [
+            {
+              "text": "Mock interview 1",
+              "percent": 100
+            },
+            {
+              "text": "Mock interview 2 (agents and evals)",
+              "percent": 0
+            },
+            {
+              "text": "Mock interview 3 (FDE case)",
+              "percent": 0
+            },
+            {
+              "text": "A full mock with a peer",
+              "percent": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -10,7 +10,9 @@ the merge publishes it.
 | `data/pc_box.toml` | names, lines, tags and pins for rows in Projects |
 | `data/links.toml` | profile links (trainer buttons, the tiles at the end of each Lately row) |
 | `data/activity.toml` | the activity row used when Strava is off |
+| `data/study-progress.json` | the STUDYING NOW bars, **generated from my study roadmap, don't edit here** |
 | `data/jobs.json` | Experience roles, **copied from curriculum-vitae, don't edit here** |
+| `data/experience.json` | what I did in each role (the bullets that open under it), **copied from the resume bullets in curriculum-vitae, don't edit here** |
 
 Before opening the PR:
 
@@ -94,6 +96,32 @@ allowed.
 Used only when the Strava secrets aren't set or Strava has never answered. Same fields as a
 Strava row. Leave out `distance_km` for activities without distance. Never add maps, routes,
 places or health data.
+
+## Study progress: `data/study-progress.json`
+
+The STUDYING NOW box is a card for the one topic I am studying right now (`current`); clicking it
+opens a tree: topics (concepts, with their interview questions) and, in a second group, labs and
+practice. Each topic has a bar, subtopics with their own percent, and concepts (lessons, papers,
+exercises, questions) marked done, partly done or to do. The page only renders the file: ids, English and
+Portuguese titles, whole percents, concept labels and which topic is current. Concept labels are
+in English only. No links, no paths. A broken file hides the box with a warning.
+
+The file is generated from the roadmap note in my study vault, so the bars and my own notes agree.
+The note decides which topics are `now=yes` (only those are written, and exactly one of them is
+`current=yes`; `kind=lab` puts a topic in the labs group; every topic needs `###` subtopics) and how each percent is
+computed (ticked checkboxes and note statuses); the rules are in the docstring of
+`tools/study_progress.py`. To refresh it, one command, run by me or a routine:
+
+```bash
+uv run --python 3.12 python tools/study_progress.py --vault <vault folder>   # or set STUDY_VAULT
+git diff data/study-progress.json                                            # review, then open a PR
+```
+
+- Nothing commits or pushes: the merge of that PR is what publishes the new bars.
+- `--check` exits 1 when the file is out of date (a routine can use it to open the PR only when
+  something changed); `--note` picks another roadmap note name. Exit 2 means a bad roadmap (an
+  unresolved link, a duplicate id, a topic without items or a Portuguese title): nothing is written.
+- Only the topic list in the roadmap note changes the bars. The tests use a fake vault, never mine.
 
 ## Experience and the case pages
 

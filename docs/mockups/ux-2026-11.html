@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" class="pal-nu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UX mockups, Nov 2026 (not part of the site)</title>
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+ .ico { width: 20px; height: 20px; margin-right: 8px; image-rendering: pixelated; flex: none; }
+ /* B: experience */
+ .job { border-bottom: 2px dotted var(--soft); }
+ .job:last-child { border-bottom: 0; }
+ .job > summary { display: flex; gap: 10px; align-items: center; padding: 10px 0; cursor: pointer; list-style: none; min-height: 44px; }
+ .job > summary::-webkit-details-marker { display: none; }
+ .job > summary::before { content: "▶"; font-size: 11px; color: var(--accent); transition: transform .1s; }
+ .job[open] > summary::before { transform: rotate(90deg); }
+ .job .t b { display: block; font-size: 15px; }
+ .job .t span { font-size: 14px; }
+ .job ul { margin: 0 0 12px; padding: 0 0 0 22px; font-size: 13.5px; line-height: 1.5; }
+ .job li { margin: 0 0 6px; }
+ .job h3 { margin: 10px 0 4px 22px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+ /* C: knowledge tree */
+ .kt { list-style: none; margin: 8px 0 0; padding: 0; font-size: 14px; }
+ .kt li { position: relative; padding: 0 0 0 26px; }
+ .kt li::before { content: ""; position: absolute; left: 9px; top: 0; bottom: 0; border-left: 3px solid var(--line); }
+ .kt li:last-child::before { bottom: auto; height: 22px; }
+ .kt li::after { content: ""; position: absolute; left: 9px; top: 22px; width: 14px; border-top: 3px solid var(--line); }
+ .node { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+ .sq { flex: none; width: 22px; height: 22px; border: 3px solid var(--line); background: var(--box); position: relative; margin-left: -2px; }
+ .sq i { position: absolute; left: 0; right: 0; bottom: 0; background: var(--accent); }
+ .sq.now { outline: 3px solid var(--hp); outline-offset: 2px; }
+ .kt .pct { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; }
+ .kt .kids { list-style: none; margin: 0 0 6px; padding: 0 0 0 4px; font-size: 13px; }
+ .badge2 { font-size: 11px; font-weight: 700; padding: 1px 6px; color: var(--box); background: var(--accent); border-radius: 3px; }
+ .wrap { max-width: 460px; margin: 0 auto; padding: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+ <section class="box" id="trainer">
+  <h2 class="h px"><span>A · Trainer links with icons</span></h2>
+  <nav class="links">
+   <a href="#"><img class="ico" src="icons/instagram.svg" alt="" width="20" height="20">Instagram</a>
+   <a href="#"><img class="ico" src="icons/github.svg" alt="" width="20" height="20">GitHub</a>
+   <a href="#"><img class="ico" src="icons/linkedin.svg" alt="" width="20" height="20">LinkedIn</a>
+   <a href="#"><img class="ico" src="icons/email.svg" alt="" width="20" height="20">Email</a>
+  </nav>
+ </section>
+
+ <section class="box" id="work" style="margin-top:14px">
+  <h2 class="h px"><span>B · Experience that opens</span></h2>
+  <p class="small">Click a role (or press Enter) to see what I did there. Works without JavaScript.</p>
+  <div>
+   <details class="job" open>
+    <summary><span class="t"><b>Senior AI/ML Engineer</b><span>Qubika · Feb 2026 – Jul 2026</span></span></summary>
+    <ul>
+     <li>Productionized a LightGBM fraud detection model that, on a 24-month backtest, cut transaction-monitoring alert volume by 99.2% (12.9M to 98.5K)…</li>
+     <li>Designed and shipped the end-to-end Databricks platform behind the model…</li>
+     <li>Built an explainability pipeline that turns each fraud alert into a reviewer-ready rationale…</li>
+    </ul>
+   </details>
+   <details class="job"><summary><span class="t"><b>Software Engineer (Machine Learning)</b><span>Nubank · Sep 2022 – Jul 2026</span></span></summary></details>
+   <details class="job"><summary><span class="t"><b>Data Scientist Intern</b><span>EloGroup · Jun 2021 – Sep 2022</span></span></summary></details>
+  </div>
+  <div class="links"><a class="primary" href="#">Resume (PDF)</a><a href="#">LinkedIn ›</a></div>
+ </section>
+
+ <section class="box" id="study" style="margin-top:14px">
+  <h2 class="h px"><span>C · Studying now as a tree</span></h2>
+  <p class="small">AI Engineer / AI FDE path · as of Nov 23</p>
+  <ul class="kt">
+   <li><div class="node"><span class="sq"><i style="height:2%"></i></span><b>LLM foundations</b><span class="pct">2%</span></div></li>
+   <li><div class="node"><span class="sq now"><i style="height:0"></i></span><b>Retrieval and RAG</b><span class="badge2">NOW</span><span class="pct">0%</span></div>
+     <ul class="kids">
+      <li><div class="node"><span class="sq"></span>Chunking and embeddings<span class="pct">0%</span></div></li>
+      <li><div class="node"><span class="sq"></span>Vector search<span class="pct">0%</span></div></li>
+      <li><div class="node"><span class="sq"></span>Retrieve then generate<span class="pct">0%</span></div></li>
+      <li><div class="node"><span class="sq"></span>Advanced retrieval<span class="pct">0%</span></div></li>
+     </ul></li>
+   <li><div class="node"><span class="sq"><i style="height:0"></i></span><b>Agentic systems and MCP</b><span class="pct">0%</span></div></li>
+   <li><div class="node"><span class="sq"><i style="height:0"></i></span><b>Evaluation</b><span class="pct">0%</span></div></li>
+   <li><div class="node"><span class="sq"><i style="height:8%"></i></span><b>Case and mock practice</b><span class="pct">8%</span></div></li>
+  </ul>
+ </section>
+</div>
+</body>
+</html>

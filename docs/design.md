@@ -40,6 +40,15 @@ So the page leads with me and my projects, and the live rows make it feel curren
 - Projects shows 5 rows so the right column ends about level with the left on a laptop.
 - Favorites is a 2×2 grid of 4 tiles. A fifth project goes to Projects, not to a lonely tile.
 
+## Studying now
+
+A card for the current topic. Opening it shows a small tree drawn as inline SVG (the path, then
+Topics and Labs, then one pixel square per topic, filled by its percent, the current one ringed
+and marked NOW), and under it the full list of topics, subtopics and concepts. A square jumps to
+its place in the list and opens it (a few lines in `site.js`); without JavaScript the list is
+still there to open by hand. The tree is built from `data/study-progress.json` at build time, in
+`render._study_map`, and takes its colours from the palette, so both themes work.
+
 ## Languages
 
 English and Portuguese (Brazil), both in the page, switched without a reload (see
@@ -49,8 +58,10 @@ subtitles are decoration with real meaning, not a third language.
 
 ## What the page shows, and what it never shows
 
-- **Side projects only.** Work for employers appears in Experience as title, company and dates,
-  nothing more: no work projects, no impact lines, no resume PDF button.
+- **Side projects in the tiles; the resume's words in Experience.** Each role shows title, company
+  and dates, and opens (a native `details`, closed by default) to the bullets of the public resume,
+  word for word from curriculum-vitae's `resume/resume.md`. Nothing is added or reworded on the
+  page, no client names, and the bullets stay in English on the Portuguese page (`lang="en-US"`).
 - **Never claim what the repo doesn't back up.** A tile or row says what the project really does
   today, not what it's meant to do one day.
 - **Coursework sorts last** in Projects, so it never pushes my own projects under "+ n more".
