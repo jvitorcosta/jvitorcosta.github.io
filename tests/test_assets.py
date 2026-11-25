@@ -456,3 +456,11 @@ def test_ask_keep_focus_moves_focus_to_the_input_only_from_inside_the_node():
     """
     run = subprocess.run(["node", "-e", script], capture_output=True, text=True, encoding="utf-8", check=True)
     assert json.loads(run.stdout) == ["input", None]
+
+
+def test_favicon_ico_holds_a_32_and_a_16_px_icon():
+    data = (ROOT / "favicon.ico").read_bytes()
+    assert data[:4] == b"\x00\x00\x01\x00"  # an ICO file
+    count = int.from_bytes(data[4:6], "little")
+    sizes = {(data[6 + 16 * i] or 256, data[7 + 16 * i] or 256) for i in range(count)}
+    assert sizes == {(32, 32), (16, 16)}

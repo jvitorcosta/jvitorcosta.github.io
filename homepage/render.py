@@ -447,6 +447,7 @@ def _head(p: Page) -> str:
 <meta property="og:type" content="website">
 <meta property="og:image" content="{SITE}{versioned("og-image.png")}">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script>{EARLY_PALETTE}</script>
@@ -467,6 +468,7 @@ def render_404(content: Content) -> str:
 <meta name="theme-color" content="{THEME_COLOR["nu"]}">
 <meta name="robots" content="noindex">
 <title>{esc(content.strings["en"]["not_found_title"])}</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script>{EARLY_PALETTE}</script>
 <link rel="stylesheet" href="/{versioned("assets/site.css")}">

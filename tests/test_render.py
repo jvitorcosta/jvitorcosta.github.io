@@ -655,6 +655,8 @@ def test_trainer_card_shows_the_motto_once_in_spanish(tmp_path):
 def test_tab_and_home_screen_icons(tmp_path):
     head = render(tmp_path).split("</head>")[0]
     assert '<link rel="icon" href="favicon.svg" type="image/svg+xml">' in head
+    # The .ico comes first, with its size, so older browsers and link scanners find a raster icon.
+    assert head.index('<link rel="icon" href="favicon.ico" sizes="32x32">') < head.index('href="favicon.svg"')
     assert '<link rel="apple-touch-icon" href="apple-touch-icon.png">' in head
 
 
