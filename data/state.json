@@ -43,7 +43,7 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-26T16:40:54Z",
+      "pushed": "2026-11-26T17:48:30Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Aventura",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02e1afa83bd73aa80c0ff0ee34",
+    "artist": "Ariana Grande",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02deec12a28d1e336c5052e9aa",
     "playing": true,
-    "title": "Obsesion",
-    "url": "https://open.spotify.com/track/65H6t1WQBim6q93yM8fEwn"
+    "title": "Love Me Harder",
+    "url": "https://open.spotify.com/track/5J4ZkQpzMUFojo1CtAZYpn"
   },
   "updated": {
     "activity": "2026-11-26",
