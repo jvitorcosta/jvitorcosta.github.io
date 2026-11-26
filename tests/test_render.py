@@ -241,9 +241,9 @@ def test_rows_link_to_items(tmp_path):
 
 def test_empty_links_are_not_rendered(tmp_path):
     html = render(tmp_path)
-    assert ">Instagram<" not in html
+    assert 'alt="Instagram"' not in html
     assert 'href=""' not in html
-    assert ">GitHub<" in html
+    assert 'alt="GitHub"' in html
 
 
 def test_missing_live_value_omits_row(tmp_path):
@@ -791,11 +791,14 @@ def test_trainer_card_keeps_the_four_contact_buttons(tmp_path):
     assert "Resume" not in nav and 'class="primary"' not in nav
 
 
-def test_trainer_buttons_lead_with_their_pixel_tile(tmp_path):
+def test_trainer_buttons_show_only_their_pixel_tile_and_keep_a_name(tmp_path):
     links = {**LINKS, "instagram": "https://www.instagram.com/joaovpi/"}
     nav = re.search(r'<nav class="links">(.*?)</nav>', section(render(tmp_path, c=content(links=links)), "trainer")).group(1)
-    tiles = re.findall(r'<a href="[^"]+"><img src="assets/icons/(\w+)\.svg\?v=[0-9a-f]{8}" alt="" width="20" height="20">(\w+)</a>', nav)
-    assert tiles == [("instagram", "Instagram"), ("github", "GitHub"), ("linkedin", "LinkedIn"), ("email", "Email")]
+    tiles = re.findall(r'<a href="[^"]+" title="(\w+)"><img src="assets/icons/(\w+)\.svg\?v=[0-9a-f]{8}" '
+                       r'alt="(\w+)" width="40" height="40"></a>', nav)
+    # No visible text: the image's alt names the link for screen readers, the title shows it on hover.
+    assert tiles == [(n, n.lower(), n) for n in ("Instagram", "GitHub", "LinkedIn", "Email")]
+    assert re.sub(r"<[^>]+>", "", nav) == ""
     assert not re.findall(r'<img[^>]*src="(?!assets/)', nav)
 
 
