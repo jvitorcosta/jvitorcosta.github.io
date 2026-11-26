@@ -40,6 +40,13 @@
   },
   "repos": [
     {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-26T16:40:54Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
       "description": "Copier template for new Python projects: uv, Ruff, strict mypy, pytest, pre-commit, CI on three OSes and a full Claude Code setup",
       "homepage": "",
       "name": "python-uv-claude-template",
@@ -52,13 +59,6 @@
       "name": "fraud-alert-explainer",
       "pushed": "2026-11-26T02:15:12Z",
       "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
-    },
-    {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-25T19:47:09Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Ozuna",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02b0a875d7f1bfe4ec4aaffa48",
+    "artist": "Aventura",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02e1afa83bd73aa80c0ff0ee34",
     "playing": true,
-    "title": "Tú Foto",
-    "url": "https://open.spotify.com/track/5zSOVwaY3sVjnmLhuEfsuf"
+    "title": "Obsesion",
+    "url": "https://open.spotify.com/track/65H6t1WQBim6q93yM8fEwn"
   },
   "updated": {
     "activity": "2026-11-26",
