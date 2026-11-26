@@ -1,13 +1,13 @@
 {
   "activity": {
     "date": "2026-11-25",
-    "detail": "2507:45 /km",
-    "distance_km": 0.0,
-    "emoji": "🏃",
-    "moving_min": 22,
-    "sport": "Run",
-    "title": "Afternoon Run",
-    "url": "https://www.strava.com/activities/21125262706"
+    "detail": "3.2 km/h",
+    "distance_km": 8.0,
+    "emoji": "🏅",
+    "moving_min": 147,
+    "sport": "Volleyball",
+    "title": "Evening Volleyball",
+    "url": "https://www.strava.com/activities/21126967763"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -40,6 +40,13 @@
   },
   "repos": [
     {
+      "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
+      "homepage": "",
+      "name": "fraud-alert-explainer",
+      "pushed": "2026-11-26T02:15:12Z",
+      "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
+    },
+    {
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
@@ -59,13 +66,6 @@
       "name": "garmin-watchfaces",
       "pushed": "2026-11-25T18:25:25Z",
       "url": "https://github.com/jvitorcosta/garmin-watchfaces"
-    },
-    {
-      "description": "Card-fraud model with SHAP-grounded LLM alert explanations and a deterministic grounding check",
-      "homepage": "",
-      "name": "fraud-alert-explainer",
-      "pushed": "2026-11-19T02:15:51Z",
-      "url": "https://github.com/jvitorcosta/fraud-alert-explainer"
     },
     {
       "description": "SolvedOR: solve linear and integer programs written like a textbook, in the browser. Live at solvedor.streamlit.app",
@@ -153,18 +153,18 @@
     }
   ],
   "song": {
-    "artist": "Eslabon Armado",
-    "cover": "https://i.scdn.co/image/ab67616d00001e022071a0c79802d9375a53bfef",
+    "artist": "Michael Jackson",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02605223665713cdf285ee0c81",
     "playing": false,
-    "title": "Ella Baila Sola",
-    "url": "https://open.spotify.com/track/3dnP0JxCgygwQH9Gm7q7nb"
+    "title": "The Way You Make Me Feel - 2012 Remaster",
+    "url": "https://open.spotify.com/track/0sKlV58cODrjxGFOyf9IXY"
   },
   "updated": {
-    "activity": "2026-11-25",
-    "anime": "2026-11-25",
-    "book": "2026-11-25",
-    "film": "2026-11-25",
-    "repos": "2026-11-25",
-    "song": "2026-11-25"
+    "activity": "2026-11-26",
+    "anime": "2026-11-26",
+    "book": "2026-11-26",
+    "film": "2026-11-26",
+    "repos": "2026-11-26",
+    "song": "2026-11-26"
   }
 }
