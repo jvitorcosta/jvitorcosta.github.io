@@ -409,7 +409,7 @@ def test_ask_layout_details():
     text = css()
     phone = re.search(r"@media \(max-width: 420px\) \{(.*?)\n\}", text, re.S).group(1)
     # TALK makes five trainer links; the odd one spans the row instead of sitting alone.
-    assert "#trainer .links [data-ask-open] { grid-column: 1 / -1; }" in phone
+    assert "#trainer .links [data-ask-open] { flex: 1 0 100%; justify-content: center; }" in phone
     # Newlines in a streamed answer show as line breaks.
     assert re.search(r"(?m)^\.ask-answer \{[^}]*white-space: pre-line", text)
 

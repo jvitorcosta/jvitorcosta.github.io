@@ -327,9 +327,10 @@ def _writing(p: Page, posts: list[Post]) -> str:
 
 
 def _trainer(p: Page) -> str:
-    # Each button leads with its 20x20 pixel tile (tools/pixel_icons.py); the label already names it.
-    links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}">'
-                    f'<img src="{versioned(f"{ICONS}/{key}.svg")}" alt="" width="20" height="20">{label}</a>'
+    # Icon-only buttons: the 20x20 pixel tile (tools/pixel_icons.py) at twice its size. The alt names
+    # the link for screen readers, the title shows the name on hover.
+    links = "".join(f'<a href="{esc(safe_url(p.c.links[key]))}" title="{label}">'
+                    f'<img src="{versioned(f"{ICONS}/{key}.svg")}" alt="{label}" width="40" height="40"></a>'
                     for key, label in TRAINER_LINKS if safe_url(p.c.links.get(key, "")))
     if _ask_api(p):
         links = _ask_opener(p, "ask_talk") + links
