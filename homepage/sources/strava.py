@@ -73,8 +73,11 @@ def _drive(a: dict) -> bool:
 def _row(a: dict) -> Activity:
     sport = a.get("sport_type") or a.get("type") or "Workout"
     meters, seconds = float(a.get("distance") or 0), int(a.get("moving_time") or 0)
+    # Slower than 1 km/h is GPS noise (GPS off, indoors): no distance, so no pace or speed from it.
+    crawl = seconds > 0 and meters / seconds * 3.6 < 1
+    km = 0 if crawl else round(meters / 1000, 1)
     detail = []
-    if meters > 0 and seconds > 0:
+    if km > 0 and seconds > 0:
         if sport in PACE:
             per_km = round(seconds / (meters / 1000))
             detail.append(f"{per_km // 60}:{per_km % 60:02d} /km")
@@ -87,7 +90,7 @@ def _row(a: dict) -> Activity:
         sport=sport,
         emoji=EMOJI.get(sport, "🏅"),
         title=str(a.get("name") or sport),
-        distance_km=round(meters / 1000, 1) if meters > 0 else None,
+        distance_km=km if km > 0 else None,
         moving_min=round(seconds / 60),
         detail=" · ".join(detail),
         date=str(a.get("start_date_local") or "")[:10],
