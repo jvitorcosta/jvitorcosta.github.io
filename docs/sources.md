@@ -45,12 +45,12 @@ status 503.
 
 The song is read twice:
 
-1. **At build time** by `fetch_song`. That song is always shown as LISTENED, because it is
+1. **At build time** by `fetch_song`. That song is always shown as LAST PLAYED, because it is
    hours old by the time anyone reads the page.
 2. **In the browser** by `assets/site.js`, once per visit, with a 4-second timeout. Its answer
    replaces the built song (title, artist, cover, link): the current track, else the latest one.
    Only when `playing` is true does the row say LISTENING with the ON badge; otherwise it stays
-   LISTENED. If the call fails, the built row stays. With no saved song at all, the row (and the
+   LAST PLAYED. If the call fails, the built row stays. With no saved song at all, the row (and the
    Lately box, when it has nothing else) starts hidden and appears only if this call succeeds.
 
 ## Film: Letterboxd

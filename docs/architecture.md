@@ -140,7 +140,7 @@ The page works without JavaScript. With it:
 - **Palette dots** switch between `night` and `nu` and remember the choice in `localStorage`.
   Without a saved choice, everyone gets `nu`, whatever the system colour scheme.
 - **Language button** switches `<html lang>` and remembers it.
-- **Spotify row:** the build's song is hours old, so it is always shown as LISTENED. On load,
+- **Spotify row:** the build's song is hours old, so it is always shown as LAST PLAYED. On load,
   `site.js` asks the Spotify endpoint once (4-second timeout, no cookies) and puts its answer in
   the row; only when a song is playing does the row say LISTENING, with ON and moving bars. On any failure the built row
   stays. Fetched text is set with `textContent`, never `innerHTML`, and only `https` links and
