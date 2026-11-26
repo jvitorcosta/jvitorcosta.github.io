@@ -402,6 +402,8 @@ a.row:hover .t { text-decoration: underline; }
   border: 3px solid var(--line);
 }
 .th.tall { height: 66px; }
+/* The latest post's cover, bigger than a Lately thumbnail so a screenshot stays readable. */
+.th.shot { width: 96px; height: 96px; object-fit: contain; }
 .stv {
   flex: none;
   display: grid; place-items: center;

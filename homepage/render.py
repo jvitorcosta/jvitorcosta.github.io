@@ -318,9 +318,11 @@ def _writing(p: Page, posts: list[Post]) -> str:
     post = posts[0]
     minutes = p.t("blog_min", n=post.minutes)
     when = blog._long_date(p, post.date)
+    # Decorative, like the covers in Lately: the row's text already names the post.
+    shot = f'<img class="th shot" src="blog/{esc(post.cover)}" alt="" loading="lazy">' if post.cover else ""
     return (f'<section class="box" id="writing"><h2 class="h px"><span>{ARROW}{p.t("blog")}{p.zh("blog")}</span>'
             f'<a href="blog/">{p.t("blog_all")}</a></h2>'
-            f'<ul class="menu"><li><a class="row" href="blog/{post.slug}.html"><div class="body">'
+            f'<ul class="menu"><li><a class="row" href="blog/{post.slug}.html">{shot}<div class="body">'
             f'<span class="k px">{p.t("blog_latest")}</span>'
             f'<span class="t" lang="en-US">{esc(post.title)}</span>{when} · {minutes}<br>'
             f'<span lang="en-US">{esc(clip(post.summary, 140))}</span></div></a></li></ul></section>')
