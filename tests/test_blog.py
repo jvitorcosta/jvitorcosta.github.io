@@ -236,6 +236,11 @@ def test_the_home_page_shows_the_blog_only_when_there_is_a_post(tmp_path):
     row = html[start:html.index("</section>", start)]
     assert 'href="blog/short-note.html"' in row and "A short note" in row  # the newest post
     assert "Latest post" in row and "Último post" in row and 'href="blog/"' in row
+    # Right below the trainer card, before everything else in both layouts.
+    ids = re.findall(r'<section class="box[^"]*" id="([\w-]+)"', html)
+    assert ids[:2] == ["trainer", "writing"], ids
+    css = (ROOT / "assets" / "site.css").read_text(encoding="utf-8")
+    assert "#writing { order" not in css  # on a phone it keeps its place under the trainer card
 
 
 def test_the_post_page_links_to_the_blog_and_the_feed():

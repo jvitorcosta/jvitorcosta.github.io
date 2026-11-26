@@ -81,7 +81,7 @@ and `Job`.
 
 | Column (wide screens) | Sections, in code order |
 |---|---|
-| left, `.col.side` | trainer card, Favorites (`#party`), Experience (`#work`) |
+| left, `.col.side` | trainer card, latest post (`#writing`, only with a post), Favorites (`#party`), Experience (`#work`) |
 | right | Lately (`#right-now`), Projects (`#pc-box`) |
 
 Section names on the page differ from the names in code because the page was renamed after the
