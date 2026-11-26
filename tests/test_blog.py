@@ -134,7 +134,6 @@ def test_the_post_page_has_title_meta_and_share_tags():
     assert '<meta property="og:type" content="article">' in html
     assert '<meta property="article:published_time" content="2026-11-26">' in html
     assert '<meta property="article:modified_time" content="2026-11-27">' in html
-    assert '<meta property="og:image" content="https://jvitorcosta.github.io/blog/images/cover.png">' in html
     assert '<meta name="description" content="One sentence for the list, the feed and the share preview.">' in html
     assert html.count("<h1") == 1 and '<h1 class="post-title">A sample post for the tests</h1>' in html
 
@@ -169,7 +168,7 @@ def test_the_body_is_english_on_both_language_pages():
     assert 'lang="en">' not in html.split('<div class="prose"')[1].split("</div>")[0]
 
 
-def test_a_post_without_a_cover_falls_back_to_the_home_share_image():
+def test_a_post_without_a_cover_has_no_figure_and_shares_the_home_image():
     text = SAMPLE.replace("cover: images/cover.png\ncover_alt: A small test picture.\n", "")
     html = render_blog_post(content(), parse_post(text, "sample-post"))
     assert re.search(r'og:image" content="https://jvitorcosta\.github\.io/og-image\.png\?v=[0-9a-f]{8}"', html)

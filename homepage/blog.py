@@ -11,12 +11,13 @@ import json
 import math
 import re
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from pathlib import Path
 
+from homepage import share
 from homepage.content import Content
-from homepage.markup import ARROW, Page, esc, safe_url, versioned
+from homepage.markup import ARROW, Page, content_version, esc, safe_url, versioned
 
 POSTS_DIR = "blog/posts"
 SLUG = re.compile(r"[a-z0-9][a-z0-9-]*")
@@ -43,6 +44,7 @@ class Post:
     cover_alt: str
     body: str  # HTML
     words: int
+    share: str = ""  # its share image, relative to blog/, or ""
 
     @property
     def minutes(self) -> int:
@@ -257,6 +259,20 @@ def parse_post(text: str, slug: str, where: str = "") -> Post:
                 fields["summary"], cover, cover_alt, html, _words(body))
 
 
+def _share_image(root: Path, post: Post) -> str:
+    """The post's committed share image with its content hash; "" when there is none, or when it
+    shows an older title or date (reported, so tools/share_images.py gets run again)."""
+    path = root / share.SHARE_DIR / f"{post.slug}.png"
+    if not path.is_file():
+        return ""
+    data = path.read_bytes()
+    if share.stamped(data) != share.fingerprint(post):
+        print(f"::warning::{share.SHARE_DIR}/{path.name}: out of date, run python -m tools.share_images",
+              file=sys.stderr)
+        return ""
+    return f"share/{path.name}?v={content_version(data)}"
+
+
 def load_posts(root: Path) -> list[Post]:
     """Every post under blog/posts/, newest first. A post that fails to build is reported and left out,
     like a source that fails: one bad file must not stop the whole site."""
@@ -264,7 +280,8 @@ def load_posts(root: Path) -> list[Post]:
     folder = Path(root) / POSTS_DIR
     for path in sorted(folder.glob("*.md")) if folder.is_dir() else []:
         try:
-            posts.append(parse_post(path.read_text(encoding="utf-8"), path.stem, f"{POSTS_DIR}/{path.name}"))
+            post = parse_post(path.read_text(encoding="utf-8"), path.stem, f"{POSTS_DIR}/{path.name}")
+            posts.append(replace(post, share=_share_image(Path(root), post)))
         except BlogError as exc:
             print(f"::warning::{exc}", file=sys.stderr)
     return sorted(posts, key=lambda post: (post.date, post.slug), reverse=True)
@@ -274,6 +291,7 @@ def load_posts(root: Path) -> list[Post]:
 
 FEED_TITLE = "Vitor Pinheiro: blog"
 FEED_SUBTITLE = "Posts and short notes about what I build."
+HOME_IMAGE_ALT = "Vitor Pinheiro's trainer card, in pixel style."
 
 
 def _long_date(p: Page, iso: str) -> str:
@@ -369,7 +387,13 @@ def render_post(content: Content, post: Post, c: Chrome) -> str:
     tag_list = f'<ul class="tags" aria-label="Tags">{tags}</ul>' if tags else ""
     cover = (f'<figure class="cover"><img src="{esc(post.cover)}" alt="{esc(post.cover_alt)}"></figure>'
              if post.cover else "")
-    image = f"{c.site}blog/{post.cover}" if post.cover else f"{c.site}{versioned('og-image.png')}"
+    # The post's own card, else the home image; both are 1200 x 630.
+    if post.share:
+        image = f"{c.site}blog/{post.share}"
+        image_alt = f"{post.title}, {share.date_label(post.date)}. Vitor Pinheiro's blog."
+    else:
+        image = f"{c.site}{versioned('og-image.png')}"
+        image_alt = HOME_IMAGE_ALT
     modified = f'\n<meta property="article:modified_time" content="{post.updated}">' if post.updated else ""
     main = f"""<article class="box post" id="post">
 <p class="crumb"><a href="../">{ARROW}{p.t("back_home")}</a> · <a href="./">{p.t("blog_all")}</a></p>
@@ -383,7 +407,10 @@ def render_post(content: Content, post: Post, c: Chrome) -> str:
 </article>"""
     return _shell(c, title=f"{post.title} | Vitor Pinheiro", description=post.summary,
                   url=f"{c.site}blog/{post.slug}.html", og_type="article", image=image,
-                  meta=(f'\n<meta property="article:published_time" content="{post.date}">{modified}'
+                  meta=(f'\n<meta property="og:image:width" content="{share.SIZE[0]}">'
+                        f'\n<meta property="og:image:height" content="{share.SIZE[1]}">'
+                        f'\n<meta property="og:image:alt" content="{esc(image_alt)}">'
+                        f'\n<meta property="article:published_time" content="{post.date}">{modified}'
                         f'\n<script type="application/ld+json">{_json_ld(post, c.site, image)}</script>'),
                   main=main, skip_to="post", p=p)
 
