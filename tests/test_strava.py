@@ -95,11 +95,12 @@ def test_activity_without_distance_shows_only_time():
     assert act.emoji == "🏋️"
 
 
-def test_run_with_almost_no_distance_shows_only_time():
-    # A run that logged a few metres (GPS off) showed "2507:45 /km".
+@pytest.mark.parametrize("meters", [8.8, 60, 900])
+def test_run_with_almost_no_distance_shows_only_time(meters):
+    # A run that logged a few metres (GPS off) showed "2507:45 /km". Under 1 km/h is not a distance.
     act, _ = fetch([{"id": 4, "name": "Afternoon Run", "sport_type": "Run",
-                     "start_date_local": "2026-11-25T17:00:00Z", "distance": 8.8, "moving_time": 1324}])
-    assert act.distance_km is None and act.moving_min == 22 and act.detail == ""
+                     "start_date_local": "2026-11-25T17:00:00Z", "distance": meters, "moving_time": 3600 if meters > 100 else 1324}])
+    assert act.distance_km is None and act.detail == ""
 
 
 def test_private_activities_are_skipped():

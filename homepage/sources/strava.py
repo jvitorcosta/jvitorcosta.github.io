@@ -73,8 +73,9 @@ def _drive(a: dict) -> bool:
 def _row(a: dict) -> Activity:
     sport = a.get("sport_type") or a.get("type") or "Workout"
     meters, seconds = float(a.get("distance") or 0), int(a.get("moving_time") or 0)
-    # Under 50 m shows as 0.0 km (GPS off, weights): no distance, so no pace or speed from it.
-    km = round(meters / 1000, 1)
+    # Slower than 1 km/h is GPS noise (GPS off, indoors): no distance, so no pace or speed from it.
+    crawl = seconds > 0 and meters / seconds * 3.6 < 1
+    km = 0 if crawl else round(meters / 1000, 1)
     detail = []
     if km > 0 and seconds > 0:
         if sport in PACE:
