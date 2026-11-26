@@ -318,9 +318,11 @@ def _writing(p: Page, posts: list[Post]) -> str:
     post = posts[0]
     minutes = p.t("blog_min", n=post.minutes)
     when = blog._long_date(p, post.date)
+    # Decorative, like the covers in Lately: the row's text already names the post.
+    shot = f'<img class="th shot" src="blog/{esc(post.cover)}" alt="" loading="lazy">' if post.cover else ""
     return (f'<section class="box" id="writing"><h2 class="h px"><span>{ARROW}{p.t("blog")}{p.zh("blog")}</span>'
             f'<a href="blog/">{p.t("blog_all")}</a></h2>'
-            f'<ul class="menu"><li><a class="row" href="blog/{post.slug}.html"><div class="body">'
+            f'<ul class="menu"><li><a class="row" href="blog/{post.slug}.html">{shot}<div class="body">'
             f'<span class="k px">{p.t("blog_latest")}</span>'
             f'<span class="t" lang="en-US">{esc(post.title)}</span>{when} · {minutes}<br>'
             f'<span lang="en-US">{esc(clip(post.summary, 140))}</span></div></a></li></ul></section>')
@@ -538,8 +540,9 @@ def render_home(content: Content, live: LiveData, repos: list[Repo], site_root: 
     # Two columns on a wide screen (assets/site.css), one on a phone. The code order is the phone
     # order, which screen readers and the keyboard follow too: who I am and my projects, then
     # the rest.
-    # Wide screens: who I am, what I build and where I work on the left. Phones show Work last (CSS).
-    side = [_trainer(p), _ask(p), _party(p, repos, site_root), _writing(p, list(posts)), _work(p, site_root)]
+    # Wide screens: who I am, my latest post, what I build and where I work on the left. Phones show
+    # Work last (CSS).
+    side = [_trainer(p), _ask(p), _writing(p, list(posts)), _party(p, repos, site_root), _work(p, site_root)]
     rest = [right_now(p, live), _pc_box(p, repos, site_root), _study(p)]
     body = (f'{_top(p, "blog/" if posts else "")}\n<div class="cols">\n'
             f'<div class="col side">\n{chr(10).join(s for s in side if s)}\n</div><!-- /side -->\n'

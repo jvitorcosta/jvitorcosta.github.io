@@ -29,10 +29,10 @@ So the page leads with me and my projects, and the live rows make it feel curren
 
 ## Layout
 
-- **Phones (under 900px):** one column, in this order: trainer card, Lately, Favorites, Projects,
-  Experience. Most phone visitors come from Instagram, and Lately was below the first screen;
-  now the live rows show as soon as the page opens, with who I am right above them.
-- **Wide screens (900px and up):** two columns, at most 1000px wide. Left: trainer card,
+- **Phones (under 900px):** one column, in this order: trainer card, latest post, Studying, Lately,
+  Favorites, Projects, Experience. The latest post sits right under who I am, so new writing is the
+  first thing a returning visitor sees; the live rows start lower on the page for that.
+- **Wide screens (900px and up):** two columns, at most 1000px wide. Left: trainer card, latest post,
   Favorites, Experience. Right: Lately, Projects. Nothing is pinned while scrolling.
 - The code writes sections in the wide-screen order, and CSS `order` rearranges it on
   phones. So on phones, screen readers and the keyboard follow the wide-screen order instead. That is

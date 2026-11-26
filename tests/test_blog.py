@@ -236,6 +236,11 @@ def test_the_home_page_shows_the_blog_only_when_there_is_a_post(tmp_path):
     row = html[start:html.index("</section>", start)]
     assert 'href="blog/short-note.html"' in row and "A short note" in row  # the newest post
     assert "Latest post" in row and "Último post" in row and 'href="blog/"' in row
+    # Right below the trainer card, before everything else in both layouts.
+    ids = re.findall(r'<section class="box[^"]*" id="([\w-]+)"', html)
+    assert ids[:2] == ["trainer", "writing"], ids
+    css = (ROOT / "assets" / "site.css").read_text(encoding="utf-8")
+    assert "#writing { order" not in css  # on a phone it keeps its place under the trainer card
 
 
 def test_the_post_page_links_to_the_blog_and_the_feed():
@@ -243,3 +248,17 @@ def test_the_post_page_links_to_the_blog_and_the_feed():
     assert '<a href="./"><span lang="en">All posts</span>' in html
     assert '<a class="top-link" href="./">BLOG</a>' in html
     assert 'rel="alternate" type="application/atom+xml"' in html
+
+
+def test_the_home_blog_card_shows_the_cover_of_the_newest_post(tmp_path):
+    def card(posts):
+        html = render_home(content(), live(), REPOS, tmp_path, posts)
+        start = html.index('id="writing"')
+        return html[start:html.index("</section>", start)]
+
+    with_cover = card([parse_post(SAMPLE, "sample-post")])
+    # Decorative: the link text already names the post.
+    assert '<img class="th shot" src="blog/images/cover.png" alt="" loading="lazy">' in with_cover
+    assert with_cover.index("<img") < with_cover.index('<div class="body">')
+    assert "<img" not in card([parse_post(FRAGMENT, "short-note")])  # no cover, no picture
+    assert re.search(r"\.th\.shot \{ width: 96px; height: 96px;", (ROOT / "assets" / "site.css").read_text(encoding="utf-8"))
