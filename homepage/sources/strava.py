@@ -25,6 +25,8 @@ PACE = {"Run", "TrailRun", "VirtualRun", "Walk", "Hike"}
 # Outdoor rides above either speed were in the car; my bike rides average 9-14 km/h, top 50.
 RIDES = {"Ride", "MountainBikeRide", "GravelRide", "EBikeRide"}
 DRIVE_AVERAGE_KMH, DRIVE_TOP_KMH = 30, 60
+# A pace slower than walking ("42:35 /km") says nothing, so none is shown below this average.
+WALK_KMH = 3
 
 
 def fetch_activity(
@@ -78,11 +80,11 @@ def _row(a: dict) -> Activity:
     km = 0 if crawl else round(meters / 1000, 1)
     detail = []
     if km > 0 and seconds > 0:
-        if sport in PACE:
+        if sport not in PACE:
+            detail.append(f"{meters / seconds * 3.6:.1f} km/h")
+        elif meters * 3.6 >= WALK_KMH * seconds:
             per_km = round(seconds / (meters / 1000))
             detail.append(f"{per_km // 60}:{per_km % 60:02d} /km")
-        else:
-            detail.append(f"{meters / seconds * 3.6:.1f} km/h")
     prs = int(a.get("pr_count") or 0)
     if prs:
         detail.append(f"{prs} PR" + ("s" if prs > 1 else ""))
