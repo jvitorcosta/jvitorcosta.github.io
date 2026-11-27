@@ -1065,3 +1065,26 @@ def test_live_rows_say_when_their_source_last_answered(tmp_path):
 def test_a_row_without_a_known_fetch_date_has_no_updated_line(tmp_path):
     box = section(render(tmp_path, lv=live(updated={"film": "not a date"})), "right-now")
     assert 'class="upd"' not in box
+
+
+def test_the_two_main_fonts_are_preloaded_before_the_stylesheet(tmp_path):
+    html = render(tmp_path)
+    links = re.findall(r'<link rel="preload" href="([^"]+)" as="font" type="font/woff2" crossorigin>', html)
+    # The same URLs as in site.css (no ?v=), or the browser would download each font twice.
+    assert links == ["assets/fonts/press-start-2p-latin.woff2", "assets/fonts/inter-latin.woff2"]
+    css = (ROOT / "assets" / "site.css").read_text(encoding="utf-8")
+    for href in links:
+        assert (ROOT / href).is_file() and f"url({href.removeprefix('assets/')})" in css
+    assert html.index('rel="preload"') < html.index('rel="stylesheet"')
+
+
+def test_every_generated_page_preloads_the_fonts_with_a_path_that_fits_it(tmp_path):
+    from homepage.blog import parse_post
+    from homepage.render import render_404, render_blog_index, render_blog_post
+    from tests.test_blog import SAMPLE
+
+    post = parse_post(SAMPLE, "sample-post")
+    for html, prefix in ((render_blog_post(content(), post), "../"), (render_blog_index(content(), [post]), "../"),
+                         (render_404(content()), "/")):
+        assert html.count('rel="preload"') == 2
+        assert f'<link rel="preload" href="{prefix}assets/fonts/inter-latin.woff2" as="font"' in html

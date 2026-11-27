@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 from homepage import blog
 from homepage.blog import Post
 from homepage.content import Content, PartyMember, StudyTopic
-from homepage.markup import ARROW, ICONS, Page, clip, esc, safe_url, versioned, warn
+from homepage.markup import ARROW, ICONS, Page, clip, esc, font_preloads, safe_url, versioned, warn
 from homepage.model import LiveData, Repo
 from homepage.right_now import right_now
 
@@ -475,7 +475,7 @@ def _head(p: Page, has_blog: bool = False) -> str:
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script>{EARLY_PALETTE}</script>
-<link rel="stylesheet" href="{versioned("assets/site.css")}">
+{font_preloads()}<link rel="stylesheet" href="{versioned("assets/site.css")}">
 <script src="{versioned("assets/site.js")}" defer></script>
 <script type="application/ld+json">{_json_ld(p.c.links)}</script>
 </head>"""
@@ -518,7 +518,7 @@ def render_404(content: Content) -> str:
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script>{EARLY_PALETTE}</script>
-<link rel="stylesheet" href="/{versioned("assets/site.css")}">
+{font_preloads("/")}<link rel="stylesheet" href="/{versioned("assets/site.css")}">
 <script src="/{versioned("assets/site.js")}" defer></script>
 </head>
 <body>
