@@ -464,3 +464,14 @@ def test_favicon_ico_holds_a_32_and_a_16_px_icon():
     count = int.from_bytes(data[4:6], "little")
     sizes = {(data[6 + 16 * i] or 256, data[7 + 16 * i] or 256) for i in range(count)}
     assert sizes == {(32, 32), (16, 16)}
+
+
+def test_the_radar_map_stays_light_enough_for_a_phone():
+    """It is a card thumbnail: geometry at whole units, no more detail than the card can show."""
+    svg = (ROOT / "assets" / "party" / "open-radars-manaus-map.svg").read_bytes()
+    assert len(svg) < 90_000, len(svg)
+    text = svg.decode("utf-8")
+    assert "prefers-color-scheme:dark" in text and "OpenStreetMap contributors" in text
+    assert len(re.findall(r"<textPath", text)) == 7  # the street names still follow their roads
+    for target in re.findall(r'<textPath[^>]*href="#([\w-]+)"', text):
+        assert f'id="{target}"' in text, target

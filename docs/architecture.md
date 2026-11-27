@@ -118,6 +118,9 @@ The `<head>` carries the title and description from `strings.toml`, Open Graph t
 `og-image.png`, the favicons, a small inline script that applies the saved palette and language
 before the page paints (so neither flashes), and JSON-LD describing me as a `Person`.
 
+Before the stylesheet, the generated pages preload the pixel font and the main Inter file
+(`markup.font_preloads`), at the same URLs `site.css` asks for, so each is downloaded once.
+
 ## Both languages in one page
 
 Every visible text is written twice, as `<span lang="en">…</span><span lang="pt">…</span>`, by

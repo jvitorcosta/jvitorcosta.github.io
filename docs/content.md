@@ -55,6 +55,9 @@ url = "projects/…html"            # optional, see below
   `.jpg`, `.png` or `.webp`. A local file goes in `assets/party/` (the Open Radars map there is
   drawn by hand as SVG; local SVGs are fine).
 - A repo shown as a tile is left out of Projects, so it never appears twice.
+- The Open Radars map (`assets/party/open-radars-manaus-map.svg`) is kept light (under 90 KB,
+  tested): its lines are simplified and use whole units, as much detail as a card can show. A new
+  export from open-radars-manaus needs the same treatment.
 - How to word the blurb is in [design.md](design.md#card-and-row-wording).
 
 ## A Projects row: `data/pc_box.toml`

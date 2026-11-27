@@ -17,7 +17,7 @@ from pathlib import Path
 
 from homepage import share
 from homepage.content import Content
-from homepage.markup import ARROW, Page, content_version, esc, safe_url, versioned
+from homepage.markup import ARROW, Page, content_version, esc, font_preloads, safe_url, versioned
 
 POSTS_DIR = "blog/posts"
 SLUG = re.compile(r"[a-z0-9][a-z0-9-]*")
@@ -338,7 +338,7 @@ def _shell(c: Chrome, *, title: str, description: str, url: str, og_type: str, i
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <script>{c.early_script}</script>
-<link rel="stylesheet" href="../{versioned("assets/site.css")}">
+{font_preloads("../")}<link rel="stylesheet" href="../{versioned("assets/site.css")}">
 <script src="../{versioned("assets/site.js")}" defer></script>
 </head>
 <body>

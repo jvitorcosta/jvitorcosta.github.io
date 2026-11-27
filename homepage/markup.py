@@ -66,6 +66,17 @@ def versioned(path: str) -> str:
     return f"{path}?v={content_version((SITE_ROOT / path).read_bytes())}"
 
 
+# The two fonts that every first screen uses: headings and labels, then body text.
+PRELOADED_FONTS = ("press-start-2p-latin.woff2", "inter-latin.woff2")
+
+
+def font_preloads(prefix: str = "") -> str:
+    """<link rel="preload"> tags that go before the stylesheet, so the first paint rarely shows a
+    fallback font. No ?v= on the URL: it must be the one site.css asks for, or it loads twice."""
+    return "".join(f'<link rel="preload" href="{prefix}assets/fonts/{name}" as="font" type="font/woff2" '
+                   "crossorigin>" + chr(10) for name in PRELOADED_FONTS)
+
+
 def warn(message: str) -> None:
     print(f"::warning::{message}", file=sys.stderr)
 
