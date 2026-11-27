@@ -486,3 +486,4 @@ def test_the_homepage_prints_as_a_resume():
     assert "#work .job::details-content, #work .grp::details-content" in printed  # closed roles show
     assert ".grp ~ .grp { display: none; }" in printed  # one group each keeps it to one page
     assert "--bg:#fff" in printed and "--ink:#000" in printed
+    assert "@page" not in css  # it cannot be limited to the homepage, and the stylesheet is shared

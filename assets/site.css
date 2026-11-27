@@ -614,7 +614,6 @@ button.btn { font-family: Inter, system-ui, sans-serif; }
    first group of bullets) and Projects. What changes every few hours stays on the screen. */
 .print-only { display: none; }
 @media print {
-  @page { margin: 11mm; }
   html:has(.cols) { --bg:#fff; --box:#fff; --ink:#000; --line:#000; --soft:#fff; --accent:#000; --ink-on-bg:#000; }
   body:has(.cols) { min-height: 0; font-size: 9pt; line-height: 1.35; }
   body:has(.cols) > :not(main), .cols > .col > :not(#trainer, #work, #pc-box), body:has(.cols) main > header.top { display: none; }
