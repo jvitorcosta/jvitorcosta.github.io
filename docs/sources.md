@@ -111,9 +111,10 @@ Read with my own Strava API app (setup in [deploy.md](deploy.md)), scope `activi
    higher number. Each run logs both counts. If this second request fails, the row still shows,
    just without PRs.
 
-The row shows: sport emoji, title, distance, moving time, pace (runs, walks, hikes) or speed
-(everything else with a distance), PR count, date and a **View on Strava** link. Never the map, start or end points, heart
-rate or any other health data.
+The row shows: sport emoji, title, distance, moving time, pace (runs, walks, hikes; none below an
+average of 3 km/h, slower than a walk) or speed (everything else with a distance), PR count, date
+and a **View on Strava** link. Never the map, start or end points, heart rate or any other health
+data.
 
 Without the three Strava secrets the source is not used at all, and the row comes from
 `data/activity.toml`. The same file is used while Strava has never answered, or answers with no
