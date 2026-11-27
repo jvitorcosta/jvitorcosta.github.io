@@ -475,3 +475,14 @@ def test_the_radar_map_stays_light_enough_for_a_phone():
     assert len(re.findall(r"<textPath", text)) == 7  # the street names still follow their roads
     for target in re.findall(r'<textPath[^>]*href="#([\w-]+)"', text):
         assert f'id="{target}"' in text, target
+
+
+def test_the_homepage_prints_as_a_resume():
+    css = (ROOT / "assets" / "site.css").read_text(encoding="utf-8")
+    assert ".print-only { display: none; }" in css
+    printed = css.split("@media print {", 1)[1]
+    assert ":not(#trainer, #work, #pc-box)" in printed  # what changes every few hours stays on screen
+    assert ".print-only { display: block;" in printed
+    assert "#work .job::details-content, #work .grp::details-content" in printed  # closed roles show
+    assert ".grp ~ .grp { display: none; }" in printed  # one group each keeps it to one page
+    assert "--bg:#fff" in printed and "--ink:#000" in printed

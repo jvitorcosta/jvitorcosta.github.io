@@ -1088,3 +1088,14 @@ def test_every_generated_page_preloads_the_fonts_with_a_path_that_fits_it(tmp_pa
                          (render_404(content()), "/")):
         assert html.count('rel="preload"') == 2
         assert f'<link rel="preload" href="{prefix}assets/fonts/inter-latin.woff2" as="font"' in html
+
+
+def test_the_trainer_card_writes_the_addresses_out_for_paper():
+    c = content()
+    c.links.update({"email": "mailto:me@example.com", "linkedin": "https://www.linkedin.com/in/me/",
+                    "github": "https://github.com/me"})
+    html = render_home(c, live(), [], ROOT)
+    assert ('<p class="print-only">me@example.com · linkedin.com/in/me · github.com/me · '
+            'jvitorcosta.github.io</p>') in html
+    c.links["email"] = ""
+    assert '<p class="print-only">linkedin.com/in/me · ' in render_home(c, live(), [], ROOT)
