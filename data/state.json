@@ -40,18 +40,18 @@
   },
   "repos": [
     {
+      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
+      "homepage": "",
+      "name": "car-cyberdeck",
+      "pushed": "2026-11-27T21:01:49Z",
+      "url": "https://github.com/jvitorcosta/car-cyberdeck"
+    },
+    {
       "description": "",
       "homepage": "",
       "name": "curriculum-vitae",
       "pushed": "2026-11-27T16:42:05Z",
       "url": "https://github.com/jvitorcosta/curriculum-vitae"
-    },
-    {
-      "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
-      "homepage": "",
-      "name": "car-cyberdeck",
-      "pushed": "2026-11-27T16:41:26Z",
-      "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
       "description": "Copier template for new Python projects: uv, Ruff, strict mypy, pytest, pre-commit, CI on three OSes and a full Claude Code setup",
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "2Pac",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02073aebff28f79959d2543596",
+    "artist": "The Weeknd",
+    "cover": "https://i.scdn.co/image/ab67616d00001e024ab2520c2c77a1d66b9ee21d",
     "playing": false,
-    "title": "Ambitionz Az A Ridah",
-    "url": "https://open.spotify.com/track/5g9lS8deSIxItFBmZRC4vN"
+    "title": "Don’t Break My Heart",
+    "url": "https://open.spotify.com/track/6a4GH1gljLL7VvmO9u5O92"
   },
   "updated": {
     "activity": "2026-11-27",
