@@ -1,13 +1,13 @@
 {
   "activity": {
-    "date": "2026-11-26",
-    "detail": "2.3 km/h",
-    "distance_km": 1.2,
-    "emoji": "🏅",
-    "moving_min": 31,
-    "sport": "Volleyball",
-    "title": "Evening Volleyball",
-    "url": "https://www.strava.com/activities/21138169903"
+    "date": "2026-11-27",
+    "detail": "",
+    "distance_km": null,
+    "emoji": "🏋️",
+    "moving_min": 37,
+    "sport": "WeightTraining",
+    "title": "Morning Weight Training",
+    "url": "https://www.strava.com/activities/21142538896"
   },
   "anime": {
     "cover": "https://cdn.myanimelist.net/r/192x272/images/anime/1818/126435.jpg?s=0be17183a1db49a9a2fb43affb404d81",
@@ -43,7 +43,7 @@
       "description": "A car cyberdeck: ESP32 touchscreens and a Garmin watch app that control the car's inside and outside LED lights by touch, gamepad, voice or watch, synced to Spotify",
       "homepage": "",
       "name": "car-cyberdeck",
-      "pushed": "2026-11-26T18:59:36Z",
+      "pushed": "2026-11-27T11:48:27Z",
       "url": "https://github.com/jvitorcosta/car-cyberdeck"
     },
     {
@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Eminem",
-    "cover": "https://i.scdn.co/image/ab67616d00001e026ca5c90113b30c3c43ffb8f4",
+    "artist": "Ludwig Göransson",
+    "cover": "https://i.scdn.co/image/ab67616d00001e02547571147aeea7d75f55ad77",
     "playing": true,
-    "title": "Superman",
-    "url": "https://open.spotify.com/track/4woTEX1wYOTGDqNXuavlRC"
+    "title": "Runnin (From \"Creed II\" Soundtrack) (feat. A$AP Rocky & Jacob Banks)",
+    "url": "https://open.spotify.com/track/7ckSHKZnX72c6IQnKGJNpi"
   },
   "updated": {
     "activity": "2026-11-27",
