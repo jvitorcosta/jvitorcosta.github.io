@@ -153,11 +153,11 @@
     }
   ],
   "song": {
-    "artist": "Yandel",
-    "cover": "https://i.scdn.co/image/ab67616d00001e02b2aec01b56eeb74610532700",
-    "playing": false,
-    "title": "Yandel 150",
-    "url": "https://open.spotify.com/track/4FAKtPVycI4DxoOHC01YqD"
+    "artist": "Eminem",
+    "cover": "https://i.scdn.co/image/ab67616d00001e026ca5c90113b30c3c43ffb8f4",
+    "playing": true,
+    "title": "Superman",
+    "url": "https://open.spotify.com/track/4woTEX1wYOTGDqNXuavlRC"
   },
   "updated": {
     "activity": "2026-11-27",
