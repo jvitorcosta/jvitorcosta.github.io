@@ -608,3 +608,42 @@ button.btn { font-family: Inter, system-ui, sans-serif; }
 .items .mark { width: 1em; text-align: center; color: var(--accent); }
 .items .done > span:nth-child(2) { text-decoration: line-through; opacity: .7; }
 .study .bar { background: var(--soft); }
+
+/* ---------- print: the homepage as a one-page resume ---------- */
+/* Black on white: the header card with the addresses written out, Experience (every role, with its
+   first group of bullets) and Projects. What changes every few hours stays on the screen. */
+.print-only { display: none; }
+@media print {
+  html:has(.cols) { --bg:#fff; --box:#fff; --ink:#000; --line:#000; --soft:#fff; --accent:#000; --ink-on-bg:#000; }
+  body:has(.cols) { min-height: 0; font-size: 9pt; line-height: 1.35; }
+  body:has(.cols) > :not(main), .cols > .col > :not(#trainer, #work, #pc-box), body:has(.cols) main > header.top { display: none; }
+  main:has(> .cols) { max-width: none; padding: 0; }
+  .cols, .col { display: block; }
+  .cols .box { margin: 0 0 8px; padding: 0; border: 0; box-shadow: none; }
+  .cols .h { margin: 0 0 3px; padding-bottom: 2px; font-size: 8pt; border-bottom: 1.5pt solid #000; }
+  .cols .h > span:not(:first-child), .cols .h a, .cols .h .zh { display: none; }
+  #trainer .trainer { gap: 10px; }
+  #trainer .ava { width: 56px; height: 56px; }
+  #trainer h1.name { margin: 0 0 3px; }
+  #trainer .small, .print-only { margin: 0; font-size: 9.5pt; }
+  #trainer .motto, #trainer .status, #trainer .links, #work .hint, #work .links, #work .aside { display: none; }
+  .print-only { display: block; margin-top: 4px; }
+  #work .small { margin: 0; font-size: 9pt; }
+  .jobs { margin-top: 0; font-size: 9pt; line-height: 1.35; }
+  .jobs li { padding: 3px 0; border-bottom: 0; }
+  .jobs b { font-size: 9.5pt; }
+  .job > summary { min-height: 0; padding: 0; }
+  .job > summary::after, .grp > summary { display: none; }
+  /* Paper cannot be tapped: every role is shown open, with only its first group of bullets. */
+  #work .job::details-content, #work .grp::details-content { content-visibility: visible; display: block; }
+  .job .did { padding: 1px 0 0; font-size: 8.5pt; line-height: 1.32; }
+  .job .did li { margin: 0; padding: 0; break-inside: avoid; }
+  .grp { border: 0; }
+  .grp ~ .grp { display: none; }
+  #pc-box { columns: 2; column-gap: 14px; }
+  #pc-box .h { column-span: all; }
+  .pc .repo { break-inside: avoid; border: 0; }
+  .pc .repo > :first-child { min-height: 0; padding: 1px 0; gap: 0; font-size: 8.5pt; }
+  .pc .repo > :first-child > span { font-size: 8pt; }
+  .pc .tag, .pc .try, .pc .more { display: none; }
+}

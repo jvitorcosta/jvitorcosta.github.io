@@ -40,6 +40,12 @@ So the page leads with me and my projects, and the live rows make it feel curren
 - Projects shows 5 rows so the right column ends about level with the left on a laptop.
 - Favorites is a 2×2 grid of 4 tiles. A fifth project goes to Projects, not to a lonely tile.
 
+## Print
+
+Printing the homepage gives a one-page resume in black on white: the header card with the addresses
+written out, Experience (every role, each with its first group of bullets) and Projects. Everything
+else stays on the screen. After adding a role or bullets, print to PDF and check it is still one page.
+
 ## Studying now
 
 A card for the current topic. Opening it shows a small tree drawn as inline SVG (the path, then

@@ -328,6 +328,13 @@ def _writing(p: Page, posts: list[Post]) -> str:
             f'<span lang="en-US">{esc(clip(post.summary, 140))}</span></div></a></li></ul></section>')
 
 
+def _print_contacts(p: Page) -> str:
+    """The contact addresses written out, for paper (assets/site.css shows it only in print)."""
+    urls = [safe_url(p.c.links.get(key, "")) for key in ("email", "linkedin", "github")]
+    shown = [re.sub(r"^(mailto:|https?://(www\.)?)", "", url).rstrip("/") for url in [*urls, SITE] if url]
+    return f'<p class="print-only">{" · ".join(esc(text) for text in shown)}</p>'
+
+
 def _trainer(p: Page) -> str:
     # Icon-only buttons: the 20x20 pixel tile (tools/pixel_icons.py) at twice its size. The alt names
     # the link for screen readers, the title shows the name on hover.
@@ -344,7 +351,7 @@ def _trainer(p: Page) -> str:
             f'<h1 class="px name">{p.t("greeting")} '
             f'<span class="zh" lang="zh-Hans">{esc(p.c.strings["en"]["chinese_name"])}</span></h1>'
             f'<p class="small">{p.t("intro")}</p>'
-            f'<p class="motto" lang="es">“{esc(p.c.strings["en"]["motto"])}”</p>{status}</div></div>{nav}</section>')
+            f'<p class="motto" lang="es">“{esc(p.c.strings["en"]["motto"])}”</p>{status}</div></div>{nav}{_print_contacts(p)}</section>')
 
 
 def _month(p: Page, text: str) -> dict[str, str]:
